@@ -32,7 +32,7 @@ const AccountPage = () => {
         <section className="account-grid">
           <div className="account-card balance-card">
             <p>Số dư</p>
-            <h3 className="user-balance">0đ</h3>
+          <h3 className="user-balance">{ user?.balance.toLocaleString() || 0}đ</h3>
             <div className="button-group">
               <button onClick={() => navigate('/account/recharge')}>Nạp tiền</button>
             </div>

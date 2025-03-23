@@ -15,8 +15,15 @@ export const UserProvider = ({ children }) => {
     }
   }, [user]);
 
+  const updateBalance = async(amount) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      balance: (prevUser?.balance || 0) + amount,
+    }));
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, updateBalance }}>
       {children}
     </UserContext.Provider>
   );

@@ -27,8 +27,12 @@ class PaymentService {
         user.balance += transferAmount;
         await user.save();
 
+        // Create transaction
+
+        // Write to log
+
         // Notify the client via WebSocket
-        getIO().to(userId).emit("recharge_success", { transferAmount, gateway });
+        getIO().to(userId).emit("recharge_success", { userId, transferAmount, gateway, newBalance: user.balance });
 
     return {
         message: "Nạp tiền thành công"

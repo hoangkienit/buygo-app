@@ -1,48 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Copy } from "lucide-react";
-import { io } from "socket.io-client";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { GrFormNextLink } from "react-icons/gr";
 import "../styles/recharge.css";
 import AccountLayout from "../layouts/AccountLayout";
-import { GrFormNextLink } from "react-icons/gr";
 import { useUser } from "../context/UserContext";
-
-const SOCKET_URL = "https://your-ngrok-subdomain.ngrok-free.app"; // Replace with your ngrok URL
-const socket = io(SOCKET_URL, { autoConnect: false });
+import socket from "../services/socket";
 
 const Recharge = () => {
-  const { user } = useUser();
+  const { user, updateBalance } = useUser();
   const [amount, setAmount] = useState("");
   const [isRecharging, setIsRecharging] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [successObj, setSuccessObj] = useState(null);
 
   const amounts = [10000, 20000, 50000, 100000, 200000, 300000, 500000, 700000, 900000, 1000000];
 
-  useEffect(() => {
-    // Set favicon dynamically
-    const link = document.querySelector("link[rel='icon']");
-    if (link) {
-      link.href = "./../public/web_tab_logo.png";
-    }
+  const handleRechargeSuccess = useCallback(async ({ transferAmount, gateway }) => {
+    await updateBalance(transferAmount);
+    setSuccessObj({ amount: transferAmount, gateway });
+    setPaymentSuccess(true);
+    setIsRecharging(false);
+  }, [updateBalance]);
 
-    // Connect socket when the user enters recharge page
+  useEffect(() => {
     if (user?._id) {
       socket.connect();
       console.log("🔄 Connecting to socket...");
       socket.emit("join", user._id);
-
-      // Listen for successful payment
-      socket.on("recharge_success", ({ transferAmount, gateway }) => {
-        setPaymentSuccess(true);
-        setIsRecharging(false);
-        alert(`✅ Nạp tiền thành công: ${transferAmount.toLocaleString()}đ, ${gateway}`);
-      });
+      socket.on("recharge_success", handleRechargeSuccess);
 
       return () => {
-        socket.off("recharge_success"); // Clean up event listener
+        socket.off("recharge_success", handleRechargeSuccess);
         socket.disconnect();
       };
     }
-  }, [user?._id]);
+  }, [user?._id, handleRechargeSuccess]);
 
   const handleRecharge = () => {
     setIsRecharging(true);
@@ -55,79 +48,109 @@ const Recharge = () => {
   };
 
   return (
-    <AccountLayout title={"Nạp tiền"}>
+    <AccountLayout title="Nạp tiền">
       <div className="recharge-container">
         <h2>Nạp tiền</h2>
 
         {paymentSuccess ? (
-          <div className="success-box">
-            🎉 Bạn đã nạp tiền thành công!
-          </div>
+          <SuccessMessage successObj={successObj} onBack={() => setPaymentSuccess(false)} />
+        ) : !isRecharging ? (
+          <AmountSelection
+            amounts={amounts}
+            selectedAmount={amount}
+            setAmount={setAmount}
+            onRecharge={handleRecharge}
+          />
         ) : (
-          !isRecharging ? (
-            <>
-              <div className="amount-options">
-                {amounts.map((amt) => (
-                  <button
-                    key={amt}
-                    className={`amount-button ${amount === amt ? "selected" : ""}`}
-                    onClick={() => setAmount(amt)}
-                  >
-                    <p className="amount-text">{amt.toLocaleString()}đ</p>
-                  </button>
-                ))}
-              </div>
-              <div className="recharge-button-wrapper">
-                <button onClick={handleRecharge} disabled={!amount} className="recharge-button">
-                  <GrFormNextLink className="recharge-icon" />
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="payment-confirmation">
-              <img
-                src={`https://qr.sepay.vn/img?acc=07014137401&bank=TPBank&amount=${amount}&des=TKPBG2 ${user?._id || 1000}`}
-                alt="QR Code"
-                className="qr-image"
-              />
-
-              <div className="payment-details">
-                <p>
-                  <span className="label">Số tiền:</span>
-                  <span className="value">{amount.toLocaleString()}đ</span>
-                </p>
-                <p>
-                  <span className="label">Ngân hàng:</span>
-                  <span className="value">TP Bank</span>
-                </p>
-                <p className="copy-row">
-                  <span className="label">Số tài khoản:</span>
-                  <div className="copy-row-value">
-                    <span className="value">07014137401</span>
-                    <Copy className="copy-icon" onClick={() => copyToClipboard("07014137401")} />
-                  </div>
-                </p>
-                <p className="copy-row">
-                  <span className="label">Nội dung chuyển khoản:</span>
-                  <div className="copy-row-value">
-                    <span className="value">TKPBG2 {user?._id || 1000}</span>
-                    <Copy className="copy-icon" onClick={() => copyToClipboard(`TKPBG2 ${user?._id || 1000}`)} />
-                  </div>
-                </p>
-                <div className="warning-box">
-                  <p className="warning-text">
-                    ⚠ Sau khi thanh toán thành công, bạn hãy đợi một vài phút để cập nhật tiền lên hệ thống nhé!
-                  </p>
-                </div>
-              </div>
-
-              <button className="back-button" onClick={() => setIsRecharging(false)}>Quay lại</button>
-            </div>
-          )
+          <PaymentConfirmation
+            amount={amount}
+            userId={user?._id || 1000}
+            copyToClipboard={copyToClipboard}
+            onBack={() => setIsRecharging(false)}
+          />
         )}
       </div>
     </AccountLayout>
   );
 };
+
+const SuccessMessage = ({ successObj, onBack }) => (
+  <>
+    <div className="success-box">
+    <AiFillCheckCircle className="success-icon" />
+    <p>
+      🎉 Bạn đã nạp tiền thành công với số tiền
+      <span className="success-amount"> {successObj?.amount.toLocaleString()}đ</span> qua{" "}
+      <span className="success-gateway">{successObj?.gateway}</span>! 🚀
+    </p>
+  </div>
+    <a className="back-to-selection-button" onClick={onBack}>
+      Nạp thêm
+    </a>
+  </>
+);
+
+const AmountSelection = ({ amounts, selectedAmount, setAmount, onRecharge }) => (
+  <>
+    <div className="amount-options">
+      {amounts.map((amt) => (
+        <button
+          key={amt}
+          className={`amount-button ${selectedAmount === amt ? "selected" : ""}`}
+          onClick={() => setAmount(amt)}
+        >
+          <p className="amount-text">{amt.toLocaleString()}đ</p>
+        </button>
+      ))}
+    </div>
+    <div className="recharge-button-wrapper">
+      <button onClick={onRecharge} disabled={!selectedAmount} className="recharge-button">
+        <GrFormNextLink className="recharge-icon" />
+      </button>
+    </div>
+  </>
+);
+
+const PaymentConfirmation = ({ amount, userId, copyToClipboard, onBack }) => (
+  <div className="payment-confirmation">
+    <img
+      src={`https://qr.sepay.vn/img?acc=07014137401&bank=TPBank&amount=${amount}&des=TKPBG2 ${userId}`}
+      alt="QR Code"
+      className="qr-image"
+    />
+
+    <div className="payment-details">
+      <p>
+        <span className="label">Số tiền:</span>
+        <span className="value">{amount.toLocaleString()}đ</span>
+      </p>
+      <p>
+        <span className="label">Ngân hàng:</span>
+        <span className="value">TP Bank</span>
+      </p>
+      <CopyRow label="Số tài khoản" value="07014137401" copyToClipboard={() => copyToClipboard("07014137401")} />
+      <CopyRow label="Nội dung chuyển khoản" value={`TKPBG2 ${userId}`} copyToClipboard={() => copyToClipboard(`TKPBG2 ${userId}`)} />
+      <div className="warning-box">
+        <p className="warning-text">
+          ⚠ Sau khi thanh toán thành công, bạn hãy đợi một vài phút để cập nhật tiền lên hệ thống nhé!
+        </p>
+      </div>
+    </div>
+
+    <button className="back-button" onClick={onBack}>
+      Quay lại
+    </button>
+  </div>
+);
+
+const CopyRow = ({ label, value, copyToClipboard }) => (
+  <div className="copy-row">
+    <span className="label">{label}:</span>
+    <div className="copy-row-value">
+      <span className="value">{value}</span>
+      <Copy className="copy-icon" onClick={copyToClipboard} />
+    </div>
+  </div>
+);
 
 export default Recharge;

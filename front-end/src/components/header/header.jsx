@@ -104,7 +104,7 @@ const Header = () => {
               {user ? (
                 <div className="user-info">
                   <a href='/account/recharge' className="user-balance">
-                    <span className="balance">{0}đ</span>
+                    <span className="balance">{user?.balance.toLocaleString() || 0}đ</span>
                   </a>
                   <a href='/account'><img src={user?.profileImg || "https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"} alt="User Avatar" className="user-avatar" /></a>
                 </div>
