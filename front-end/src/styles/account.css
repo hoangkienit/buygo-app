@@ -1,0 +1,211 @@
+.account-container {
+    display: flex;
+    width: 1200px;
+    min-height:520px;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 50px auto;
+}
+
+.account-sidebar {
+    width: 250px;
+    height: 100%;
+    background: var(--seven);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.account-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.account-sidebar li {
+    padding: 0px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+    color: #fff;
+    font-family: 'montserrat-md', sans-serif;
+    font-size: 13px;
+}
+
+.account-sidebar li:hover,
+.account-sidebar .active {
+    background: var(--eight);
+}
+
+.account-sidebar li.active {
+    background: var(--eight);
+}
+
+.account-sidebar li a {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    width: 100%;
+}
+
+.account-sidebar .navlink{
+    padding: 10px 0px;
+    margin: 5px 0px;
+}
+
+.account-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.account-card {
+    background: var(--seven);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-info h2 {
+    color: #fff;
+    font-family: 'montserrat-bold', sans-serif;
+    font-size: 18px;
+}
+
+.profile-info .user-rank {
+    color: #c0c0c0;
+    font-family: 'montserrat-md', sans-serif;
+    font-size: 13px;
+}
+
+.profile-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.update-btn,
+.account-card button {
+    background: var(--eight);
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: auto;
+    display: inline-block;
+    font-family: 'montserrat-md', sans-serif;
+    text-transform: none;
+}
+
+.update-btn:hover,
+.account-card button:hover {
+    background: var(--fourth);
+}
+
+.account-card p {
+    color: #fff;
+    font-family: 'montserrat-bold';
+    font-size: 15px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--third);
+}
+
+.account-card .user-balance {
+    color: var(--secondary);
+    font-family: 'montserrat-bold';
+    background-color: var(--seven);
+}
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.storage-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.storage-stats span {
+    color: #fff;
+    font-family: 'montserrat-md', sans-serif;
+    font-size: 13px;
+}
+
+.password-card input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    text-align: center;
+}
+
+.button-group {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.logout-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: red !important;
+}
+
+.logout-icon {
+    font-size: 20px;
+    text-align: center;
+}
+
+
+
+@media (max-width: 768px) {
+    .account-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .account-sidebar {
+        display: none;
+    }
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+}

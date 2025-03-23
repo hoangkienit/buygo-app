@@ -1,0 +1,162 @@
+/* Bottom Navbar */
+.bottom-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 0.2px solid var(--eight);
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    transition: color 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-item span{
+    font-family: 'montserrat-md',sans-serif;
+    font-size: 9px;
+}
+
+.nav-item:hover {
+    color: white;
+    background-color: var(--eight);
+}
+
+.nav-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* Popup Styles */
+.popup {
+    position: fixed;
+    background: var(--primary);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 250px;
+    padding: 15px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+}
+
+/* Category Popup - Left to Right */
+.popup-left {
+    top: 0;
+    left: 0;
+    height: 100vh;
+}
+
+.popup-left.active {
+    transform: translateX(0);
+}
+
+/* Account Popup - Right to Left */
+.popup-right {
+    top: 0;
+    right: 0;
+    height: 100vh;
+    transform: translateX(100%);
+}
+
+.popup-right.active {
+    transform: translateX(0);
+}
+
+/* Chat Popup - Bottom to Top */
+.popup-bottom {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 80%;
+    border-radius: 10px 10px 0 0;
+}
+
+.popup-bottom.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Popup Content */
+.popup-content {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.popup-content h3 {
+    margin-bottom: 10px;
+    color: var(--fourth);
+    font-family: 'montserrat-bold', sans-serif;
+
+}
+
+.popup-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.popup-content li {
+    padding: 10px 0;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 5px;
+    margin: 20px 0;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+}
+
+.popup-content li a{
+    text-decoration: none;
+    color: #fff;
+}
+
+
+.popup-icon {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.popup-contact {
+    display: flex;
+    align-items: center;
+    /* Center text vertically with the image */
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.popup-contact span{
+    color: #fff;
+    font-family: 'montserrat-md',sans-serif;
+    font-size: 13px;
+}
+
+/* Contact Icons as Images */
+.popup-logo {
+    width: 24px;
+    /* Adjust image size */
+    height: 24px;
+    margin-right: 10px;
+}
+
+/* Overlay when popup is active */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}

@@ -1,0 +1,228 @@
+.recharge-container {
+    max-width: 1500px;
+    height: 100%;
+    padding: 15px;
+    margin: 10px 10px;
+    background: var(--seven);
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.recharge-container h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    text-align: start;
+    font-family: 'montserrat-bold',sans-serif;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--eight);
+}
+
+.recharge-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.recharge-container input:focus {
+    border-color: #007bff;
+}
+
+.amount-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.amount-button {
+    padding: 15px;
+    font-weight: 600;
+    border: none;
+    background: #f8f9fa;
+    color: #333;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-transform: none;
+}
+
+.amount-button .amount-text{
+    font-family: 'montserrat-md', sans-serif;
+    font-size: 14px;
+}
+
+.amount-button:hover {
+    background: var(--eight);
+    color: white;
+}
+
+.amount-options .selected {
+    background: var(--eight) !important;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* AMOUNT */
+.recharge-container .amount-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.recharge-button-wrapper{
+    display: flex;
+        justify-content: flex-end;
+        /* Moves the button to the right */
+        width: 100%;
+}
+
+.recharge-container .recharge-button{
+    background-color: var(--eight);
+    color: #fff;
+    display: flex;
+    max-width: 10%;
+    justify-content: center;
+    align-items: center;
+}
+
+.recharge-container .recharge-button .recharge-icon {
+    color: #fff;
+    text-align: center;
+    font-size: 25px;
+}
+
+.recharge-container .recharge-button:hover {
+    background: var(--eight);
+    transform: translateY(-2px);
+}
+
+.recharge-container .recharge-button:disabled {
+    background: #808080;
+    cursor: not-allowed;
+    transform: none;
+    color: #000;
+}
+
+.payment-confirmation {
+    padding: 20px;
+    background: var(--seven);
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.qr-image {
+    width: 230px;
+    display: block;
+    margin: 15px auto;
+}
+
+.payment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.payment-details p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label {
+    font-size: 13px;
+    font-family: 'montserrat-bold';
+}
+
+.value {
+    font-family: 'montserrat-md';
+    font-size: 13px;
+}
+
+.copy-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-row-value{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.copy-icon {
+    cursor: pointer;
+    margin-left: 10px;
+    color: #fff;
+    transition: color 0.2s;
+}
+
+.copy-icon:hover {
+    color: var(--eight);
+}
+
+.back-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: none;
+    font-family: 'montserrat-bold';
+    font-size: 13px;
+}
+
+.back-button:hover {
+    background: var(--eight);
+}
+
+.warning-box {
+    background: #977f1f;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    font-family: 'montserrat-md';
+    border: 1px solid #fff;
+}
+
+.warning-text {
+    font-size: 13px;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .recharge-container .recharge-button {
+            max-width: 20%;
+        }
+
+    .amount-button .amount-text{
+        font-size: 12px;
+    }
+    
+    .qr-image{
+        width: 170px;
+    }
+}

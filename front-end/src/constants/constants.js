@@ -1,0 +1,1 @@
+export const BASE_API_URL_V1 = 'http://localhost:5000/api/v1'

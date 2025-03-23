@@ -1,0 +1,24 @@
+*{margin: 0; padding: 0; box-sizing: border-box;}
+
+.container{background-color: var(--primary)}
+
+@font-face {
+    font-family: 'montserrat-bold';
+    src: url('/public/fonts/Montserrat-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'montserrat-md';
+    src: url('/public/fonts/Montserrat-Medium.ttf') format('truetype');
+}
+
+:root {
+    --primary: #092339;
+    --secondary: #ffcc00;
+    --third: #302f5a;
+    --fourth: #4b7dff;
+    --fifth: #141432;
+    --six: #0e0a2f;
+    --seven: #011727;
+    --eight: #134977;
+}

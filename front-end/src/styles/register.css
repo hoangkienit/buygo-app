@@ -1,0 +1,123 @@
+/* 🎮 Gaming-Inspired Login Page */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url("../assets/images/login_background.jpg") no-repeat center center/cover;
+    padding: 20px;
+}
+
+.register-box {
+    background: #0e0a2f;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 20px #302f5a;
+    transition: transform 0.3s ease-in-out;
+}
+
+.register-box:hover {
+    transform: scale(1.05);
+}
+
+.register-box .register-title {
+    margin-bottom: 10px;
+    font-size: 28px;
+    color: #4b7dff;
+    text-shadow: 0 0 12px #4b7dff;
+}
+
+.register-box .register-second-title {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-family: 'montserrat-md', sans-serif;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 15px;
+    background: #070920;
+    color: #fff;
+    font-size: 12px;
+    outline: none;
+    font-family: 'montserrat-md', sans-serif;
+    /* box-shadow: 0 0 6px #302f5a; */
+    transition: 0.2s;
+    border: 0.1px solid gray;
+}
+
+.input-group input:hover {
+    /* box-shadow: 0 0 12px #ffcc00; */
+    border-color: #4b7dff;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #4b7dff;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+}
+
+button:hover {
+    background: #4b7dff;
+    box-shadow: 0 0 5px #4b7dff;
+}
+
+.register-icon {
+    color: #fff;
+}
+
+.submit-text{
+    text-align: center;
+    color: #fff;
+}
+
+.login-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #fff;
+    font-family: 'montserrat-md', sans-serif;
+}
+
+.login-text a {
+    color: #4b7dff;
+    text-decoration: none;
+    font-family: 'montserrat-md';
+}
+
+.login-text a:hover {
+    text-shadow: 0 0 8px #4b7dff;
+}
+
+button.disabled-btn {
+    background: #ccc;
+    /* cursor: not-allowed; */
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .login-box {
+        padding: 30px;
+        max-width: 90%;
+    }
+}
