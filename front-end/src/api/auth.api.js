@@ -18,7 +18,11 @@ export const login = async (username, password) => {
     const response = await axios.post(`${BASE_API_URL_V1}/auth/login`, {
       username,
       password,
-    });
+    },
+      {
+        credentials: true
+      }
+    );
 
     return response.data;
   } catch (error) {
@@ -33,7 +37,9 @@ export const register = async (username, email, password) => {
       username,
       email,
       password,
-    });
+    },{
+        credentials: true
+      });
 
     return response.data;
   } catch (error) {

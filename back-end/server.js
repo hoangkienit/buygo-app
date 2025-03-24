@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const connectDb = require('./config/db');
 const cookieParser = require("cookie-parser");
 const http = require("http");
-const { initializeSocket, getIO } = require("./services/socket.service");
+const { initializeSocket } = require("./services/socket.service");
 
 // Load environment variables
 dotenv.config();
@@ -20,7 +20,7 @@ initializeSocket(server);
 
 // Middlewares
 app.use(cors({
-  origin: "*", // Adjust based on frontend URL
+  origin: "http://localhost:3000", // Adjust based on frontend URL
   credentials: true, // ✅ Allow cookies
 }));
 app.use(cookieParser());
