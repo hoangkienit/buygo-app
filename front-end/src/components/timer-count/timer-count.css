@@ -1,0 +1,10 @@
+.timer {
+    font-size: 18px;
+    font-family: 'montserrat-bold',sans-serif;
+}
+
+@media (max-width: 768px){
+    .timer {
+        font-size: 14px;
+    }
+}

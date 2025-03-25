@@ -11,6 +11,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Register from "./pages/Register";
 import { UserProvider } from "./context/UserContext";
 import Recharge from "./pages/Recharge";
+import Payment from "./pages/Payment";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route element={<MainLayout />}>
                 <Route path="/account" element={<Account />} />
                 <Route path="/account/recharge" element={<Recharge />} />
+                <Route path="/account/recharge/:transactionId" element={<Payment/>} />
             </Route>
           </Route>
 

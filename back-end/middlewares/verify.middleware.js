@@ -27,7 +27,7 @@ const verifyMiddleware = async (req, res, next) => {
                 });
             }
 
-            req.body.id = decoded.id; // Attach user ID to request
+            req.user = decoded; // Attach user to request
             next();
         });
     } catch (error) {

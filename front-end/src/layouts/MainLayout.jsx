@@ -2,7 +2,7 @@
 import { Link, Outlet } from "react-router-dom";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
-import ChatButton from "../components/chat-button/ChatButton";
+import ChatButton from "../components/chat-button/chat-button";
 import BottomNavbar from "../components/bottom-navbar/bottom-navbar";
 
 const MainLayout = () => {

@@ -1,0 +1,68 @@
+.success-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #d4edda;
+    border: 1px solid #155724;
+    color: #155724;
+    padding: 14px 18px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    text-align: left;
+    max-width: 420px;
+    margin: 20px auto;
+    word-wrap: break-word;
+}
+
+.success-icon {
+    color: #28a745;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.success-message {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Fix for ensuring amount stays in the same line */
+.amount {
+    font-weight: bold;
+    font-size: 16px;
+    white-space: nowrap;
+    margin-left: 3px;
+}
+
+/* Prevents breaking issue */
+.inline-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+/* 📱 Mobile Fix */
+@media (max-width: 480px) {
+    .success-box {
+        flex-direction: row;
+        padding: 12px;
+        gap: 10px;
+        max-width: 90%;
+    }
+
+    .success-message {
+        display: block;
+        /* Prevents excessive shrinking */
+    }
+
+    .inline-group {
+        display: inline;
+        /* Keeps amount + "via Stripe" together */
+    }
+}

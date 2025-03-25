@@ -7,6 +7,7 @@ const connectDb = require('./config/db');
 const cookieParser = require("cookie-parser");
 const http = require("http");
 const { initializeSocket } = require("./services/socket.service");
+require("./jobs/transactionQueue");
 
 // Load environment variables
 dotenv.config();
@@ -32,7 +33,8 @@ app.get('/', (req, res) => res.status(200).send("Hello world!"));
 
 app.use('/api/v1/auth', require('./routes/auth.route'));
 app.use('/api/v1/user', require('./routes/user.route'));
-app.use('/api/v1/payment', require('./routes/payment.webhook.route'));
+app.use('/api/v1/payment', require('./routes/payment.route'));
+app.use('/api/v1/transaction', require('./routes/transaction.route'));
 
 // Start Server
 const PORT = process.env.PORT || 5000;

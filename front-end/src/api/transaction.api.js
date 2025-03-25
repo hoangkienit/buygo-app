@@ -12,12 +12,12 @@ const handleError = (error) => {
   }
 };
 
-// Login function
-export const login = async (username, password) => {
+export const createTransaction = async (amount, gateway, paymentMethod) => {
   try {
-    const response = await axios.post(`${BASE_API_URL_V1}/auth/login`, {
-      username,
-      password,
+    const response = await axios.post(`${BASE_API_URL_V1}/transaction/create-transaction`, {
+        amount,
+        paymentMethod,
+        gateway
     },
       {
         withCredentials: true
@@ -30,16 +30,13 @@ export const login = async (username, password) => {
   }
 };
 
-// Register function
-export const register = async (username, email, password) => {
+export const getTransaction = async (transactionId) => {
   try {
-    const response = await axios.post(`${BASE_API_URL_V1}/auth/register`, {
-      username,
-      email,
-      password,
-    },{
+    const response = await axios.get(`${BASE_API_URL_V1}/transaction/${transactionId}`,
+      {
         withCredentials: true
-      });
+      }
+    );
 
     return response.data;
   } catch (error) {

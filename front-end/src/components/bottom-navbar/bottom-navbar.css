@@ -3,13 +3,15 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
     background-color: var(--primary);
     display: flex;
     justify-content: space-around;
     padding: 10px 0;
     border-top: 0.2px solid var(--eight);
     z-index: 1000;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .nav-item {
@@ -98,6 +100,53 @@
     color: var(--fourth);
     font-family: 'montserrat-bold', sans-serif;
 
+}
+
+.popup-content .user-popup-info-container{
+    /* background-color: red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid var(--eight) ;
+    border-bottom: 1px solid var(--eight);
+    padding: 5px 0px;
+}
+
+.user-popup-info-container .avatar{
+    width: 50px;
+    height: 50px;
+}
+.username-currency{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: start;
+    gap: 5px;
+}
+
+.username-currency .name{
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+}
+
+.currency-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.currency-container .currency-icon{
+    width: 20px;
+    height: 20px;
+}
+
+.currency-container .balance {
+    color: var(--secondary);
+    font-family: 'montserrat-bold';
+    font-size: 13px;
 }
 
 .popup-content ul {

@@ -25,13 +25,11 @@ const Login = () => {
       setLoading(true);
 
       if (username === " " && password === " ") {
+        setLoading(false);
         setError({message: "Vui lòng điền vào các trường"})
         return;  
       }
-      console.log("Logging in with:", username, password);
       const res = await login(username, password);
-      console.log("Response received:", res);
-
 
       setLoading(false);
       authenticatedUser(res.data.user);
@@ -71,7 +69,11 @@ const Login = () => {
           </div>
           
 
-          <button type="submit">
+          <p className="reset-password">
+            <a className="reset-password-text" href="/reset-password">Quên mật khẩu</a>
+          </p>
+
+          <button type="submit" disabled={loading} className={`login-button ${loading ? "disabled-btn": ""}`}>
             {loading ? <ClipLoader size={20} color="#fff" /> : <i className="fas fa-arrow-right login-icon"></i>}
           </button>
         </form>
@@ -79,6 +81,9 @@ const Login = () => {
         <p className="register-text">
           Chưa có tài khoản? <a href="/register">Đăng kí ngay</a>
         </p>
+        <a className="back-to-dashboard-button" href="/">
+          ← Quay về trang chủ
+        </a>
       </div>
     </div>
   );

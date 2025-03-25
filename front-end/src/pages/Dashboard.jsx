@@ -37,10 +37,11 @@ const Dashboard = () => {
     <div className="custom-dots-container">
       <ul> {dots} </ul>
     </div>
-  ),
-  customPaging: i => (
-    <div className="custom-dot"></div> // Custom dot styling
-  )
+    ),
+    customPaging: i => (
+      <div className="custom-dot"></div> // Custom dot styling
+    ),
+    arrows: false
   };
 
   return (

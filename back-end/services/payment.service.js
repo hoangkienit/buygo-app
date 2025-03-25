@@ -1,38 +1,45 @@
 const { getIO } = require("./socket.service");
 const User = require("../models/user.model");
+const Transaction = require("../models/transaction.model");
 const { convertToObjectId } = require("../utils/convert");
+const { splitString } = require("../utils/text");
+
 
 class PaymentService {
-  // 🔹 Login user and generate JWT
+  // 🔹 Add user balance
     static async updateUserBalance(gateway, transactionDate, description, transferAmount) {
         let userId = '';
-        if (!description || typeof description !== "string") {
-            throw new Error("Invalid description");
-        }
-        const match = description.match(/[a-f0-9]{24}/); // Validate description
-        if (match)
-        {
-            userId = match[0].replace("TKPBG2 ", "");
-            console.log(userId);
-        } else {
-            throw new Error("Invalid description");
-        }
+        let transactionId = '';
+        
+        const splittedString = splitString(description);
+        userId = splittedString[2];
+        transactionId = splittedString[1];
 
         const user = await User.findOne({ _id: convertToObjectId(userId) });
         if (!user) {
-            throw new Error("Không tìm thấy người dùng");
+            throw new Error("User not found");
         }
 
         // Update user balance
         user.balance += transferAmount;
         await user.save();
 
-        // Create transaction
+        // Update transaction status
+        // 🔹 Find and update
+        const transaction = await Transaction.findOneAndUpdate(
+            { transactionId: transactionId, userId: convertToObjectId(userId), transactionStatus: "pending" }, 
+            { transactionStatus: "success", updatedAt: new Date() },
+            { new: true }
+        );
+
+        if (!transaction) {
+            throw new Error("Không tìm thấy giao dịch hợp lệ");
+        }
 
         // Write to log
 
         // Notify the client via WebSocket
-        getIO().to(userId).emit("recharge_success", { userId, transferAmount, gateway, newBalance: user.balance });
+        getIO().to(userId).emit("recharge_success", { userId, transferAmount, gateway });
 
     return {
         message: "Nạp tiền thành công"

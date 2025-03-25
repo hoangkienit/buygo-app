@@ -4,18 +4,18 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url("../assets/images/login_background.jpg") no-repeat center center/cover;
+    background: url("../assets/images/register_background.jpg") no-repeat center center/cover;
     padding: 20px;
 }
 
 .login-box {
-    background: #0e0a2f;
+    background: var(--primary);
     padding: 40px;
     border-radius: 12px;
     text-align: center;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 0 20px #302f5a;
+    box-shadow: 0 0 20px var(--eight);
     transition: transform 0.3s ease-in-out;
 }
 
@@ -26,7 +26,7 @@
 .login-box .login-title {
     margin-bottom: 10px;
     font-size: 28px;
-    color: #4b7dff;
+    color: #fff;
     text-shadow: 0 0 12px #4b7dff;
 }
 
@@ -47,25 +47,29 @@
     padding: 12px;
     border: none;
     border-radius: 15px;
-    background: #070920;
+    background: var(--seven) !important;
     color: #fff;
     font-size: 12px;
     outline: none;
     font-family: 'montserrat-md', sans-serif;
     /* box-shadow: 0 0 6px #302f5a; */
     transition: 0.2s;
-    border: 0.1px solid gray;
+    border: 0.2px solid var(--nine) !important;
+}
+
+.input-group input::placeholder{
+    color: #fff;
 }
 
 .input-group input:hover {
     /* box-shadow: 0 0 12px #ffcc00; */
-    border-color: #4b7dff;
+    border-color: var(--nine) !important;
 }
 
 button {
     width: 100%;
     padding: 12px;
-    background: #4b7dff;
+    background: var(--nine);
     border: none;
     border-radius: 6px;
     font-size: 18px;
@@ -74,6 +78,11 @@ button {
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
+}
+
+.login-button{
+    width: 100%;
+    background-color: var(--nine);
 }
 
 button:hover {
@@ -110,6 +119,24 @@ button.disabled-btn {
     font-family: 'montserrat-md';
     font-size: 13px;
     margin-bottom: 5px;
+}
+
+.back-to-dashboard-button{
+    color: #b8b8b8;
+    font-size: 12px;
+    cursor: pointer;
+
+}
+
+.reset-password{
+    text-align: end;
+    font-size: 12px;
+    padding: 5px;
+    font-family: 'montserrat-md';
+}
+
+.reset-password-text{
+    color: #4b7dff;
 }
 
 /* Responsive */

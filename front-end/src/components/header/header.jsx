@@ -14,13 +14,22 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(1);
+  const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
 
   const searchRef = useRef(null);
 
   useEffect(() => {
-    console.log(user);
-  }, []);
+  const handleResize = () => {
+    if (window.innerWidth > 768) {
+      setIsMobileSearchActive(false);
+      document.body.style.overflow = 'auto'; // Reset scrolling
+    }
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   useEffect(() => {
     if (searchTerm) {
@@ -38,11 +47,30 @@ const Header = () => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowDropdown(false);
+        document.body.style.overflow = 'auto'
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Toggle bottom-header on mobile when search icon is clicked
+  const handleSearchClick = () => {
+    if (window.innerWidth <= 768) { // Mobile width
+    setIsMobileSearchActive(prevState => {
+      const newState = !prevState;
+      document.body.style.overflow = newState ? 'hidden' : 'auto';
+      return newState;
+    });
+  }
+  };
+
+  const handleCloseSearchPopup = () => {
+    if (window.innerWidth <= 768) { // Mobile width
+      setIsMobileSearchActive(false);
+      document.body.style.overflow = 'auto'
+    }
+  }
 
   return (
     <>
@@ -52,14 +80,12 @@ const Header = () => {
       </div>
       <header className="header">     
         <div className="header-container">
-          {/* Logo */}
           <div className="logo-container">
             <a href="/">
               <img src={Logo} alt="Logo" className="header-logo" />
             </a>
           </div>
 
-          {/* Navigation Menu */}
           <nav className="nav-menu">
             <ul>
               <li><a href="/games">Trò chơi</a></li>
@@ -69,7 +95,6 @@ const Header = () => {
             </ul>
           </nav>
 
-          {/* Search and Icons */}
           <div className="header-right">
             <div className="header-search" ref={searchRef}>
               <input
@@ -80,9 +105,8 @@ const Header = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onFocus={() => setShowDropdown(true)}
               />
-              <FaSearch className="search-icon" />
+              <FaSearch className="search-icon" onClick={handleSearchClick} />
               
-              {/* Autocomplete Dropdown */}
               {showDropdown && (
                 <ul className="autocomplete-dropdown">
                   {filteredSuggestions.map((item, index) => (
@@ -111,14 +135,25 @@ const Header = () => {
               ) : (
                 <div className="auth-links">
                   <a href="/login">Đăng nhập</a>
-                  /
-                  <a href="/register">Đăng ký</a>
                 </div>
               )}
             </div>
           </div>
         </div>
       </header>
+
+      {/* Bottom header that appears on mobile */}
+      <div className={`bottom-header ${isMobileSearchActive ? 'show' : ''}`}>
+        <div className="mobile-search-bar">
+          <input
+            type="text"
+            placeholder="Tìm kiếm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mobile-search-input"
+          />
+        </div>
+      </div>
     </>
   );
 };

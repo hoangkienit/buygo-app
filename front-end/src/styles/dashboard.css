@@ -8,7 +8,7 @@
 }
 
 .banner-slider {
-    width: 100%;
+    width: 90%;
     margin: 0 auto 20px;
     /* Center horizontally */
     justify-content: center;
@@ -143,7 +143,7 @@ a {text-decoration: none;}
     background-color: rgba(255, 255, 255, 0.5);
     /* Inactive dots */
     margin: 0 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease-in-out;
 }
 
 /* Active Dot */
@@ -152,6 +152,7 @@ a {text-decoration: none;}
     /* Active dot color */
     width: 20px;
     height: 5px;
+    transform: scale(1.4);
 }
 
 /* Fake Data Section */

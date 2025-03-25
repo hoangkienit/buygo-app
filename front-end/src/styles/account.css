@@ -109,6 +109,18 @@
     font-size: 18px;
 }
 
+.user-balance-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.user-balance-container .currency{
+    width: 30px;
+    height: 30px;
+}
+
 .update-btn,
 .account-card button {
     background: var(--eight);
@@ -199,6 +211,7 @@
     .account-container {
         flex-direction: column;
         width: 100%;
+        min-height: 300px;
     }
 
     .account-sidebar {

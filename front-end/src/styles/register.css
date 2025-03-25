@@ -4,19 +4,26 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url("../assets/images/login_background.jpg") no-repeat center center/cover;
+    background: url("../assets/images/register_background.jpg") no-repeat center center/cover;
     padding: 20px;
 }
 
 .register-box {
-    background: #0e0a2f;
+    background: var(--primary);
     padding: 40px;
     border-radius: 12px;
     text-align: center;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 0 20px #302f5a;
+    box-shadow: 0 0 20px var(--eight);
     transition: transform 0.3s ease-in-out;
+}
+
+.back-to-dashboard-button {
+    color: #b8b8b8;
+    font-size: 12px;
+    cursor: pointer;
+
 }
 
 .register-box:hover {
@@ -26,7 +33,7 @@
 .register-box .register-title {
     margin-bottom: 10px;
     font-size: 28px;
-    color: #4b7dff;
+    color: #fff;
     text-shadow: 0 0 12px #4b7dff;
 }
 
@@ -60,6 +67,12 @@
 .input-group input:hover {
     /* box-shadow: 0 0 12px #ffcc00; */
     border-color: #4b7dff;
+}
+
+.register-button{
+    background-color: var(--nine);
+    text-transform: none;
+    font-size: 13px;
 }
 
 button {
@@ -112,6 +125,13 @@ button:hover {
 button.disabled-btn {
     background: #ccc;
     /* cursor: not-allowed; */
+}
+
+.error-text {
+    color: red;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+    margin-bottom: 5px;
 }
 
 /* Responsive */

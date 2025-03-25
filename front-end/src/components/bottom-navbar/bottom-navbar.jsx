@@ -5,8 +5,11 @@ import "./bottom-navbar.css";
 import MESSENGER_LOGO from './../../assets/images/messenger-icon.png'
 import ZALO_LOGO from './../../assets/images/zalo-icon.png'
 import PHONE_LOGO from './../../assets/images/phone-icon.png'
+import CURRENCY from './../../assets/images/currency_icon.png'
+import { useUser } from "../../context/UserContext";
 
 const BottomNavbar = () => {
+  const { user } = useUser();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [activePopup, setActivePopup] = useState(null); // Controls which popup is open
 
@@ -61,15 +64,34 @@ const BottomNavbar = () => {
 
       <div className={`popup popup-right ${activePopup === "account" ? "active" : ""}`}>
         <div className="popup-content">
-          <h3>Tài khoản</h3>
-          <ul>
-            <li><a href="/account">Tài khoản của tôi</a></li>
-            <li><a href="/account/recharge">Nạp tiền</a></li>
-            <li><a href="/account">Đơn hàng</a></li>
-            <li><a href="/account">Lịch sử giao dịch</a></li>
-            <li><a href="/account">Sản phẩm yêu thích</a></li>
-            <li><a href="/account">Đăng xuất</a></li>
-          </ul>
+          {user ? 
+            <>
+              <h3>Tài khoản</h3>
+              <div className="user-popup-info-container">
+                <img className="avatar" src={user?.profileImg || null} alt="User avatar"></img>
+                <div className="username-currency">
+                  <p className="name">{user?.username || "User"}</p>
+                  <div className="currency-container">
+                    <img src={CURRENCY} alt="Currency" className="currency-icon"></img>
+                    <p className="balance">{user?.balance.toLocaleString() || 0 }</p>
+                  </div>
+                </div>
+              </div>
+              <ul>
+                <li><a href="/account">Tài khoản của tôi</a></li>
+                <li><a href="/account/recharge">Nạp tiền</a></li>
+                <li><a href="/account">Đơn hàng</a></li>
+                <li><a href="/account">Lịch sử giao dịch</a></li>
+                <li><a href="/account">Sản phẩm yêu thích</a></li>
+                <li><a href="/account">Đăng xuất</a></li>
+              </ul>
+            </>
+            :
+            <ul>
+                <li><a href="/login">Đăng nhập</a></li>
+                <li><a href="/register">Đăng ký</a></li>
+            </ul>
+          }
         </div>
       </div>
 

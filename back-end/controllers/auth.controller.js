@@ -38,7 +38,7 @@ class AuthController {
       res.cookie("accessToken", response.accessToken, {
         httpOnly: true,
         secure: true,  // Set to true in production (HTTPS required)
-        sameSite: "Strict",
+        sameSite: "Lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days: 7 * 24 * 60 * 60 * 1000
       });
 

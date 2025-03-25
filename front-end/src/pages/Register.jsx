@@ -2,29 +2,43 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/register.css";
 import { ClipLoader } from "react-spinners";
+import { register } from "../api/auth.api";
 
 const Register = () => {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
     
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
     useEffect(() => {
         document.title = "Đăng ký";
     }, []);
 
-    const handleRegister = (e) => {
+    const handleRegister = async(e) => {
+      try {
         e.preventDefault();
-        if (password !== confirmPassword) {
-        alert("Mật khẩu xác nhận không khớp!");
-        return;
+        setLoading(true);
+        setError(null);
+      
+        if (username === " " || email === " " || password === " " || confirmPassword === " ") {
+          setLoading(false);
+          setError({ message: "Vui lòng điền vào các trường" });
+          return;
         }
-    // Dummy register logic
-    alert("Đăng ký thành công!");
-    navigate("/login");
+
+        await register(username, email, password);
+
+        setLoading(false);
+        navigate('/login')
+
+      } catch (error) {
+        setLoading(false);
+        setError({message: error.message})
+      }
   };
 
   return (
@@ -33,6 +47,7 @@ const Register = () => {
                 <h2 className="register-title">Đăng ký</h2>
                 <p className="register-second-title">Tham gia ngay – Nhận ưu đãi liền tay!</p>
 
+        {error && <p className="error-text">*{error.message}</p>}
         <form onSubmit={handleRegister}>
           <div className="input-group">
             <input
@@ -71,7 +86,7 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading} className={loading ? "disabled-btn" : ""}>
+          <button type="submit" disabled={loading} className={loading ? "disabled-btn register-button" : "register-button"}>
             {loading ? <ClipLoader size={20} color="#fff" /> : <p className="submit-text">Đăng ký</p>}
           </button>
         </form>
@@ -79,6 +94,9 @@ const Register = () => {
         <p className="login-text">
           Đã có tài khoản? <a href="/login">Đăng nhập ngay</a>
         </p>
+        <a className="back-to-dashboard-button" href="/">
+          ← Quay về trang chủ
+        </a>
       </div>
     </div>
   );

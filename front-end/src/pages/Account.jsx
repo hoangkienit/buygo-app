@@ -5,6 +5,7 @@ import { MdLogout } from "react-icons/md";
 import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
 import AccountLayout from "../layouts/AccountLayout";
+import CURRENCY from './../assets/images/currency_icon.png'
 
 const AccountPage = () => {
   const { user } = useUser();
@@ -32,7 +33,10 @@ const AccountPage = () => {
         <section className="account-grid">
           <div className="account-card balance-card">
             <p>Số dư</p>
-          <h3 className="user-balance">{ user?.balance.toLocaleString() || 0}đ</h3>
+          <div className="user-balance-container">
+              <img className="currency" src={CURRENCY} alt="currency"></img>
+              <h3 className="user-balance">{ user?.balance.toLocaleString() || 0}đ</h3>
+            </div>
             <div className="button-group">
               <button onClick={() => navigate('/account/recharge')}>Nạp tiền</button>
             </div>
