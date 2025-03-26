@@ -7,7 +7,7 @@ const { splitString } = require("../utils/text");
 
 class PaymentService {
   // 🔹 Add user balance
-    static async updateUserBalance(gateway, transactionDate, description, transferAmount) {
+    static async updateUserBalance(gateway, description, transferAmount) {
         let userId = '';
         let transactionId = '';
         
@@ -23,12 +23,13 @@ class PaymentService {
         // Update user balance
         user.balance += transferAmount;
         await user.save();
+        const newBalance = user.balance;
 
         // Update transaction status
         // 🔹 Find and update
         const transaction = await Transaction.findOneAndUpdate(
             { transactionId: transactionId, userId: convertToObjectId(userId), transactionStatus: "pending" }, 
-            { transactionStatus: "success", updatedAt: new Date() },
+            { transactionStatus: "success", updatedAt: new Date(), gateway: gateway },
             { new: true }
         );
 
@@ -39,7 +40,7 @@ class PaymentService {
         // Write to log
 
         // Notify the client via WebSocket
-        getIO().to(userId).emit("recharge_success", { userId, transferAmount, gateway });
+        getIO().to(userId).emit("recharge_success", { userId, newBalance, gateway, transferAmount });
 
     return {
         message: "Nạp tiền thành công"

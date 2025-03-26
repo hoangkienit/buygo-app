@@ -7,8 +7,8 @@ class PaymentController {
         const key = req.headers.authorization || '';
         const attachKey = key.startsWith('Apikey ') ? key.replace('Apikey ', '') : null;
 
-        const { gateway, transactionDate, description, transferAmount } = req.body;
-        if (!gateway || !transactionDate || !description || !transferAmount) {
+        const { gateway, description, transferAmount } = req.body;
+        if (!gateway || !description || !transferAmount) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
       
@@ -23,7 +23,7 @@ class PaymentController {
       }
 
     try {
-        const response = await PaymentService.updateUserBalance(gateway, transactionDate, description, transferAmount);
+        const response = await PaymentService.updateUserBalance(gateway, description, transferAmount);
         return res.status(200).json({ success: true, message: response.message, data: null });
     } catch (error) {
         console.log(error);

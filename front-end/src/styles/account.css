@@ -1,9 +1,8 @@
 .account-container {
     display: flex;
-    width: 1200px;
     min-height:520px;
     justify-content: center;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 50px auto;
 }
 

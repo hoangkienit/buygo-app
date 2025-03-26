@@ -5,7 +5,12 @@ const TransactionController = require('../controllers/transaction.controller');
 const router = express.Router();
 
 
-router.get('/:transactionId', verifyMiddleware, TransactionController.getTransaction);
+router.get('/get-transaction/transactions', verifyMiddleware, TransactionController.getTransactionList);
+
+router.get('/get-transaction/:transactionId', verifyMiddleware, TransactionController.getTransaction);
+
+router.put('/cancel-transaction/:transactionId', verifyMiddleware, TransactionController.cancelTransaction);
+
 router.post('/create-transaction', verifyMiddleware, TransactionController.createTransaction);
 
 

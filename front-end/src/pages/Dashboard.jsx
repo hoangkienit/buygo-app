@@ -78,7 +78,7 @@ const Dashboard = () => {
 
       <div className="fake-data-grid">
         {fakeData.filter(item => item.category === category).map((item, index) => (
-          <div key={index} className="fake-data-item">
+          <a href="/product" key={index} className="fake-data-item">
             {/* Image on the Left */}
             <img src={item.image} alt={item.name} className="fake-data-image" />
 
@@ -97,7 +97,7 @@ const Dashboard = () => {
                 </span>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>

@@ -30,6 +30,21 @@ export const login = async (username, password) => {
   }
 };
 
+// Login function
+export const logout = async () => {
+  try {
+    const response = await axios.post(`${BASE_API_URL_V1}/auth/logout`, {},
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.log("Log out error: " + error);
+  }
+};
+
 // Register function
 export const register = async (username, email, password) => {
   try {

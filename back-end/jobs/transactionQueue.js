@@ -14,7 +14,7 @@ cron.schedule("* * * * *", async () => {
       { transactionStatus: "pending", createdAt: { $lte: expiredTime } },
       { transactionStatus: "failed" }
     );
-    console.log("Checked pending transactions and marked as failed.");
+    console.log(`Marked failed pending transaction.`);
   } catch (error) {
     console.error("Error updating transactions:", error);
   } finally {

@@ -6,11 +6,12 @@ import { FaCheckCircle } from "react-icons/fa";
 import socket from "../services/socket";
 import { ClipLoader, HashLoader } from "react-spinners";
 import AccountLayout from "../layouts/AccountLayout";
-import { getTransaction } from "../api/transaction.api";
+import { cancelTransaction, getTransaction } from "../api/transaction.api";
 import CountdownTimer from "../components/timer-count/timer-count";
-import { useLocation } from "react-router-dom";
 import { truncateText } from "../utils/text";
 import { useUser } from "../context/UserContext";
+import { handleUnauthorizedError } from "../utils/handleError";
+import ConfirmationModal from "../components/confirm-box/confirm-box";
 
 const Payment = () => {
     const { transactionId } = useParams();
@@ -20,18 +21,12 @@ const Payment = () => {
     const [pending, setPending] = useState(true);
     const [status, setStatus] = useState(pending ? "Đang chờ" : "Thành công");
     const [transactionData, setTransactionData] = useState(null);
-    const location = useLocation();
     const [timerReset, setTimerReset] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (location.state?.newTransaction) {
-        setTimerReset(true);
-        }
-    }, [location.state]);
-
-    const handleRechargeSuccess = useCallback(async ({ transferAmount, gateway }) => {
-        await updateBalance(transferAmount);
+    const handleRechargeSuccess = useCallback(async ({ newBalance, gateway, transferAmount }) => {
+        await updateBalance(newBalance);
         setSuccessObj({ amount: transferAmount, gateway });
         setPending(false);
     }, [updateBalance]);
@@ -78,8 +73,9 @@ const Payment = () => {
                 setTransactionData(res.data.transaction);
             }
         } catch (error) {
-            setLoading(false);
-            alert(error.message);
+          setLoading(false);
+          handleUnauthorizedError(error.message, navigate);
+          console.log(error.message);
         }
     }
     
@@ -88,7 +84,19 @@ const Payment = () => {
     };
 
     const onCancelTransaction = async() => {
-        navigate('/account/recharge')
+      try {
+        setLoading(true);
+        const res = await cancelTransaction(transactionId);
+
+        if (res.success) {
+          setShowModal(false);
+          navigate('/account/recharge');
+        }
+      } catch (error) {
+        handleUnauthorizedError(error.message, navigate);
+      } finally {
+        setLoading(false);
+      }
     }
 
     const onTimeUp = () => {
@@ -140,9 +148,16 @@ const Payment = () => {
 
     </div>
 
-    <button className="back-button" onClick={onCancelTransaction}>
-      Quay lại
+    <button className="back-button" onClick={() => setShowModal(true)}>
+      Hủy giao dịch
     </button>
+          {showModal && (
+        <ConfirmationModal
+          message="Nếu bạn đã chuyển khoản thành công mà hệ thống chưa cập nhật tiền, bạn hãy lưu ảnh chụp màn hình chuyển khoản và liên hệ với Admin để giải quyết nhé."
+          onConfirm={onCancelTransaction}
+          onClose={() => setShowModal(false)} // Close modal when clicking cancel or outside
+        />
+      )}
   </div>
         }
       </AccountLayout>

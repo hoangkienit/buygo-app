@@ -12,6 +12,9 @@ import Register from "./pages/Register";
 import { UserProvider } from "./context/UserContext";
 import Recharge from "./pages/Recharge";
 import Payment from "./pages/Payment";
+import Logout from "./pages/Logout";
+import Transaction from "./pages/Transaction";
+import Product from "./pages/Product";
 
 
 function App() {
@@ -23,6 +26,7 @@ function App() {
           {/* Public Routes */}
           <Route element={<MainLayout />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/product" element={<Product />} />
           </Route>
 
           {/* Auth Routes */}
@@ -31,10 +35,15 @@ function App() {
 
           {/* Protected Routes */}
           <Route element={<AuthLayout />}>
-            <Route element={<MainLayout />}>
+              {/* Auth Routes */}
+              <Route path="/logout" element={<Logout/>} />
+            <Route element={<MainLayout />}>                             
+                {/* Account Routes */}
                 <Route path="/account" element={<Account />} />
                 <Route path="/account/recharge" element={<Recharge />} />
-                <Route path="/account/recharge/:transactionId" element={<Payment/>} />
+                <Route path="/account/recharge/:transactionId" element={<Payment />} />
+                
+                <Route path="/transaction" element={<Transaction/>} />
             </Route>
           </Route>
 

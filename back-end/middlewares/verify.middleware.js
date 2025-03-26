@@ -4,11 +4,10 @@ const verifyMiddleware = async (req, res, next) => {
     try {
         // Get token from cookies
         const token = req.cookies.accessToken;
-
         if (!token) {
             return res.status(401).json({
                 success: false,
-                message: "Unauthorized! No token provided.",
+                message: "Token not found",
             });
         }
 
@@ -18,15 +17,14 @@ const verifyMiddleware = async (req, res, next) => {
                 if (err.name === "TokenExpiredError") {
                     return res.status(401).json({
                         success: false,
-                        message: "Session expired. Please log in again.",
+                        message: "Session expired",
                     });
                 }
                 return res.status(401).json({
                     success: false,
-                    message: "Invalid token!",
+                    message: "Invalid token",
                 });
             }
-
             req.user = decoded; // Attach user to request
             next();
         });

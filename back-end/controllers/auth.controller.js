@@ -47,6 +47,13 @@ class AuthController {
       return res.status(400).json({ success: false, message: error.message });
     }
   }
+
+  // 🔹 Logout User
+  static async logout(req, res) {
+    // Clear cookie
+    res.clearCookie("accessToken", { httpOnly: true, secure: true, sameSite: "Lax" });
+    return res.status(200).json({ success: true, message: "Logout successfully" });
+  }
 }
 
 module.exports = AuthController;

@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
   const updateBalance = async(amount) => {
     setUser((prevUser) => ({
       ...prevUser,
-      balance: (prevUser?.balance || 0) + amount,
+      balance: amount,
     }));
   };
 

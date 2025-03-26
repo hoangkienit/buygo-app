@@ -1,0 +1,163 @@
+/* TransactionPage.css */
+.transaction-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--seven);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.transaction-title {
+    text-align: start;
+    font-size: 18px;
+    font-family: 'montserrat-bold';
+    color: #fff;
+    padding-bottom: 10px;
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: 10px;
+    text-align: start;
+    white-space: nowrap;
+}
+
+.transaction-table th {
+    background: var(--eight);
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 14px;
+}
+
+.transaction-table tr {
+    color: #fff;
+    background-color: var(--primary);
+    font-family: 'montserrat-md';
+    font-size: 14px;
+}
+
+.transaction-table tr td{
+    text-align: start;
+}
+
+.transaction-table tr:nth-child(even) {
+}
+
+.transaction-table tr:hover {
+    background: var(--seven);
+}
+
+/* Loader styles */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination-btn {
+    background-color: var(--eight);
+    color: white;
+    border: none;
+    padding: 4px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-btn:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--eight);
+}
+
+.pagination-info {
+    font-size: 16px;
+    color: #fff;
+    font-family: 'montserrat-bold';
+    padding: 0px 30px;
+}
+
+.pagination-icon{
+    font-size: 20px;
+}
+
+.transaction-status{
+    font-weight: 600;
+}
+
+.success-status{
+    color: #2ecc71;
+}
+
+.pending-status {
+    color: #f1c40f;
+}
+
+.failed-status {
+    color: #e74c3c;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .transaction-container {
+        padding: 10px;
+    }
+
+    .transaction-title {
+        font-size: 16px;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transaction-container {
+        padding: 10px;
+    }
+
+    .transaction-title {
+        font-size: 14px;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 10px;
+        font-size: 11px;
+    }
+
+    .transaction-table {
+        min-width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+}

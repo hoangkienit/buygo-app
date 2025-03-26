@@ -1,0 +1,253 @@
+.product-container {
+    width: 80%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.product-left{
+    width: 70%;
+}
+
+.product-right {
+    width: 30%;
+}
+
+.breadcrumb {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.payment-container{
+    background-color: var(--seven);
+    margin-top: 30px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.payment-title{
+    font-family: 'montserrat-bold';
+    font-size: 17px;
+    color: #fff;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--eight);
+}
+
+.item-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px
+}
+
+.item-image{
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.item-info-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item-info-container .item-coin{
+    color: #b3b3b3;
+    font-family: 'montserrat-bold';
+    font-size: 12px;
+}
+
+.item-info-container .item-price {
+    color: var(--secondary);
+    font-family: 'montserrat-bold';
+    font-size: 13px;
+}
+
+.price-container{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 7px 2px;
+}
+
+.price-container .price-text{
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+}
+
+.checkout-button{
+    color: var(--eight) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    font-size: 12px;
+}
+
+.total-price-container{
+    display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: space-between;
+        font-family: 'montserrat-bold';
+        font-size: 16px;
+        padding: 10px 0;
+        border-top: 1px solid var(--eight);
+}
+
+.total-price-container .total-label{
+    color: #fff;
+}
+
+.total-price-container .total-amount {
+    color: var(--secondary);
+}
+
+.voucher-container{
+    display: flex;
+        flex-direction: row;
+        gap: 30px;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+}
+
+.voucher-icon{
+    font-size: 30px;
+    color: #fff;
+}
+
+.voucher-button{
+    width: 50%;
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+    text-align: end;
+    cursor: pointer;
+}
+
+.product {
+    display: flex;
+    gap: 20px;
+    background: var(--seven);;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-gallery {
+}
+
+.product-image {
+    width: 250px;
+    height: 290px;
+    border-radius: 8px;
+}
+
+.product-info {
+    flex: 2;
+}
+
+.product-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.price {
+    font-size: 22px;
+    color: red;
+    margin: 10px 0;
+}
+
+.description {
+    margin: 10px 0;
+    color: #555;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.buy-button,
+.cart-button {
+    background: red;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.cart-button {
+    background: orange;
+}
+
+.buy-button:hover {
+    background: darkred;
+}
+
+.cart-button:hover {
+    background: darkorange;
+}
+
+.details {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.details h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.details li {
+    margin-bottom: 5px;
+}
+
+.reviews {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.reviews h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.review-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+.review-item strong {
+    color: #333;
+}

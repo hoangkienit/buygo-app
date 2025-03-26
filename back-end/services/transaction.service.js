@@ -38,7 +38,41 @@ class TransactionService {
         return {
             transaction: transaction
     };
-  }
+    }
+
+    // 🔹 Get transaction list
+    static async getTransactionList(userId, limit = 20) {  
+        try {
+            const transactions = await Transaction.find({ userId: convertToObjectId(userId) }) // Find transactions by userId
+            .limit(limit) // Limit the number of transactions returned
+            .sort({ createdAt: -1 }) // Sort by most recent transactions
+            .exec();
+
+        if (!transactions || transactions.length === 0) {
+            return { transactions: [] };
+        }
+
+        return { transactions };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // 🔹 Cancel transaction
+    static async cancelTransaction(transactionId) {       
+        const transaction = await Transaction.findOneAndUpdate(
+            { transactionId: transactionId },
+            { transactionStatus: "failed" },
+            { new: true }
+        );
+        if (!transaction) {
+            throw new Error("Transaction not found");
+        }
+
+    return {
+        message: "Update transaction status successfully",
+    };
+    }
 }
 
 module.exports = TransactionService;

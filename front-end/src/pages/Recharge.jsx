@@ -6,6 +6,7 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../api/transaction.api";
 import { ClipLoader } from "react-spinners";
+import { handleUnauthorizedError } from "../utils/handleError";
 
 const Recharge = () => {
   const [amount, setAmount] = useState("");
@@ -22,10 +23,11 @@ const Recharge = () => {
 
       if (res.success) {
         setLoading(false);
-        navigate(`/account/recharge/${res?.data?.transactionId}`, { state: { newTransaction: true } });
+        navigate(`/account/recharge/${res?.data?.transactionId}`);
       }
     } catch (error) {
       setLoading(false);
+      handleUnauthorizedError(error.message, navigate);
       alert(error.message);
     }
   };
