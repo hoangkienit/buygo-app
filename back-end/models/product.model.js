@@ -10,6 +10,7 @@ const ProductSchema = new mongoose.Schema(
             required: true 
         },
         product_slug: { type: String, required: true },
+        product_category: { type: String, required: true },
         product_attributes: { type: mongoose.Schema.Types.Mixed, required: true }, // Chứa thông tin riêng của từng loại sản phẩm
 
     },
@@ -23,9 +24,8 @@ const TopUpPackageSchema = new mongoose.Schema({
   packages: [
     {
         img: { type: String, required: true },
-        name: { type: String, required: true }, // Tên gói nạp (Ví dụ: 105 FC, 585 FC)
-        price: { type: Number, required: true }, // Giá gói nạp
-        currency: { type: String, default: "VND" } // Đơn vị tiền tệ
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
     }
     ]
     },{
@@ -53,4 +53,4 @@ const Product = mongoose.model("Product", ProductSchema);
 const GameAccount = mongoose.model("Account", GameAccountSchema);
 const TopUpPackage = mongoose.model("TopUpPackage", TopUpPackageSchema);
 
-module.exports = { Product , TopUpPackage};
+module.exports = { Product , TopUpPackage, GameAccount};
