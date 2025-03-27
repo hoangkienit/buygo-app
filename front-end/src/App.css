@@ -23,4 +23,19 @@
     --eight: #134977;
     --nine: #2e5f89;
     --ten: #FF3B30;
+    --eleven: #0e3657;
+}
+
+.dark-theme {
+    --primary: #141414;
+    --secondary: #ffcc00;
+    --third: #302f5a;
+    --fourth: #4b7dff;
+    --fifth: #141432;
+    --six: #0e0a2f;
+    --seven: #000000;
+    --eight: gray;
+    --nine: #2e5f89;
+    --ten: #FF3B30;
+    --eleven: #262626;
 }

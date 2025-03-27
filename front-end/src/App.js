@@ -27,6 +27,8 @@ function App() {
           <Route element={<MainLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/product" element={<Product />} />
+              {/* Not Found Page */}
+              <Route path="*" element={<NotFound />} />
           </Route>
 
           {/* Auth Routes */}
@@ -37,7 +39,7 @@ function App() {
           <Route element={<AuthLayout />}>
               {/* Auth Routes */}
               <Route path="/logout" element={<Logout/>} />
-            <Route element={<MainLayout />}>                             
+              <Route element={<MainLayout />}>                             
                 {/* Account Routes */}
                 <Route path="/account" element={<Account />} />
                 <Route path="/account/recharge" element={<Recharge />} />
@@ -46,9 +48,6 @@ function App() {
                 <Route path="/transaction" element={<Transaction/>} />
             </Route>
           </Route>
-
-          {/* Not Found Page */}
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>

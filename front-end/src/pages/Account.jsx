@@ -10,11 +10,9 @@ import CURRENCY from './../assets/images/currency_icon.png'
 const AccountPage = () => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const { removeUser } = useAuth();
 
   const handleLogout = () => {
-    removeUser();
-    setTimeout(() => navigate('/'), 500);
+    navigate('/logout');
   }
   return (
     <AccountLayout title="Tài khoản của tôi">

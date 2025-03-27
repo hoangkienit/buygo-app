@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './header.css';
-import Logo from '../../assets/images/BUYGO1.png';
+import Logo from '../../assets/images/BUYGO_LOGO.png';
 import { FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { useUser } from '../../context/UserContext';
+import { MdLightMode, MdDarkMode } from "react-icons/md";
 
 const searchSuggestions = [
   "Steam Wallet 100$", "Google Play Gift Card", "PUBG Mobile UC", 
@@ -65,18 +66,33 @@ const Header = () => {
   }
   };
 
-  const handleCloseSearchPopup = () => {
-    if (window.innerWidth <= 768) { // Mobile width
-      setIsMobileSearchActive(false);
-      document.body.style.overflow = 'auto'
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-theme");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-theme");
+      localStorage.setItem("theme", "light");
     }
-  }
+  }, [darkMode]);
 
   return (
     <>
       <div className='top-header'>
-        <a className='top-header-link' href='/'>Hướng dẫn</a>
-        <a className='top-header-link' href='/'>Tuyển dụng</a>
+        <div className='top-header-link-container'>
+          <a className='top-header-link' href='/'>Hướng dẫn</a>
+          <a className='top-header-link' href='/'>Tuyển dụng</a>
+        </div>
+        <div className='toggle-theme-mode-container'>
+          {darkMode ? <MdDarkMode className='theme-icon' /> : <MdLightMode className='theme-icon'/>}
+          <button className={`toggle-btn ${darkMode ? "active" : ""}`} onClick={() => setDarkMode(!darkMode)}>
+          <div className="toggle-circle"></div>
+        </button>
+        </div>
       </div>
       <header className="header">     
         <div className="header-container">

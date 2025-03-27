@@ -83,7 +83,7 @@ const BottomNavbar = () => {
                 <li><a href="/account">Đơn hàng</a></li>
                 <li><a href="/transaction">Lịch sử giao dịch</a></li>
                 <li><a href="/account">Sản phẩm yêu thích</a></li>
-                <li><a href="/account">Đăng xuất</a></li>
+                <li><a href="/logout">Đăng xuất</a></li>
               </ul>
             </>
             :

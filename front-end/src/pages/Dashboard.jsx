@@ -4,6 +4,7 @@ import "../styles/dashboard.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { fakeData } from "../data/fake";
+import AccountSection from "../components/dashboard/account-section";
 
 const banners = [
   "https://elements-resized.envatousercontent.com/elements-preview-images/29961ce9-4919-49b0-a72d-fd9104b7042d?w=632&cf_fit=scale-down&q=85&format=auto&s=fbd666bd56dbb781cc84d18ff9d6d4e9a60a88293c5e9ba895b60afe320e9ab3",
@@ -70,6 +71,8 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
+
+      <AccountSection title={'eFootball'}/>
 
       <section className="fake-data-section">
   {Array.from(new Set(fakeData.map(item => item.category))).map(category => (

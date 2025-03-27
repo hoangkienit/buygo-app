@@ -19,7 +19,13 @@
     padding: 0 20px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+}
+
+.top-header-link-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .top-header .top-header-link{
@@ -317,6 +323,48 @@ html {
 
 .autocomplete-dropdown li:hover {
     background-color: #302f5a;
+}
+
+.toggle-btn {
+    width: 35px;
+    height: 17px;
+    background-color: #b4b4b4;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.toggle-btn.active {
+    background-color: var(--fourth);
+}
+
+.toggle-circle {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    left: 3px;
+    transition: transform 0.3s;
+}
+
+.toggle-btn.active .toggle-circle {
+    transform: translateX(20px);
+}
+
+.toggle-theme-mode-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-icon{
+    color: #ccc;
 }
 
 /* 🌍 RESPONSIVE DESIGN */
