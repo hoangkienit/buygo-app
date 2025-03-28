@@ -13,7 +13,7 @@ const AccountSection = ({title}) => {
                 </div>
                 <div className='account-info-container'>
                     <AccountCard />
-                    <AccountCard2 />
+                    <AccountCard />
                     <AccountCard />
                     <AccountCard />
                     <AccountCard />
@@ -29,7 +29,7 @@ const AccountSection = ({title}) => {
 
 const AccountCard = () => {
     return (
-        <a className='account-item-container'>
+        <a href='/admin' className='account-item-container'>
                         <img className='account-item-image' src={test} alt='product-img' />
                         <div className='account-item-info'>
                             <p className='item-name'>SIÊU PHẨM KHUNG NGON VÀ VIP PRO MS 795</p>
@@ -48,26 +48,6 @@ const AccountCard = () => {
                     </a>
     );
 }
-const AccountCard2 = () => {
-    return (
-        <a className='account-item-container'>
-                        <img className='account-item-image' src={test2} alt='product-img' />
-                        <div className='account-item-info'>
-                            <p className='item-name'>SIÊU PHẨM KHUNG NGON VÀ VIP PRO MS 795</p>
-                            <div className='order-type-price-container'>
-                                <div className='order-type-container'>
-                                    <BsFillCartCheckFill className="account-item-order-icon stock" />
-                                    <p className='available-text stock'>Có sẵn</p>
-                                </div>
-                                <p className='item-price'>2.900.000đ</p>
-                            </div>
-                            <div className='rating-sold-container'>
-                                <StarRating rating={5} />
-                                <p className='sold-text'>Đã bán 0</p>
-                            </div>
-                        </div>
-                    </a>
-    );
-}
+
 
 export default AccountSection;

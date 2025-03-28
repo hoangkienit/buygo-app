@@ -15,42 +15,45 @@ import Payment from "./pages/Payment";
 import Logout from "./pages/Logout";
 import Transaction from "./pages/Transaction";
 import Product from "./pages/Product";
+import { Admin } from "./pages/Admin";
+import AdminLayout from "./layouts/AdminLayout";
 
 
 function App() {
   return (
     <UserProvider>
       <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route element={<MainLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/product" element={<Product />} />
-              {/* Not Found Page */}
-              <Route path="*" element={<NotFound />} />
-          </Route>
+          <Router>
+            <Routes>
+              {/* Public Routes */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/product" element={<Product />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
 
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register/>} />
-
-          {/* Protected Routes */}
-          <Route element={<AuthLayout />}>
               {/* Auth Routes */}
-              <Route path="/logout" element={<Logout/>} />
-              <Route element={<MainLayout />}>                             
-                {/* Account Routes */}
-                <Route path="/account" element={<Account />} />
-                <Route path="/account/recharge" element={<Recharge />} />
-                <Route path="/account/recharge/:transactionId" element={<Payment />} />
-                
-                <Route path="/transaction" element={<Transaction/>} />
-            </Route>
-          </Route>
-        </Routes>
-      </Router>
-    </AuthProvider>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+
+              {/* Protected Routes */}
+              <Route element={<AuthLayout />}>
+                <Route path="/logout" element={<Logout />} />
+                <Route element={<MainLayout />}>
+                  <Route path="/account" element={<Account />} />
+                  <Route path="/account/recharge" element={<Recharge />} />
+                  <Route path="/account/recharge/:transactionId" element={<Payment />} />
+                  <Route path="/transaction" element={<Transaction />} />
+                </Route>
+              </Route>
+
+              {/* Admin Routes */}
+              <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+            </Routes>
+          </Router>
+      </AuthProvider>
     </UserProvider>
   );
 }
