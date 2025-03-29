@@ -39,6 +39,7 @@ export const Sidebar = ({ isSidebarOpen}) => {
     }, [isSidebarOpen]);
 
     const handleLinkClick = () => {
+        if (!isMobile()) return;
         const sidebarElement = document.querySelector('.sidebar');
         if (sidebarElement) {
             sidebarElement.classList.remove("open");
@@ -79,7 +80,7 @@ export const Sidebar = ({ isSidebarOpen}) => {
                         </div>
                     </Link>
 
-                    <Link to="/super-admin/products" className={`nav-selection-item ${location.pathname === "/super-admin/products" ? "active" : ""}`} onClick={handleLinkClick}>
+                    <Link to="/super-admin/products" className={`nav-selection-item ${location.pathname === "/super-admin/products" || location.pathname === "/super-admin/products/add-product" ? "active" : ""}`} onClick={handleLinkClick}>
                         <div className='nav-selection-icon-container'>
                             <BsBoxSeamFill />
                             <p className='nav-selection-text'>Sản phẩm</p>

@@ -1,16 +1,29 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './admin-add-product.css'
+import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
+import { ClipLoader } from "react-spinners";
+import { useNavigate } from 'react-router-dom';
+
 
 export const AdminAddProduct = () => {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedStatus, setSelectedStatus] = useState("");
     const [price, setPrice] = useState(0);
+    const [stock, setStock] = useState(0);
     const [displayPrice, setDisplayPrice] = useState("");
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
 
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        showToast("hello", "success");
+        showToast("hello", "error");
+    }, []);
 
     const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -39,6 +52,14 @@ export const AdminAddProduct = () => {
 
         setPrice(numericValue);
         setDisplayPrice(formattedPrice);
+    }
+
+    const handleAdd = async() => {
+        try {
+            
+        } catch (error) {
+            
+        }
     }
 
     return (
@@ -89,7 +110,7 @@ export const AdminAddProduct = () => {
                         onChange={(e) => {
                             setSelectedCategory(e.target.value);
                         }}
-                    >
+                        >
                         <option value="" disabled>Chọn danh mục sản phẩm</option>
                         <option value="topup_package">Gói nạp</option>
                         <option value="game_account">Tài khoản game</option>
@@ -106,8 +127,35 @@ export const AdminAddProduct = () => {
                             
                         </div>
                     </div>
+                    <div className='select-item-status-stock-container'>
+                        <div className='basic-info-header-container'><h3 className='basic-info-title'>Khác</h3></div>
+                        <div className='select-item-status-container'>
+                            <p className='select-item-status-title'>Trạng thái sản phẩm</p>
+                            <select
+                            className="status-selection"
+                            value={selectedStatus}
+                            onChange={(e) => {
+                                setSelectedStatus(e.target.value);
+                            }}
+                            >
+                                <option value="" disabled>Chọn</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div className='stock-container'>
+                            <p className='select-item-status-title'>Tồn kho</p>
+                            <input type='number' inputMode="numeric" onChange={(e) => setStock(e.target.value.replace(/\D/g, ''))} className='price-amount-input' required></input>
+                        </div>
+                    </div>
+                    <div className='submit-discard-buttons-container'>
+                        <button disabled={loading} className={`add-button ${loading ? "disabled-button" : ""}`}>{loading ? <ClipLoader color='#fff' size={20}/> : "Thêm" }</button>
+                        <button className='discard-button' onClick={() => navigate('/super-admin/products')}>Hủy bỏ</button>
+                    </div>
                 </div>
             </div>
+            {/** Toast */}
+            <ToastNotification/>
         </div>
     )
 }

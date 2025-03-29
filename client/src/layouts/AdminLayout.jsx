@@ -8,7 +8,7 @@ import { useUser } from "../context/UserContext";
 
 const AdminLayout = () => {
   const { user } = useUser();
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   
 
   if (user.role !== 'admin') {

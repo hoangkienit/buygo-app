@@ -121,7 +121,7 @@ const Header = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onFocus={() => setShowDropdown(true)}
               />
-              <FaSearch className="search-icon" onClick={handleSearchClick} />
+              <FaSearch className="header-search-icon" onClick={handleSearchClick} />
               
               {showDropdown && (
                 <ul className="autocomplete-dropdown">
