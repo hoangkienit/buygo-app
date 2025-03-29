@@ -1,16 +1,22 @@
 /* Main container */
 .admin-container {
     display: flex;
-    height: 100vh;
+    flex-direction: row;
+    min-height: 100vh;
     transition: margin-left 0.3s ease;
 }
 
 /* Sidebar */
 .sidebar {
+    position: sticky;
     width: 250px;
+    height: 100vh;
     background: var(--primary);
     color: white;
     transition: transform 0s ease, width 0s ease;
+    z-index: 1000;
+    left: 0;
+    top: 0;
 }
 
 .sidebar-logo-container{
@@ -89,8 +95,8 @@
 }
 
 .nav-selection-text{
-    font-family: 'montserrat-bold';
-    font-size: 14px;
+    font-family: 'montserrat-md';
+    font-size: 13px;
 }
 
 .nav-selection-notification{
@@ -124,12 +130,13 @@
 }
 
 /* Toggle Button */
-.toggle-btn {
+.toggle-menu-btn {
     background: none;
     border: none;
     color: white;
     font-size: 24px;
     cursor: pointer;
+    display: flex;
 }
 
 /* Main Area (Header + Content) */
@@ -145,8 +152,16 @@
     width: 100%;
 }
 
+.active {
+    border-radius: 8px;
+    background: linear-gradient(to right, rgba(46, 95, 137, 1), rgba(46, 95, 137, 0));
+}
+
 /* Header */
 .admin-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     background: var(--seven);
     color: white;
     display: flex;
@@ -159,26 +174,73 @@
 .admin-profile {
     display: flex;
     align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    background-color: var(--eight);
+    padding: 5px 10px;
+    border-radius: 30px;
 }
 
 .username {
-    margin-right: 20px;
+    width: 100%;
+    font-family: 'montserrat-bold';
+    font-size: 14px;
 }
 
-.logout-btn {
-    background: red;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
+.user-img{
+    width: 30px;
+    height: 30px;
+}
+
+.admin-profile-container {
+    position: relative;
+    display: inline-block;
+    border-radius: 30px;
+    box-shadow: 0px 0px 6px var(--eight);
+}
+
+.admin-dropdown {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    /* Adjust position below the profile */
+    background: white;
+    border: 1px solid #ddd;
     border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.logout-button-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: gray;
+    cursor: pointer;
+    gap: 5px;
+    padding: 5px;
+}
+
+.logout-button-container:hover{
+    background-color: #ddd;
+    border-radius: 30px;
+}
+
+.logout-text{
+    font-family: 'montserrat-md';
+    font-size: 14px;
 }
 
 /* Main content */
 .admin-content {
     flex-grow: 1;
-    padding: 20px;
     background: #ebebeb;
+    display: flex;
+    justify-content: center;
+    height: fit-content;
 }
 
 @media (max-width: 798px){

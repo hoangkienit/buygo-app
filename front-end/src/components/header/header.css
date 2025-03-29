@@ -328,7 +328,7 @@ html {
 .toggle-btn {
     width: 35px;
     height: 17px;
-    background-color: #b4b4b4;
+    background-color: gray !important;
     border-radius: 25px;
     display: flex;
     align-items: center;

@@ -33,7 +33,10 @@ const Login = () => {
 
       setLoading(false);
       authenticatedUser(res.data.user);
-      navigate("/");
+
+      if (res.data.user.role === 'admin') {
+        navigate("/super-admin/dashboard");
+      }else navigate("/");
       
     } catch (error) {
       setLoading(false);

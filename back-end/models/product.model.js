@@ -11,7 +11,12 @@ const ProductSchema = new mongoose.Schema(
         },
         product_slug: { type: String, required: true },
         product_category: { type: String, required: true },
-        product_attributes: { type: mongoose.Schema.Types.Mixed, required: true }, // Chứa thông tin riêng của từng loại sản phẩm
+        product_category: {
+          type: String,
+          enum: ["active", "inactive"],
+          default: "active"
+        },
+        product_attributes: { type: mongoose.Schema.Types.Mixed, required: true },
 
     },
     {

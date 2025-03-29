@@ -23,11 +23,11 @@ cron.schedule("* * * * *", async () => {
 });
 
 // Delete old transactions daily at midnight
-cron.schedule("0 0 * * *", async () => {
-  try {
-    await Transaction.deleteMany({ createdAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } });
-    console.log("Deleted old transactions.");
-  } catch (error) {
-    console.error("Error deleting transactions:", error);
-  }
-});
+// cron.schedule("0 0 * * *", async () => {
+//   try {
+//     await Transaction.deleteMany({ createdAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } });
+//     console.log("Deleted old transactions.");
+//   } catch (error) {
+//     console.error("Error deleting transactions:", error);
+//   }
+// });

@@ -29,3 +29,167 @@ export const fakeData = [
   { category: "Utilities", name: "Grammarly Premium", price: "3,500,000 VND/năm", image: "https://getnhanh.net/wp-content/uploads/2021/10/Tai-Khoan-Grammarly-Premium.jpg" },
   { category: "Utilities", name: "Canva Pro", price: "3,000,000 VND/năm", image: "https://quanghuong.vn/wp-content/uploads/2013/06/CANVAPRO.png" }
 ];
+
+export const productsFake = [
+  {
+    productId: "P001",
+    productName: "Laptop Asus ROG",
+    productPrice: 32000000,
+    productStatus: "active",
+    stock: 15,
+    createAt: "2024-03-01T10:30:00Z"
+  },
+  {
+    productId: "P002",
+    productName: "iPhone 15 Pro Max",
+    productPrice: 39990000,
+    productStatus: "Hết hàng",
+    stock: 0,
+    createAt: "2024-02-25T15:45:00Z"
+  },
+  {
+    productId: "P003",
+    productName: "Samsung Galaxy S24 Ultra",
+    productPrice: 34990000,
+    productStatus: "Còn hàng",
+    stock: 20,
+    createAt: "2024-02-20T12:10:00Z"
+  },
+  {
+    productId: "P004",
+    productName: "Tai nghe Sony WH-1000XM5",
+    productPrice: 6990000,
+    productStatus: "Còn hàng",
+    stock: 10,
+    createAt: "2024-01-15T09:00:00Z"
+  },
+  {
+    productId: "P005",
+    productName: "Chuột Logitech G Pro X Superlight",
+    productPrice: 2990000,
+    productStatus: "Còn hàng",
+    stock: 30,
+    createAt: "2024-01-10T18:20:00Z"
+  },
+  {
+    productId: "P006",
+    productName: "Bàn phím cơ Keychron K8",
+    productPrice: 2490000,
+    productStatus: "Còn hàng",
+    stock: 25,
+    createAt: "2024-01-05T14:50:00Z"
+  },
+  {
+    productId: "P007",
+    productName: "Màn hình LG UltraGear 27GN950",
+    productPrice: 15990000,
+    productStatus: "Còn hàng",
+    stock: 12,
+    createAt: "2024-02-01T11:30:00Z"
+  },
+  {
+    productId: "P008",
+    productName: "Máy ảnh Canon EOS R6",
+    productPrice: 51990000,
+    productStatus: "Hết hàng",
+    stock: 0,
+    createAt: "2024-02-10T08:10:00Z"
+  },
+  {
+    productId: "P009",
+    productName: "Loa JBL Charge 5",
+    productPrice: 3990000,
+    productStatus: "Còn hàng",
+    stock: 18,
+    createAt: "2024-03-05T16:00:00Z"
+  },
+  {
+    productId: "P010",
+    productName: "Smartwatch Apple Watch Series 9",
+    productPrice: 11990000,
+    productStatus: "Còn hàng",
+    stock: 22,
+    createAt: "2024-02-28T13:45:00Z"
+  },
+  {
+    productId: "P011",
+    productName: "Ổ cứng SSD Samsung 970 EVO Plus 1TB",
+    productPrice: 2990000,
+    productStatus: "Còn hàng",
+    stock: 50,
+    createAt: "2024-03-02T10:20:00Z"
+  },
+  {
+    productId: "P012",
+    productName: "Bộ phát Wi-Fi TP-Link Archer AX73",
+    productPrice: 2490000,
+    productStatus: "Còn hàng",
+    stock: 35,
+    createAt: "2024-03-08T17:40:00Z"
+  },
+  {
+    productId: "P013",
+    productName: "Bàn ghế gaming DXRacer",
+    productPrice: 5990000,
+    productStatus: "Hết hàng",
+    stock: 0,
+    createAt: "2024-02-18T19:00:00Z"
+  },
+  {
+    productId: "P014",
+    productName: "Micro thu âm Rode NT1",
+    productPrice: 4990000,
+    productStatus: "Còn hàng",
+    stock: 14,
+    createAt: "2024-01-20T09:50:00Z"
+  },
+  {
+    productId: "P015",
+    productName: "Camera an ninh Xiaomi Mi 360",
+    productPrice: 1290000,
+    productStatus: "Còn hàng",
+    stock: 40,
+    createAt: "2024-02-22T20:30:00Z"
+  },
+  {
+    productId: "P016",
+    productName: "Ổ cắm thông minh TP-Link HS110",
+    productPrice: 990000,
+    productStatus: "Còn hàng",
+    stock: 60,
+    createAt: "2024-03-06T07:20:00Z"
+  },
+  {
+    productId: "P017",
+    productName: "Balo chống nước Xiaomi Mi Casual",
+    productPrice: 590000,
+    productStatus: "Còn hàng",
+    stock: 45,
+    createAt: "2024-03-07T15:10:00Z"
+  },
+  {
+    productId: "P018",
+    productName: "Máy chiếu mini Anker Nebula",
+    productPrice: 7990000,
+    productStatus: "Còn hàng",
+    stock: 8,
+    createAt: "2024-01-30T11:00:00Z"
+  },
+  {
+    productId: "P019",
+    productName: "Đèn bàn LED thông minh Philips",
+    productPrice: 890000,
+    productStatus: "Còn hàng",
+    stock: 38,
+    createAt: "2024-03-04T09:40:00Z"
+  },
+  {
+    productId: "P020",
+    productName: "Quạt điều hòa Midea AC120-16AR",
+    productPrice: 5290000,
+    productStatus: "Hết hàng",
+    stock: 0,
+    createAt: "2024-02-15T18:50:00Z"
+  }
+];
+

@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import "./../styles/admin.css"; // Import CSS file
 import { Sidebar } from "../components/admin/sidebar";
 import { AdminHeader } from "../components/admin/header";
+import { useUser } from "../context/UserContext";
 
 
 const AdminLayout = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const { user } = useUser();
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  
+
+  if (user.role !== 'admin') {
+    return <Navigate to={'/unauthorized'}/>
+  }
+
+
   return (
     <div className="admin-container">
       {/* Sidebar */}

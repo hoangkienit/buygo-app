@@ -1,0 +1,321 @@
+.admin-product-container {
+    width: 95%;
+    height: fit-content;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0px;
+    margin: 20px 0;
+}
+
+.header-search-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 300px;
+}
+
+.header-search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+    background-color: lightgray;
+}
+
+.header-search-input:focus {
+    border: 1px solid #000;
+    color: #000;
+}
+
+.header-search-input::placeholder {
+    font-family: 'montserrat-md';
+    font-size: 13px;
+    color: #000;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    color: #000;
+    cursor: pointer;
+}
+
+.admin-product-header {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0px 0px;
+    width: 100%;
+}
+
+.search-filter-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-selection {
+    padding: 5px;
+    border-radius: 5px;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+}
+
+.add-product-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--eight);
+    box-shadow: 0px 0px 6px rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.add-product-button-container:hover {
+    transform: scale(1.05);
+}
+
+.add-text {
+    font-family: 'montserrat-md';
+    font-size: 14px;
+    color: #fff;
+}
+
+.add-icon {
+    font-size: 20px;
+    color: #fff;
+}
+
+/* TABLE */
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+.product-table th,
+.product-table td {
+    padding: 10px;
+    text-align: start;
+    white-space: nowrap;
+}
+
+.product-table th {
+    background: var(--primary);
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 14px;
+}
+
+.product-table tr {
+    color: #000;
+    background-color: rgb(230, 230, 230);
+    font-family: 'montserrat-md';
+    font-size: 14px;
+    border-bottom: 1px solid rgb(197, 197, 197);
+}
+
+.product-table tr td {
+    text-align: start;
+}
+
+.transaction-table tr:nth-child(even) {}
+
+.product-table tr:hover {
+    background: rgb(214, 214, 214);
+}
+
+.table-product-img {
+    width: 70px;
+    height: 70px;
+}
+
+.table-product-name {
+    cursor: pointer;
+}
+
+.table-product-name:hover {
+    text-decoration: underline;
+}
+
+.product-active {
+    text-align: center;
+    background-color: #2ecc71;
+    padding: 5px;
+    border-radius: 30px;
+    color: #fff;
+    box-shadow: 0px 4px 10px rgba(46, 204, 113, 0.5), 0px 0px 10px rgba(46, 204, 113, 0.3);
+}
+
+.product-inactive {
+    text-align: center;
+    background-color: #e74c3c;
+    padding: 5px;
+    border-radius: 30px;
+    color: #fff;
+    box-shadow: 0px 4px 10px rgba(231, 76, 60, 0.5), 0px 0px 10px rgba(231, 76, 60, 0.3);
+}
+
+.action-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    font-size: 20px;
+    cursor: pointer;
+    width: 30px;
+    background-color: rgb(187, 187, 187);
+}
+
+.action-container:hover {
+    background-color: rgb(187, 187, 187) !important;
+    box-shadow: none;
+}
+
+.action-cell {
+    position: relative;
+}
+
+.action-modal {
+    position: absolute;
+    top: 80%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+    z-index: 10;
+}
+
+.action-modal button {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.action-modal button:hover {
+    background: #f0f0f0;
+}
+
+.edit-btn {
+    color: #007bff;
+}
+
+.delete-btn {
+    color: #dc3545;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0px;
+}
+
+.pagination-btn {
+    background-color: var(--eight);
+    color: white;
+    border: none;
+    padding: 4px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-btn:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--eight);
+}
+
+.pagination-info {
+    font-size: 16px;
+    color: #000;
+    font-family: 'montserrat-bold';
+    padding: 0px 30px;
+}
+
+.pagination-icon {
+    font-size: 20px;
+}
+
+.product-table-container{
+    width: 95%;
+    display: flex;
+    justify-content: center;
+}
+
+.tab-nav-title{
+    width: 100%;
+    font-family: 'montserrat-bold';
+    font-size: 14px;
+    padding: 0px 20px;
+    color: grey;
+}
+
+@media (max-width: 768px){
+    .product-table-container {
+            width: 95%;
+            overflow-x: auto !important;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .product-table{
+            display: block;
+            max-width: 1200px;
+            min-width: 400px;
+        }
+
+        .header-search-input-container {
+            width: 250px;
+        }
+
+    .filter-selection{
+        width: 80px;
+    }
+
+    .admin-product-header{
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .admin-table-container {
+            overflow-x: auto;
+            display: block;
+        }
+}

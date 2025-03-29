@@ -50,7 +50,7 @@ const BottomNavbar = () => {
       </nav>
 
       {/* Popups */}
-      <div className={`popup popup-left ${activePopup === "category" ? "active" : ""}`}>
+      <div className={`popup popup-left ${activePopup === "category" ? "popup-active" : ""}`}>
         <div className="popup-content">
           <h3>Danh mục</h3>
           <ul>
@@ -62,7 +62,7 @@ const BottomNavbar = () => {
         </div>
       </div>
 
-      <div className={`popup popup-right ${activePopup === "account" ? "active" : ""}`}>
+      <div className={`popup popup-right ${activePopup === "account" ? "popup-active" : ""}`}>
         <div className="popup-content">
           {user ? 
             <>
@@ -95,7 +95,7 @@ const BottomNavbar = () => {
         </div>
       </div>
 
-      <div className={`popup popup-bottom ${activePopup === "chat" ? "active" : ""}`}>
+      <div className={`popup popup-bottom ${activePopup === "chat" ? "popup-active" : ""}`}>
         <div className="popup-content">
           <h3>Liên hệ</h3>
             <a href="https://zalo.me/yourZaloID" target="_blank" rel="noopener noreferrer" className="popup-contact">

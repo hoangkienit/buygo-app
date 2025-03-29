@@ -29,7 +29,7 @@ const AccountSection = ({title}) => {
 
 const AccountCard = () => {
     return (
-        <a href='/admin' className='account-item-container'>
+        <a href='/' className='account-item-container'>
                         <img className='account-item-image' src={test} alt='product-img' />
                         <div className='account-item-info'>
                             <p className='item-name'>SIÊU PHẨM KHUNG NGON VÀ VIP PRO MS 795</p>

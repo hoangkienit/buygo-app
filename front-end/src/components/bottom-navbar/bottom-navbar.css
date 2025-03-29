@@ -61,7 +61,7 @@
     height: 100vh;
 }
 
-.popup-left.active {
+.popup-left.popup-active {
     transform: translateX(0);
 }
 
@@ -73,7 +73,7 @@
     transform: translateX(100%);
 }
 
-.popup-right.active {
+.popup-right.popup-active {
     transform: translateX(0);
 }
 
@@ -86,7 +86,7 @@
     border-radius: 10px 10px 0 0;
 }
 
-.popup-bottom.active {
+.popup-bottom.popup-active {
     transform: translateX(-50%) translateY(0);
 }
 

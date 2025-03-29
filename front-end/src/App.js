@@ -15,8 +15,13 @@ import Payment from "./pages/Payment";
 import Logout from "./pages/Logout";
 import Transaction from "./pages/Transaction";
 import Product from "./pages/Product";
-import { Admin } from "./pages/Admin";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import AdminLayout from "./layouts/AdminLayout";
+import Unauthorized from "./pages/Unauthorized";
+import { AdminPayment } from "./pages/admin/AdminPayment";
+import { AdminProduct } from "./pages/admin/AdminProduct";
+import { AdminAddProduct } from "./pages/admin/AdminAddProduct";
+
 
 
 function App() {
@@ -30,6 +35,7 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/product" element={<Product />} />
                 <Route path="*" element={<NotFound />} />
+                <Route path="/unauthorized" element={<Unauthorized/>} />
               </Route>
 
               {/* Auth Routes */}
@@ -49,7 +55,10 @@ function App() {
 
               {/* Admin Routes */}
               <Route element={<AdminLayout />}>
-                <Route path="/admin" element={<Admin />} />
+                <Route path="/super-admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/super-admin/payment" element={<AdminPayment />} />
+                <Route path="/super-admin/products" element={<AdminProduct />} />
+                <Route path="/super-admin/products/add-product" element={<AdminAddProduct />} />
               </Route>
             </Routes>
           </Router>
