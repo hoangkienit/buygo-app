@@ -37,6 +37,7 @@ class ProductService {
         product_status,
         product_stock,
         image,
+        product_price,
         product_attributes
     ) {
         // 🔹 Check if product existed
@@ -69,28 +70,38 @@ class ProductService {
 
 
         if (existingProduct.product_type === "game_account") {
-            // 🔒 Hash password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(product_attributes?.password, salt);
-            
-            var newGameAccount = new GameAccount({
-                account: {
-                    username: product_attributes?.username,
-                    password: hashedPassword,
-                    price: product_attributes?.price,
-                    sold: false
-                }
+            if (!Array.isArray(product_attributes)) {
+                throw new Error("product_attributes must be an array");
+            }
+
+            // Hash passwords for each account entry
+            const hashedAccounts = await Promise.all(
+                product_attributes.map(async (attr) => {
+                    const salt = await bcrypt.genSalt(10);
+                    const hashedPassword = await bcrypt.hash(attr.password, salt);
+
+                    return {
+                        username: attr.username,
+                        password: hashedPassword,
+                        sold: false
+                    };
+                })
+            );
+
+            // Create new GameAccount entry
+            const newGameAccount = new GameAccount({
+                price: product_price || 0, // Assuming price is same for all
+                account: hashedAccounts
             });
 
             await newGameAccount.save();
+
+            existingProduct.product_attributes = newGameAccount;
+            await existingProduct.save();
         } else {
             throw new Error("Invalid product type")
         }
 
-        if (newGameAccount) {
-            existingProduct.product_attributes = newGameAccount;
-            await existingProduct.save();
-        }
         
         return {
             message: "Create product successfully",

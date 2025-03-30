@@ -9,3 +9,14 @@ export const getFileType = (uri) => {
 
   return fileExtension === "png" ? "image/png" : "image/jpeg";
 };
+
+export const getProductTypeObject = (selectedType) => {
+        switch (selectedType) {
+            case "topup_package":
+                return { name: "", price: 0 }
+            case "game_account":
+                return { username: "", password: "" }     
+            default:
+                return {}
+        }
+    }

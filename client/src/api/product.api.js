@@ -10,8 +10,7 @@ export const addNewAccountProduct = async (
     product_category,
     product_status,
     product_stock,
-    product_username,
-    product_password,
+    product_attributes,
     product_price
 ) => {
     try {
@@ -24,11 +23,8 @@ export const addNewAccountProduct = async (
         formData.append("product_category", product_category);
         formData.append("product_status", product_status);
         formData.append("product_stock", product_stock);
-        formData.append("product_attributes", JSON.stringify({
-            username: product_username,
-            password: product_password,
-            price: product_price
-        }));
+        formData.append("product_price", product_price);
+        formData.append("product_attributes", JSON.stringify(product_attributes));
 
     const response = await axios.post(`${BASE_API_URL_V1}/product/add-product`, formData, {
       headers: {

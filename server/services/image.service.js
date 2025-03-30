@@ -49,7 +49,7 @@ class ImageService {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: folder,
-            public_id: `img_${Date.now()}`,
+            public_id: `product_${Date.now()}`,
             format: 'webp',
             transformation: [{ quality: 'auto' }],
           },

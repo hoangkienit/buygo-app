@@ -1,5 +1,5 @@
 const ProductService = require("../services/product.service");
-const { validateProduct } = require("../utils/validation");
+const { validateProduct, validateProductAttributes } = require("../utils/validation");
 
 class ProductController {
     // 🔹 Get All Product
@@ -27,29 +27,40 @@ class ProductController {
             product_category,
             product_status,
             product_stock,
+            product_price,
             product_attributes
         } = req.body;
+        console.log(product_price)
+        console.log(JSON.parse(product_attributes));
 
         if (!req.file) {
             return res.status(400).json({ success: false, error: 'No file uploaded' });
         }
 
-        const errors = validateProduct({
+        let errors = validateProduct({
             product_name,
             product_description,
             product_type,
             product_category,
             product_status,
             product_stock,
+            product_price
         });
         if (errors && errors.length > 0) {
             return res.status(400).json({ success: false, error: errors[0].message });
         }
 
-        //TODO: Validate this
+        
+        // Validate product attributes
         let productAttributes = null;
         if (product_attributes) {
             productAttributes = JSON.parse(product_attributes);
+        }
+        console.log(productAttributes);
+
+        errors = validateProductAttributes({ product_type, productAttributes });
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
         }
 
         try {
@@ -61,6 +72,7 @@ class ProductController {
                 product_status,
                 product_stock,
                 req.file,
+                product_price,
                 productAttributes
             );
 

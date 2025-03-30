@@ -295,6 +295,20 @@
     width: 100%;
 }
 
+.action-buttons-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0px 10px;
+}
+
+.action-button{
+    font-size: 20px;
+    cursor: pointer;
+}
+
 @media (max-width: 768px){
     .product-table-container {
             width: 95%;
@@ -331,4 +345,18 @@
             overflow-x: auto;
             display: block;
         }
+
+    .search-filter-container{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .filter-selection {
+        width: 150px;
+    }
+
+    .action-cell{
+        position: static;
+    }
 }

@@ -10,7 +10,7 @@ const ToastNotification = () => {
 export const showToast = (message, type = "error") => {
   toast[type](message, {
     position: "bottom-right",
-    autoClose: 3000,
+    autoClose: 5000,
     closeButton: false,
     className: `custom-toast`,
   });

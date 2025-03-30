@@ -113,7 +113,54 @@ const idSchema = Joi.string()
         "number.base": "Số lượng sản phẩm phải là số nguyên.",
         "number.min": "Số lượng sản phẩm không thể nhỏ hơn {#limit}.",
         "any.required": "Số lượng sản phẩm là bắt buộc."
+    }),
+    product_price: Joi.number().integer().required().messages({
+        "number.base": "Giá sản phẩm phải là số nguyên.",
+        "number.min": "Giá sản phẩm không thể nhỏ hơn {#limit}.",
+        "any.required": "Giá sản phẩm là bắt buộc."
     })
+  });
+
+  const productAttributesSchema = Joi.object({
+    product_type: Joi.string().valid("game_account", "topup_package").required(),
+
+    productAttributes: Joi.when("product_type", {
+        is: "topup_package",
+        then: Joi.array().items(
+            Joi.object({
+                name: Joi.string()
+                    .pattern(/^[a-zA-Z0-9\s]+$/)
+                    .required()
+                    .messages({
+                        "string.pattern.base": "Name can only contain letters and numbers.",
+                    }),
+                price: Joi.number().required().messages({
+                    "number.base": "Price must be a number.",
+                }),
+            })
+        ).min(1).required(),
+        
+        otherwise: Joi.when("product_type", {
+            is: "game_account",
+            then: Joi.array().items(
+                Joi.object({
+                    username: Joi.string()
+                        .pattern(/^[a-zA-Z0-9\s]+$/)
+                        .required()
+                        .messages({
+                            "string.pattern.base": "Username can only contain letters and numbers.",
+                        }),
+                    password: Joi.string()
+                        .pattern(/^[a-zA-Z0-9\s]+$/)
+                        .required()
+                        .messages({
+                            "string.pattern.base": "Password can only contain letters and numbers.",
+                        }),
+                })
+            ).min(1).required(),
+            otherwise: Joi.forbidden(), // Explicitly disallow other values
+        }),
+    }),
 });
 
 module.exports = {
@@ -123,4 +170,5 @@ module.exports = {
     validateId: (data) => validate(idSchema, data),
     validateWebhookDescription: (data) => validate(webhookDescriptionSchema, data),
     validateProduct: (data) => validate(productValidationSchema, data),
+    validateProductAttributes: (data) => validate(productAttributesSchema, data),
 };

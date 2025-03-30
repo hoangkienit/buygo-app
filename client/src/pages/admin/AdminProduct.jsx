@@ -2,26 +2,37 @@ import React, { useEffect, useRef, useState } from "react";
 import "./admin-product.css";
 import { FaSearch } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
-import { productsFake } from "../../data/fake";
 import { HiDotsVertical } from "react-icons/hi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { HashLoader } from "react-spinners";
 import { getProducts } from "../../api/product.api";
+import { FaEye } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const ITEMS_PER_PAGE = 8;
 
 export const AdminProduct = () => {
     const [products, setProducts] = useState([]);
     const [selected, setSelected] = useState("");
+    const [selectedProductType, setSelectedProductType] = useState("game_account");
     const [searchInput, setSearchInput] = useState("");
     const [openActionId, setOpenActionId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [loading, setLoading] = useState(false);
     const modalRef = useRef(null);
 
     useEffect(() => {
         fetchProductData();
+    }, []);
+
+    useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     const fetchProductData = async () => {
@@ -118,6 +129,16 @@ export const AdminProduct = () => {
                         <option value="active">Đang hoạt động</option>
                         <option value="inactive">Không hoạt động</option>
                     </select>
+                    <select
+                        className="filter-selection"
+                        value={selectedProductType}
+                        onChange={(e) => {
+                            setSelectedProductType(e.target.value);
+                        }}
+                    >
+                        <option value="game_account">Tài khoản game</option>
+                        <option value="topup_package">Gói nạp</option>
+                    </select>
                 </div>
                 <a href="/super-admin/products/add-product" className="add-product-button-container">
                     <MdOutlineAdd className="add-icon" />
@@ -141,45 +162,61 @@ export const AdminProduct = () => {
                 </thead>
                 <tbody>
                     {currentProducts.length > 0 ? (
-                        currentProducts.map((tx) => (
-                            <tr key={tx.productId}>
-                                <td>
-                                    <img
-                                        className="table-product-img"
-                                        src={require("./../../assets/images/test-img.jpg")}
-                                        alt="product-img"
-                                    />
-                                </td>
-                                <td>{tx.productId}</td>
-                                <td><a className="table-product-name">{tx.product_name}</a></td>
-                                <td>{tx.product_attributes?.account?.price.toLocaleString()}đ</td>
-                                <td>{tx.product_stock}</td>
-                                <td>
-                                    <div className={`transaction-status ${tx.product_status === "active" ? "product-active" : "product-inactive"}`}>{tx.product_status}</div>
-                                </td>
-                                <td>{new Date(tx.createdAt).toLocaleString()}</td>
-                                <td className="action-cell">
-                                    <button
-                                        className="action-container"
-                                        onClick={() => setOpenActionId(openActionId === tx.productId ? null : tx.productId)}
-                                    >
-                                        <HiDotsVertical />
-                                    </button>
-                                    {openActionId === tx.productId && (
-                                        <div ref={modalRef} className="action-modal">
-                                            <button className="view-btn">Xem</button>
-                                            <button className="edit-btn">Chỉnh sửa</button>
-                                            <button className="delete-btn">Xóa</button>
-                                        </div>
-                                    )}
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="8">Không có sản phẩm.</td>
-                        </tr>
+    currentProducts
+        .filter((tx) => tx.product_type === "game_account") // Only include game_account products
+        .map((tx) => (
+            <tr key={tx.productId}>
+                <td>
+                    <img
+                        className="table-product-img"
+                        src={require("./../../assets/images/test-img.jpg")}
+                        alt="product-img"
+                        loading="lazy"
+                    />
+                </td>
+                <td>{tx.productId}</td>
+                <td><a className="table-product-name">{tx.product_name}</a></td>
+                <td>{tx.product_attributes?.price?.toLocaleString()}đ</td>
+                <td>{tx.product_stock}</td>
+                <td>
+                    <div className={`transaction-status ${tx.product_status === "active" ? "product-active" : "product-inactive"}`}>
+                        {tx.product_status}
+                    </div>
+                </td>
+                <td>{new Date(tx.createdAt).toLocaleString()}</td>
+                <td className="action-cell">
+                    {
+                        isMobile ? 
+                            <div className="action-buttons-container">
+                        <FaEye className="view-btn action-button"/>
+                        <FaEdit  className="edit-btn action-button"/>
+                        <MdDelete className="delete-btn action-button"/>
+                            </div> 
+                            :
+                            <>
+                                <button
+                        className="action-container"
+                        onClick={() => setOpenActionId(openActionId === tx.productId ? null : tx.productId)}
+                    >
+                        <HiDotsVertical />
+                    </button>
+                    {openActionId === tx.productId && (
+                        <div ref={modalRef} className="action-modal">
+                            <button className="view-btn">Xem</button>
+                            <button className="edit-btn">Chỉnh sửa</button>
+                            <button className="delete-btn">Xóa</button>
+                        </div>
                     )}
+                            </>
+                    }
+                </td>
+            </tr>
+        ))
+) : (
+    <tr>
+        <td colSpan="8">Không có sản phẩm nào</td>
+    </tr>
+)}
                 </tbody>
             </table>
             </div>

@@ -44,12 +44,14 @@ const TopUpPackageSchema = new mongoose.Schema(
 
 const GameAccountSchema = new mongoose.Schema(
   {
-    account: {
+    price: { type: Number, required: true },
+    account: [
+      {
         username: { type: String, required: true },
         password: { type: String, required: true },
-        price: { type: Number, required: true },
         sold: {type: Boolean, default: false}
-      },
+      }
+    ],
   },
   { timestamps: true }
 );

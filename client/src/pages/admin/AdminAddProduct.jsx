@@ -3,7 +3,8 @@ import './admin-add-product.css'
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from 'react-router-dom';
-import { addNewAccountProduct } from '../../api/product.api';
+import { addNewAccountProduct as addNewProduct } from '../../api/product.api';
+import { getProductTypeObject } from '../../utils';
 
 
 export const AdminAddProduct = () => {
@@ -17,10 +18,8 @@ export const AdminAddProduct = () => {
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
 
-    // For specific type
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
+    const [amount, setAmount] = useState("");
+    const [formData, setFormData] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -54,17 +53,42 @@ export const AdminAddProduct = () => {
         setDisplayPrice(formattedPrice);
     }
 
+    useEffect(() => {
+    const num = Number(amount);
+        if (num > 0) {
+            setFormData(() => 
+                Array.from({ length: num }, () => getProductTypeObject(selectedType))
+            );
+        } else {
+            setFormData([]);
+        }
+    }, [amount, selectedType]);  // Depend on selectedType
+
+
+
+    const handleInputChange = (index, field, value) => {
+        setFormData((prevData) =>
+            prevData.map((item, i) => (i === index ? { ...item, [field]: value } : item))
+        );
+    };
+
     const handleAddProduct = async () => {
         setLoading(true);
-        if (!image) {
+        if (!image || !productName || !selectedType || !selectedStatus || !stock) {
             showToast("Bạn phải cung cấp đầy đủ thông tin");
             setLoading(false);
             return;
         }
+
+        if (!validateInputs()) {
+            showToast("Vui lòng điền đầy đủ thông tin tài khoản", "error");
+            setLoading(false);
+            return;
+        }
+
         try {
             let response = null;
-            if (selectedType === "game_account") {
-                response = await addNewAccountProduct(
+            response = await addNewProduct(
                     image,
                     productName,
                     productDescription,
@@ -72,12 +96,9 @@ export const AdminAddProduct = () => {
                     "Mobile Game",
                     selectedStatus,
                     stock,
-                    username,
-                    password,
+                    formData,
                     price
-                );
-            }
-            
+                );           
 
             if (response?.success) {
                 showToast("Thêm sản phẩm thành công", "success");
@@ -88,6 +109,8 @@ export const AdminAddProduct = () => {
                 setPreview(null);
                 setImage(null);
                 setSelectedStatus("");
+                setAmount("");
+                setStock(0);
             }
         }
         catch (error) {
@@ -100,6 +123,22 @@ export const AdminAddProduct = () => {
         }
     }
 
+    const validateInputs = () => {
+        const newErrors = formData.map((item) => {
+        let error = {};
+            if (selectedType === 'game_account') {
+                if (!item.username) error.username = "Username is required.";
+                if (!item.password) error.password = "Password is required.";
+            }
+            else if (selectedType === 'topup_package') {
+                if (!item.name) error.username = "Username is required.";
+                if (!item.price) error.password = "Password is required.";
+            }
+            return error;
+            });
+        return newErrors.every((error) => Object.keys(error).length === 0);
+    };
+
     return (
         <div className='admin-add-product-container'>
             <span className='tab-nav-title'><a href='/super-admin/products'>Sản phẩm</a> / Thêm sản phẩm</span>
@@ -109,11 +148,11 @@ export const AdminAddProduct = () => {
                         <div className='basic-info-header-container'><h3 className='basic-info-title'>Thông tin cơ bản</h3></div>
                         <div className='input-container'>
                             <p className='input-title'>Tên sản phẩm</p>
-                            <input required className='input-field' placeholder='' onChange={(e) => setProductName(e.target.value)}/>
+                            <input value={productName} required className='input-field' placeholder='' onChange={(e) => setProductName(e.target.value)}/>
                         </div>
                         <div className='input-container'>
                             <p className='input-title'>Mô tả sản phẩm</p>
-                            <textarea required className='description-input-field' placeholder='' onChange={(e) =>setProductDescription(e.target.value)}/>
+                            <textarea value={productDescription} required className='description-input-field' placeholder='' onChange={(e) =>setProductDescription(e.target.value)}/>
                         </div>
                     </div>
                     <div className='add-image-container'>
@@ -147,29 +186,15 @@ export const AdminAddProduct = () => {
                         value={selectedType}
                         onChange={(e) => {
                             setSelectedType(e.target.value);
+                            setAmount(0);
                         }}
                         >
                             <option value="" disabled>Loại sản phẩm</option>
                             <option value="topup_package">Gói nạp</option>
                             <option value="game_account">Tài khoản game</option>
-                        </select>
+                        </select>                   
 
-                        {/** This is for admin provide account info */}
-                        {selectedType === "game_account" &&
-                            <>
-                                <div className='stock-container'>
-                                    <p className='select-item-status-title'>Tên đăng nhập</p>
-                                    <input type='text' onChange={(e) => setUsername(e.target.value)} className='price-amount-input' required></input>
-                                </div>
-
-                                <div className='stock-container'>
-                                    <p className='select-item-status-title'>Mật khẩu</p>
-                                    <input type='text' onChange={(e) => setPassword(e.target.value)} className='price-amount-input' required></input>
-                                </div>
-                            </>
-                        }
-
-                        <div className='pricing-container'>
+                        {selectedType !== 'topup_package' ? <div className='pricing-container'>
                             <div className='price-side'>
                                 <p className='pricing-input-title'>Giá</p>
                                 <input inputMode="numeric" onChange={(e) => handleFormatPrice(e.target.value)} value={displayPrice} className='price-amount-input' required></input>
@@ -179,8 +204,66 @@ export const AdminAddProduct = () => {
                                 <input className='price-currency-input' placeholder='đ' disabled/>
                             </div>
                             
-                        </div>
+                        </div> : null}
                     </div>
+                    {/** This is for admin provide account info */}
+                        {selectedType === "game_account" &&
+                        <div className='add-product-account-container'>
+                            <div className='basic-info-header-container'><h3 className='basic-info-title'>Thêm tài khoản</h3></div>
+                            <input value={amount} onChange={(e) => {
+                                setAmount(e.target.value);
+                            }} type='number' className='account-number-input' placeholder='Nhập số lượng tài khoản'></input>
+                            {formData.map((item, index) => (
+                                <div key={index} className='account-input-container'>
+                                    <p className='account-input-title'>Tài khoản {index + 1}</p>
+                                    <div className='account-inputs'>
+                                        <input
+                                            onChange={(e) => handleInputChange(index, "username", e.target.value)}
+                                            type='text'
+                                            value={item.username}
+                                            className='account-input'
+                                            placeholder='Tài khoản'></input>
+                                        <input
+                                            onChange={(e) => handleInputChange(index, "password", e.target.value)}
+                                            type='text'
+                                            value={item.password}
+                                            className='account-input'
+                                            placeholder='Mật khẩu'></input>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    }
+                    {/* <button onClick={() => console.log(formData)}/> */}
+                    {/** This is for admin provide top up package info */}
+                        {selectedType === "topup_package" &&
+                        <div className='add-product-account-container'>
+                            <div className='basic-info-header-container'><h3 className='basic-info-title'>Thêm gói nạp</h3></div>
+                            <input onChange={(e) => {
+                                setAmount(e.target.value);
+                            }} type='number' className='account-number-input' placeholder='Nhập số lượng gói nạp'></input>
+                            {formData.map((item, index) => (
+                                <div key={index} className='account-input-container'>
+                                    <p className='account-input-title'>Gói nạp {index + 1}</p>
+                                    <div className='account-inputs'>
+                                        <input
+                                            onChange={(e) => handleInputChange(index, "name", e.target.value)}
+                                            type='text'
+                                            value={item.name}
+                                            className='account-input'
+                                            placeholder='Tên gói nạp'></input>
+                                        <input
+                                            onChange={(e) => handleInputChange(index, "price", Number(e.target.value.replace(/\D/g, '')))}
+                                            // type='number'
+                                            value={item.price ? item.price.toLocaleString('vi-VN') : 0}
+                                            className='account-input'
+                                            placeholder='Giá'></input>
+                                    </div>
+                                </div>
+                            ))}
+                            
+                        </div>
+                        }
                     <div className='select-item-status-stock-container'>
                         <div className='basic-info-header-container'><h3 className='basic-info-title'>Khác</h3></div>
                         <div className='select-item-status-container'>
@@ -193,13 +276,13 @@ export const AdminAddProduct = () => {
                             }}
                             >
                                 <option value="" disabled>Chọn</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="active">Active (hiển thị)</option>
+                                <option value="inactive">Inactive (không hiển thị)</option>
                             </select>
                         </div>
                         <div className='stock-container'>
-                            <p className='select-item-status-title'>Tồn kho</p>
-                            <input type='number' inputMode="numeric" onChange={(e) => setStock(Number(e.target.value.replace(/\D/g, '')))} className='price-amount-input' required></input>
+                            <p className='select-item-status-title'>Tồn kho (số lượng)</p>
+                            <input value={stock} placeholder='0' type='number' inputMode="numeric" onChange={(e) => setStock(Number(e.target.value.replace(/\D/g, '')))} className='price-amount-input' required></input>
                         </div>
                     </div>
                     <div className='submit-discard-buttons-container'>
