@@ -1,20 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./admin-product.css";
 import { FaSearch } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
 import { productsFake } from "../../data/fake";
 import { HiDotsVertical } from "react-icons/hi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import { HashLoader } from "react-spinners";
+import { getProducts } from "../../api/product.api";
 
 const ITEMS_PER_PAGE = 8;
 
 export const AdminProduct = () => {
-    const [products] = useState(productsFake);
+    const [products, setProducts] = useState([]);
     const [selected, setSelected] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [openActionId, setOpenActionId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
 
+    const [loading, setLoading] = useState(false);
+    const modalRef = useRef(null);
+
+    useEffect(() => {
+        fetchProductData();
+    }, []);
+
+    const fetchProductData = async () => {
+        try {
+            setLoading(true);
+
+            const res = await getProducts();
+
+            if (res.success) {
+                setProducts(res.data.products);
+            }
+        }
+        catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (modalRef.current && !modalRef.current.contains(event.target)) {
+                    setOpenActionId(null);
+                }
+            };
+    
+            if (openActionId) {
+                document.addEventListener("mousedown", handleClickOutside);
+            }
+    
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [openActionId]);
     // Filter products based on search & status selection
     const filteredProducts = products.filter((product) => {
         const matchesSearch = product.productId.toLowerCase().includes(searchInput.toLowerCase());
@@ -41,6 +84,12 @@ export const AdminProduct = () => {
         }
     };
 
+    if (loading) {
+        return <div className="loader-container">
+            <HashLoader color="#092339"/>
+        </div>
+    }
+
     return (
         <div className="admin-product-container">
             <p className="tab-nav-title">Sản phẩm</p>
@@ -64,7 +113,7 @@ export const AdminProduct = () => {
                             setCurrentPage(1); // Reset pagination on filter change
                         }}
                     >
-                        <option value="">Bộ lọc</option>
+                        <option value="" disabled>Bộ lọc</option>
                         <option value="all">Tất cả</option>
                         <option value="active">Đang hoạt động</option>
                         <option value="inactive">Không hoạt động</option>
@@ -102,13 +151,13 @@ export const AdminProduct = () => {
                                     />
                                 </td>
                                 <td>{tx.productId}</td>
-                                <td><a className="table-product-name">{tx.productName}</a></td>
-                                <td>{tx.productPrice.toLocaleString()}đ</td>
-                                <td>{tx.stock}</td>
+                                <td><a className="table-product-name">{tx.product_name}</a></td>
+                                <td>{tx.product_attributes?.account?.price.toLocaleString()}đ</td>
+                                <td>{tx.product_stock}</td>
                                 <td>
-                                    <div className={`transaction-status ${tx.productStatus === "active" ? "product-active" : "product-inactive"}`}>{tx.productStatus}</div>
+                                    <div className={`transaction-status ${tx.product_status === "active" ? "product-active" : "product-inactive"}`}>{tx.product_status}</div>
                                 </td>
-                                <td>{new Date(tx.createAt).toLocaleString()}</td>
+                                <td>{new Date(tx.createdAt).toLocaleString()}</td>
                                 <td className="action-cell">
                                     <button
                                         className="action-container"
@@ -117,7 +166,8 @@ export const AdminProduct = () => {
                                         <HiDotsVertical />
                                     </button>
                                     {openActionId === tx.productId && (
-                                        <div className="action-modal">
+                                        <div ref={modalRef} className="action-modal">
+                                            <button className="view-btn">Xem</button>
                                             <button className="edit-btn">Chỉnh sửa</button>
                                             <button className="delete-btn">Xóa</button>
                                         </div>

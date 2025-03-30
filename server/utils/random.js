@@ -3,4 +3,9 @@ const generateTransactionId = () => {
     return `GD${randomNumber}`;
 }
 
-module.exports = {generateTransactionId}
+const generateProductId = () => {
+    const randomNumber = Math.floor(1000 + Math.random() * 9000); // 4-digit random number
+    return `SP${randomNumber}`;
+}
+
+module.exports = {generateTransactionId, generateProductId}

@@ -75,10 +75,52 @@ const idSchema = Joi.string()
     "any.required": "The string is required."
   });
 
+  const productValidationSchema = Joi.object({
+    product_name: Joi.string().min(3).max(255).required().messages({
+        "string.empty": "Tên sản phẩm không được để trống.",
+        "string.min": "Tên sản phẩm phải có ít nhất {#limit} ký tự.",
+        "string.max": "Tên sản phẩm không được vượt quá {#limit} ký tự.",
+        "any.required": "Tên sản phẩm là bắt buộc."
+    }),
+
+    product_description: Joi.string().allow("").max(1000).messages({
+        "string.max": "Mô tả sản phẩm không được vượt quá {#limit} ký tự."
+    }),
+
+    product_type: Joi.string()
+        .valid("topup_package", "game_account")
+        .required()
+        .messages({
+            "any.only": "Loại sản phẩm chỉ có thể là 'topup_package' hoặc 'game_account'.",
+            "any.required": "Loại sản phẩm là bắt buộc."
+        }),
+
+    product_category: Joi.string().min(3).max(255).required().messages({
+        "string.empty": "Danh mục sản phẩm không được để trống.",
+        "string.min": "Danh mục sản phẩm phải có ít nhất {#limit} ký tự.",
+        "string.max": "Danh mục sản phẩm không được vượt quá {#limit} ký tự.",
+        "any.required": "Danh mục sản phẩm là bắt buộc."
+    }),
+
+    product_status: Joi.string()
+        .valid("active", "inactive")
+        .default("active")
+        .messages({
+            "any.only": "Trạng thái sản phẩm chỉ có thể là 'active' hoặc 'inactive'."
+        }),
+
+    product_stock: Joi.number().integer().min(0).required().messages({
+        "number.base": "Số lượng sản phẩm phải là số nguyên.",
+        "number.min": "Số lượng sản phẩm không thể nhỏ hơn {#limit}.",
+        "any.required": "Số lượng sản phẩm là bắt buộc."
+    })
+});
+
 module.exports = {
     validateLogin: (data) => validate(loginSchema, data),
     validateRegister: (data) => validate(registerSchema, data),
     validateTransaction: (data) => validate(transactionSchema, data),
     validateId: (data) => validate(idSchema, data),
     validateWebhookDescription: (data) => validate(webhookDescriptionSchema, data),
+    validateProduct: (data) => validate(productValidationSchema, data),
 };

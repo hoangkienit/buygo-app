@@ -175,7 +175,9 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin: 20px 20px
+    width: 100%;
+    margin: 0px 0px 20px 0px;
+    padding: 0px 20px;
 }
 
 .price-side{
@@ -283,6 +285,10 @@
     background-color: grey;
     color: #fff;
     width: 30%;
+}
+
+.discard-button:hover{
+    background-color: grey;
 }
 
 .disabled-button{

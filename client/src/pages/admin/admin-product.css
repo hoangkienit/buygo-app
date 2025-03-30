@@ -198,7 +198,7 @@
 .action-modal {
     position: absolute;
     top: 80%;
-    right: 0;
+    right: 50%;
     background: white;
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
@@ -225,6 +225,10 @@
 
 .edit-btn {
     color: #007bff;
+}
+
+.view-btn {
+    color: goldenrod;
 }
 
 .delete-btn {
@@ -287,12 +291,21 @@
     color: grey;
 }
 
+.loader-container{
+    width: 100%;
+}
+
 @media (max-width: 768px){
     .product-table-container {
             width: 95%;
             overflow-x: auto !important;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
+        }
+
+        .action-modal{
+            right: 80px;
+            top: 7px;
         }
 
         .product-table{

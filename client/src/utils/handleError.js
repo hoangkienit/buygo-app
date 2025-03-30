@@ -1,7 +1,7 @@
 export const handleError = (error) => {
+  console.log(error);
   if (error.response) {
     const message = error.response.data.message;
-    console.log(error);
     throw new Error(message || "Có lỗi xảy ra.");
   } else if (error.request) {
     throw new Error("Lỗi mạng! Vui lòng kiểm tra kết nối của bạn.");

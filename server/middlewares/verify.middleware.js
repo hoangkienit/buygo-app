@@ -37,4 +37,24 @@ const verifyMiddleware = async (req, res, next) => {
     }
 };
 
-module.exports = { verifyMiddleware };
+const verifyAdminMiddleware = async (req, res, next) => {
+    try {
+        const role = req.user.role;
+        console.log(role);
+        if (role !== 'admin') {
+            return res.status(401).json({
+                success: false,
+                message: "You don't have permission to access this",
+            });
+        }
+        next();
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+module.exports = { verifyMiddleware, verifyAdminMiddleware };

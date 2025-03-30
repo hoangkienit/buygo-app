@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const connectDb = require('./config/db');
 const cookieParser = require("cookie-parser");
 const http = require("http");
+const multer = require('multer');
 const { initializeSocket } = require("./services/socket.service");
 require("./jobs/transactionQueue");
 
@@ -25,6 +26,11 @@ app.use(cors({
   credentials: true, // ✅ Allow cookies
 }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
+
+const upload = multer({ dest: "uploads/" });
+
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -35,6 +41,7 @@ app.use('/api/v1/auth', require('./routes/auth.route'));
 app.use('/api/v1/user', require('./routes/user.route'));
 app.use('/api/v1/payment', require('./routes/payment.route'));
 app.use('/api/v1/transaction', require('./routes/transaction.route'));
+app.use('/api/v1/product', require('./routes/product.route'));
 
 // Start Server
 const PORT = process.env.PORT || 5000;

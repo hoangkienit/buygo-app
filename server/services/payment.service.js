@@ -43,7 +43,7 @@ class PaymentService {
         getIO().to(userId).emit("recharge_success", { userId, newBalance, gateway, transferAmount });
 
     return {
-        message: "Nạp tiền thành công"
+        message: "Recharge successfully"
     };
   }
 }

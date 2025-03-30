@@ -3,12 +3,13 @@ import './admin-add-product.css'
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from 'react-router-dom';
+import { addNewAccountProduct } from '../../api/product.api';
 
 
 export const AdminAddProduct = () => {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedType, setSelectedType] = useState("game_account");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [price, setPrice] = useState(0);
     const [stock, setStock] = useState(0);
@@ -16,21 +17,20 @@ export const AdminAddProduct = () => {
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
 
+    // For specific type
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
-    useEffect(() => {
-        showToast("hello", "success");
-        showToast("hello", "error");
-    }, []);
-
     const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImage(file);
-      setPreview(URL.createObjectURL(file)); // Generate preview
-    }
+        setImage(file);
+        setPreview(URL.createObjectURL(file)); // Generate preview
+        }
     };
     
     const handleImgClick = (event) => {
@@ -54,11 +54,49 @@ export const AdminAddProduct = () => {
         setDisplayPrice(formattedPrice);
     }
 
-    const handleAdd = async() => {
+    const handleAddProduct = async () => {
+        setLoading(true);
+        if (!image) {
+            showToast("Bạn phải cung cấp đầy đủ thông tin");
+            setLoading(false);
+            return;
+        }
         try {
+            let response = null;
+            if (selectedType === "game_account") {
+                response = await addNewAccountProduct(
+                    image,
+                    productName,
+                    productDescription,
+                    selectedType,
+                    "Mobile Game",
+                    selectedStatus,
+                    stock,
+                    username,
+                    password,
+                    price
+                );
+            }
             
-        } catch (error) {
-            
+
+            if (response?.success) {
+                showToast("Thêm sản phẩm thành công", "success");
+                setProductName("");
+                setProductDescription("");
+                setPrice(0);
+                setDisplayPrice("");
+                setPreview(null);
+                setImage(null);
+                setSelectedStatus("");
+            }
+        }
+        catch (error) {
+            setLoading(false);
+            showToast(error.message, "error");
+        }
+        finally {
+            setLoading(false);
+
         }
     }
 
@@ -71,11 +109,11 @@ export const AdminAddProduct = () => {
                         <div className='basic-info-header-container'><h3 className='basic-info-title'>Thông tin cơ bản</h3></div>
                         <div className='input-container'>
                             <p className='input-title'>Tên sản phẩm</p>
-                            <input required className='input-field' placeholder=''/>
+                            <input required className='input-field' placeholder='' onChange={(e) => setProductName(e.target.value)}/>
                         </div>
                         <div className='input-container'>
                             <p className='input-title'>Mô tả sản phẩm</p>
-                            <textarea required className='description-input-field' placeholder=''/>
+                            <textarea required className='description-input-field' placeholder='' onChange={(e) =>setProductDescription(e.target.value)}/>
                         </div>
                     </div>
                     <div className='add-image-container'>
@@ -106,15 +144,31 @@ export const AdminAddProduct = () => {
                         <div className='basic-info-header-container'><h3 className='basic-info-title'>Danh mục</h3></div>
                         <select
                         className="category-selection"
-                        value={selectedCategory}
+                        value={selectedType}
                         onChange={(e) => {
-                            setSelectedCategory(e.target.value);
+                            setSelectedType(e.target.value);
                         }}
                         >
-                        <option value="" disabled>Chọn danh mục sản phẩm</option>
-                        <option value="topup_package">Gói nạp</option>
-                        <option value="game_account">Tài khoản game</option>
+                            <option value="" disabled>Loại sản phẩm</option>
+                            <option value="topup_package">Gói nạp</option>
+                            <option value="game_account">Tài khoản game</option>
                         </select>
+
+                        {/** This is for admin provide account info */}
+                        {selectedType === "game_account" &&
+                            <>
+                                <div className='stock-container'>
+                                    <p className='select-item-status-title'>Tên đăng nhập</p>
+                                    <input type='text' onChange={(e) => setUsername(e.target.value)} className='price-amount-input' required></input>
+                                </div>
+
+                                <div className='stock-container'>
+                                    <p className='select-item-status-title'>Mật khẩu</p>
+                                    <input type='text' onChange={(e) => setPassword(e.target.value)} className='price-amount-input' required></input>
+                                </div>
+                            </>
+                        }
+
                         <div className='pricing-container'>
                             <div className='price-side'>
                                 <p className='pricing-input-title'>Giá</p>
@@ -145,11 +199,11 @@ export const AdminAddProduct = () => {
                         </div>
                         <div className='stock-container'>
                             <p className='select-item-status-title'>Tồn kho</p>
-                            <input type='number' inputMode="numeric" onChange={(e) => setStock(e.target.value.replace(/\D/g, ''))} className='price-amount-input' required></input>
+                            <input type='number' inputMode="numeric" onChange={(e) => setStock(Number(e.target.value.replace(/\D/g, '')))} className='price-amount-input' required></input>
                         </div>
                     </div>
                     <div className='submit-discard-buttons-container'>
-                        <button disabled={loading} className={`add-button ${loading ? "disabled-button" : ""}`}>{loading ? <ClipLoader color='#fff' size={20}/> : "Thêm" }</button>
+                        <button onClick={handleAddProduct} disabled={loading} className={`add-button ${loading ? "disabled-button" : ""}`}>{loading ? <ClipLoader color='#fff' size={20}/> : "Thêm" }</button>
                         <button className='discard-button' onClick={() => navigate('/super-admin/products')}>Hủy bỏ</button>
                     </div>
                 </div>
