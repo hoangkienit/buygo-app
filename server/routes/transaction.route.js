@@ -13,5 +13,8 @@ router.put('/cancel-transaction/:transactionId', verifyMiddleware, TransactionCo
 
 router.post('/create-transaction', verifyMiddleware, TransactionController.createTransaction);
 
+// For admin
+router.get('/admin/get-transaction/transactions', verifyMiddleware, TransactionController.getTransactionListForAdmin);
+
 
 module.exports = router;

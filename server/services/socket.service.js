@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
-const cookie = require("cookie"); // Parse cookies from headers
+const cookie = require("cookie"); // For cookie parsing
 
 let io;
 
@@ -9,33 +9,41 @@ const initializeSocket = (server) => {
         cors: {
             origin: "http://localhost:3000",
             methods: ["GET", "POST"],
-            credentials: true, // Allow cookies in requests
+            credentials: true, // Allow credentials (headers & cookies)
         },
     });
 
     console.log("🟢 Socket.io server initialized");
 
-    // Middleware to authenticate using cookie
+    // Middleware to authenticate using header or cookie
     io.use((socket, next) => {
-        const cookies = socket.handshake.headers.cookie;
-        if (!cookies) return next(new Error("Authentication error: No cookies found"));
-
-        const parsedCookies = cookie.parse(cookies);
-        const token = parsedCookies.accessToken;
-
-        if (!token) return next(new Error("Authentication error: No token provided"));
-
         try {
-            const user = jwt.verify(token, process.env.JWT_SECRET); // Verify JWT
-            socket.user = user; // Attach user data to socket
+            let token = socket.handshake.auth?.token; // Preferred method: from headers
+            if (!token) {
+                const cookies = socket.handshake.headers.cookie;
+                if (cookies) {
+                    const parsedCookies = cookie.parse(cookies);
+                    token = parsedCookies.accessToken; // Fallback to cookies
+                }
+            }
+
+            if (!token) {
+                console.error("❌ Authentication error: No token provided");
+                return next(new Error("Authentication error: No token provided"));
+            }
+
+            // Verify JWT
+            const user = jwt.verify(token, process.env.JWT_SECRET);
+            socket.user = user; // Attach user info to socket
             next();
         } catch (error) {
+            console.error("❌ Authentication error:", error.message);
             return next(new Error("Authentication error: Invalid token"));
         }
     });
 
     io.on("connection", (socket) => {
-        console.log(`🔌 New client connected: ${socket.id}, User: ${socket.user.username}`);
+        console.log(`🔌 New client connected: ${socket.id}, User: ${socket.user?.username}`);
 
         socket.on("join", (room) => {
             socket.join(room);

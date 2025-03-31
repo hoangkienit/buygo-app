@@ -43,18 +43,18 @@ class TransactionService {
     // 🔹 Get transaction list
     static async getTransactionList(userId, limit = 20) {  
         try {
-            const transactions = await Transaction.find({ userId: convertToObjectId(userId) }) // Find transactions by userId
-            .limit(limit) // Limit the number of transactions returned
-            .sort({ createdAt: -1 }) // Sort by most recent transactions
-            .exec();
+            const transactions = await Transaction.find({ userId: convertToObjectId(userId) })// Find transactions by userId
+                .limit(limit) // Limit the number of transactions returned
+                .sort({ createdAt: -1 }) // Sort by most recent transactions
+                .lean();
 
         if (!transactions || transactions.length === 0) {
             return { transactions: [] };
         }
-
+            console.log(transactions);
         return { transactions };
         } catch (error) {
-            console.log(error);
+            throw new Error("Cant get transaction list. System error");
         }
     }
 
@@ -72,6 +72,26 @@ class TransactionService {
     return {
         message: "Update transaction status successfully",
     };
+    }
+
+    // For admin
+    // 🔹 Get transaction list
+    static async getTransactionListForAdmin(limit = 20) {  
+        try {
+            const transactions = await Transaction.find()// Find transactions
+                .limit(limit) // Limit the number of transactions returned
+                .populate("userId", "username")
+                .sort({ createdAt: -1 }) // Sort by most recent transactions
+                .lean();
+
+        if (!transactions || transactions.length === 0) {
+            return { transactions: [] };
+        }
+        console.log(transactions);
+        return { transactions };
+        } catch (error) {
+            throw new Error("Cant get transaction list. System error");
+        }
     }
 }
 

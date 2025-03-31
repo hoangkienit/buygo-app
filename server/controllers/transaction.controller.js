@@ -6,7 +6,7 @@ class TransactionController {
     static async createTransaction(req, res) {
         const { amount, paymentMethod, gateway } = req.body;
         const userId = req.user.id;
-    
+        console.log("UserId:"+userId);
         const errors = validateTransaction(req.body);
             if (errors && errors.length > 0) {
             return res.status(400).json({ success: false, message: errors[0].message });
@@ -85,6 +85,25 @@ class TransactionController {
                 success: true,
                 message: response.message,
                 data: null
+            });
+        } catch (error) {
+            return res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
+    // For admin
+    // 🔹 Get transaction list
+    static async getTransactionListForAdmin(req, res) {
+        const limit = parseInt(req.query.limit) || 20;
+        try {
+            const response = await TransactionService.getTransactionListForAdmin(limit);
+
+            return res.status(200).json({
+                success: true,
+                message: "Get transaction list successfully",
+                data: {
+                    transactions: response.transactions
+                }
             });
         } catch (error) {
             return res.status(400).json({ success: false, message: error.message });

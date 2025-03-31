@@ -44,9 +44,13 @@ class AuthService {
       throw new Error("Sai mật khẩu");
     }
 
-    // 📲 Generate Access Token
+    // 📲 Generate Access Token & Refresh Token
     const accessToken = JWT.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "7d",
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1m",
+    });
+
+    const refreshToken = JWT.sign({ id: user._id, role: user.role }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "7d",
     });
 
     user.password = undefined;
@@ -54,6 +58,7 @@ class AuthService {
     return {
       user: user,
       accessToken,
+      refreshToken
     };
   }
 }

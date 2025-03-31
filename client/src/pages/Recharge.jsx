@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../api/transaction.api";
 import { ClipLoader } from "react-spinners";
 import { handleUnauthorizedError } from "../utils/handleError";
+import { showToast } from "../components/toasts/ToastNotification";
 
 const Recharge = () => {
   const [amount, setAmount] = useState("");
@@ -27,8 +28,7 @@ const Recharge = () => {
       }
     } catch (error) {
       setLoading(false);
-      handleUnauthorizedError(error.message, navigate);
-      alert(error.message);
+      showToast(error.message, "error");
     }
   };
 

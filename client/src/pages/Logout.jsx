@@ -17,6 +17,7 @@ const Logout = () => {
         const res = await logout();
 
         if (res.success) {
+          localStorage.removeItem("accessToken");
             removeUser();
             setTimeout(() => {
                 navigate('/login');

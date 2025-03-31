@@ -2,8 +2,13 @@ const JWT = require("jsonwebtoken");
 
 const verifyMiddleware = async (req, res, next) => {
     try {
-        // Get token from cookies
-        const token = req.cookies.accessToken;
+        const authHeader = req.headers.authorization;
+    
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ message: "Unauthorized! No token provided." });
+        }
+
+        const token = authHeader.split(" ")[1];
         if (!token) {
             return res.status(401).json({
                 success: false,
@@ -26,6 +31,7 @@ const verifyMiddleware = async (req, res, next) => {
                 });
             }
             req.user = decoded; // Attach user to request
+            console.log("User:"+req.user);
             next();
         });
     } catch (error) {

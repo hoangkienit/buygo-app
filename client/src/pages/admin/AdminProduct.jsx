@@ -9,6 +9,7 @@ import { getProducts } from "../../api/product.api";
 import { FaEye } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { showToast } from "../../components/toasts/ToastNotification";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -47,7 +48,7 @@ export const AdminProduct = () => {
         }
         catch (error) {
             console.log(error);
-            setLoading(false);
+            showToast(error.message, "error");
         }
         finally {
             setLoading(false);

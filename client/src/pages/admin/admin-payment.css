@@ -1,0 +1,45 @@
+.admin-payment-container{
+    width: 95%;
+        height: fit-content;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0px;
+        margin: 20px 0;
+}
+
+.transaction-success {
+    text-align: center;
+    background-color: #2ecc71;
+    padding: 5px;
+    border-radius: 30px;
+    color: #fff;
+    box-shadow: 0px 4px 10px rgba(46, 204, 113, 0.5), 0px 0px 10px rgba(46, 204, 113, 0.3);
+}
+
+.transaction-failed {
+    text-align: center;
+    background-color: #e74c3c;
+    padding: 5px;
+    border-radius: 30px;
+    color: #fff;
+    box-shadow: 0px 4px 10px rgba(231, 76, 60, 0.5), 0px 0px 10px rgba(231, 76, 60, 0.3);
+}
+
+.transaction-pending {
+    text-align: center;
+    background-color: #f39c12;
+    padding: 5px;
+    border-radius: 30px;
+    color: #fff;
+    box-shadow: 0px 4px 10px rgba(243, 156, 18, 0.5), 0px 0px 10px rgba(243, 156, 18, 0.3);
+}
+
+.transaction-price{
+    color: #9b59b6;
+}

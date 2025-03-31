@@ -10,8 +10,8 @@ import { cancelTransaction, getTransaction } from "../api/transaction.api";
 import CountdownTimer from "../components/timer-count/timer-count";
 import { truncateText } from "../utils/text";
 import { useUser } from "../context/UserContext";
-import { handleUnauthorizedError } from "../utils/handleError";
 import ConfirmationModal from "../components/confirm-box/confirm-box";
+import { showToast } from "../components/toasts/ToastNotification";
 
 const Payment = () => {
     const { transactionId } = useParams();
@@ -74,7 +74,7 @@ const Payment = () => {
             }
         } catch (error) {
           setLoading(false);
-          handleUnauthorizedError(error.message, navigate);
+          showToast(error.message, "error");
           console.log(error.message);
         }
     }
@@ -93,7 +93,7 @@ const Payment = () => {
           navigate('/account/recharge');
         }
       } catch (error) {
-        handleUnauthorizedError(error.message, navigate);
+        showToast(error.message, "error");
       } finally {
         setLoading(false);
       }
@@ -148,9 +148,15 @@ const Payment = () => {
 
     </div>
 
-    <button className="back-button" onClick={() => setShowModal(true)}>
+          {pending ? 
+      <button className="back-button" onClick={() => setShowModal(true)}>
       Hủy giao dịch
-    </button>
+            </button>
+            :
+            <button className="back-button" onClick={() => navigate('/account/recharge')}>
+          Nạp tiếp
+        </button>
+  }
           {showModal && (
         <ConfirmationModal
           message="Nếu bạn đã chuyển khoản thành công mà hệ thống chưa cập nhật tiền, bạn hãy lưu ảnh chụp màn hình chuyển khoản và liên hệ với Admin để giải quyết nhé."

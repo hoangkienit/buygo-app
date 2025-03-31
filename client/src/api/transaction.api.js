@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { BASE_API_URL_V1 } from "../constants/constants";
 import { handleError } from '../utils/handleError';
+import api from './../utils/api'
 
 
 export const createTransaction = async (amount, gateway, paymentMethod) => {
   try {
-    const response = await axios.post(`${BASE_API_URL_V1}/transaction/create-transaction`, {
+    const response = await api.post(`/transaction/create-transaction`, {
         amount,
         paymentMethod,
         gateway
@@ -17,13 +18,13 @@ export const createTransaction = async (amount, gateway, paymentMethod) => {
 
     return response.data;
   } catch (error) {
-    handleError(error);
+    throw error;
   }
 };
 
 export const getTransaction = async (transactionId) => {
   try {
-    const response = await axios.get(`${BASE_API_URL_V1}/transaction/get-transaction/${transactionId}`,
+    const response = await api.get(`/transaction/get-transaction/${transactionId}`,
       {
         withCredentials: true
       }
@@ -31,13 +32,13 @@ export const getTransaction = async (transactionId) => {
 
     return response.data;
   } catch (error) {
-    handleError(error);
+    throw error;
   }
 };
 
 export const getTransactionList = async (limit = 20) => {
   try {
-    const response = await axios.get(`${BASE_API_URL_V1}/transaction/get-transaction/transactions?limit=${limit}`,
+    const response = await api.get(`/transaction/get-transaction/transactions?limit=${limit}`,
       {
         withCredentials: true
       }
@@ -45,14 +46,13 @@ export const getTransactionList = async (limit = 20) => {
 
     return response.data;
   } catch (error) {
-    console.log(error)
-    handleError(error);
+    throw error;
   }
 };
 
 export const cancelTransaction = async (transactionId) => {
   try {
-    const response = await axios.put(`${BASE_API_URL_V1}/transaction/cancel-transaction/${transactionId}`,
+    const response = await api.put(`/transaction/cancel-transaction/${transactionId}`,
       {},
       {
         withCredentials: true
@@ -61,6 +61,21 @@ export const cancelTransaction = async (transactionId) => {
 
     return response.data;
   } catch (error) {
-    handleError(error);
+    throw error;
+  }
+};
+
+// For admin
+export const getTransactionListForAdmin = async (limit = 20) => {
+  try {
+    const response = await api.get(`/transaction/admin/get-transaction/transactions?limit=${limit}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };

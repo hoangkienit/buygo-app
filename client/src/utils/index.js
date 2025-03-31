@@ -19,4 +19,43 @@ export const getProductTypeObject = (selectedType) => {
             default:
                 return {}
         }
+}
+    
+export const statusType = (type) => {
+    switch (type) {
+      case "success":
+        return "transaction-success";
+      case "pending":
+        return "transaction-pending";
+      case "failed":
+        return "transaction-failed";
+      default:
+        break;
     }
+}
+  
+export const statusText = (type) => {
+    switch (type) {
+      case "success":
+        return "Thành công";
+      case "pending":
+        return "Đang chờ";
+      case "failed":
+        return "Thất bại";
+      default:
+        break;
+    }
+}
+  
+export const paymentMethodText = (type) => {
+    switch (type) {
+      case "bank_transfer":
+        return "Ngân hàng";
+      case "card":
+        return "Thẻ cào";
+      case "momo":
+        return "Momo";
+      default:
+        break;
+    }
+  }

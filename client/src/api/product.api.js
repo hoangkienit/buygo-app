@@ -1,6 +1,4 @@
-import axios from "axios";
-import { BASE_API_URL_V1 } from "../constants/constants";
-import { handleError } from "../utils/handleError";
+import api from './../utils/api'
 
 export const addNewAccountProduct = async (
     product_img,
@@ -26,7 +24,7 @@ export const addNewAccountProduct = async (
         formData.append("product_price", product_price);
         formData.append("product_attributes", JSON.stringify(product_attributes));
 
-    const response = await axios.post(`${BASE_API_URL_V1}/product/add-product`, formData, {
+    const response = await api.post(`/product/add-product`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -35,13 +33,13 @@ export const addNewAccountProduct = async (
 
     return response.data;
   } catch (error) {
-    handleError(error);
+      throw error;
   }
 };
 
 export const getProducts = async () => {
   try {
-    const response = await axios.get(`${BASE_API_URL_V1}/product/all-products`,
+    const response = await api.get(`/product/all-products`,
       {
         withCredentials: true
       }
@@ -49,6 +47,6 @@ export const getProducts = async () => {
 
     return response.data;
   } catch (error) {
-    handleError(error);
+    throw error;
   }
 };

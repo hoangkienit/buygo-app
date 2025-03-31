@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { BASE_API_URL_V1 } from "../constants/constants";
+import api from './../utils/api';
+
 
 // Centralized error handler
 const handleError = (error) => {
@@ -15,18 +17,15 @@ const handleError = (error) => {
 // Login function
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${BASE_API_URL_V1}/auth/login`, {
+    const response = await api.post(`/auth/login`, {
       username,
       password,
-    },
-      {
-        withCredentials: true
-      }
-    );
+    });
+    localStorage.setItem("accessToken", response.data.data.accessToken);
 
     return response.data;
   } catch (error) {
-    handleError(error);
+    throw error;
   }
 };
 

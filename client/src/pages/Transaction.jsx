@@ -4,21 +4,9 @@ import "./../styles/transaction.css";
 import AccountLayout from "../layouts/AccountLayout";
 import { HashLoader } from "react-spinners";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { handleUnauthorizedError } from "../utils/handleError";
 import { getTransactionList } from "../api/transaction.api";
+import showToast from './../components/toasts/ToastNotification';
 
-const transactionsData = [
-    { transactionId: "GD56789", amount: 50000, date: Date.now(), status: "pending", gateway: "Vietcombank" },
-    { transactionId: "GD543678", amount: 100000, date: Date.now(), status: "success", gateway: "TP BANK" },
-    { transactionId: "GD34521", amount: 1000000, date: Date.now(), status: "failed", gateway: "Sacombank" },
-    { transactionId: "GD56421", amount: 200000, date: Date.now(), status: "success", gateway: "Agribank" },
-    { transactionId: "GD12543", amount: 75000, date: Date.now(), status: "pending", gateway: "MB Bank" },
-    { transactionId: "GD87654", amount: 850000, date: Date.now(), status: "failed", gateway: "Vietinbank" },
-    { transactionId: "GD43567", amount: 120000, date: Date.now(), status: "success", gateway: "BIDV" },
-    { transactionId: "GD98432", amount: 55000, date: Date.now(), status: "pending", gateway: "Techcombank" },
-    { transactionId: "GD76432", amount: 340000, date: Date.now(), status: "success", gateway: "TP BANK" },
-    { transactionId: "GD87432", amount: 130000, date: Date.now(), status: "pending", gateway: "Vietcombank" }
-];
 
 const ITEMS_PER_PAGE = 8;
 
@@ -37,8 +25,7 @@ const Transaction = () => {
                     setTransactions(res.data.transactions);
                 }
             } catch (error) {
-                console.log(error);
-                handleUnauthorizedError(error.message, navigate);
+                showToast(error.message, "error");
             } finally {
                 setLoading(false);
             }
