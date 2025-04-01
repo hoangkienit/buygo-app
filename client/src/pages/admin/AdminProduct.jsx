@@ -10,6 +10,7 @@ import { FaEye } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { showToast } from "../../components/toasts/ToastNotification";
+import { useNavigate } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -20,20 +21,13 @@ export const AdminProduct = () => {
     const [searchInput, setSearchInput] = useState("");
     const [openActionId, setOpenActionId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [loading, setLoading] = useState(false);
     const modalRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchProductData();
-    }, []);
-
-    useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+        document.title = 'Admin - Sản phẩm'
     }, []);
 
     const fetchProductData = async () => {
@@ -73,7 +67,7 @@ export const AdminProduct = () => {
     // Filter products based on search & status selection
     const filteredProducts = products.filter((product) => {
         const matchesSearch = product.productId.toLowerCase().includes(searchInput.toLowerCase());
-        const matchesStatus = selected === "" || selected === "all" || product.productStatus === selected;
+        const matchesStatus = selected === "" || selected === "all" || product.product_status === selected;
         return matchesSearch && matchesStatus;
     });
 
@@ -151,7 +145,9 @@ export const AdminProduct = () => {
                 <table className="product-table">
                 <thead>
                     <tr>
-                        <th>Hình ảnh</th>
+                            {selectedProductType === 'game_account' &&
+                                <>
+                                <th>Hình ảnh</th>
                         <th>Mã sản phẩm</th>
                         <th>Tên sản phẩm</th>
                         <th>Số tiền</th>
@@ -159,12 +155,26 @@ export const AdminProduct = () => {
                         <th>Trạng thái</th>
                         <th>Thời gian</th>
                         <th>Thao tác</th>
+                                </>
+                            }
+                            
+                            {selectedProductType === 'topup_package' &&
+                                <>
+                                <th>Hình ảnh</th>
+                        <th>Mã sản phẩm</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng gói nạp</th>
+                        <th>Trạng thái</th>
+                        <th>Thời gian</th>
+                        <th>Thao tác</th>
+                                </>
+                        }
                     </tr>
                 </thead>
                 <tbody>
                     {currentProducts.length > 0 ? (
     currentProducts
-        .filter((tx) => tx.product_type === "game_account") // Only include game_account products
+        .filter((tx) => tx.product_type === selectedProductType)
         .map((tx) => (
             <tr key={tx.productId}>
                 <td>
@@ -175,41 +185,32 @@ export const AdminProduct = () => {
                         loading="lazy"
                     />
                 </td>
-                <td>{tx.productId}</td>
+                <td className="productId">{tx.productId}</td>
                 <td><a className="table-product-name">{tx.product_name}</a></td>
-                <td>{tx.product_attributes?.price?.toLocaleString()}đ</td>
-                <td>{tx.product_stock}</td>
+                {selectedProductType === 'game_account' &&
+                    <>
+                  <td>{tx.product_attributes?.price?.toLocaleString()}</td>
+                <td>{tx.product_stock}</td>  
+                </>
+                }
+
+                {selectedProductType === 'topup_package' &&
+                    <>
+                <td>{tx.product_attributes?.packages?.length}</td>  
+                </>
+                }
                 <td>
                     <div className={`transaction-status ${tx.product_status === "active" ? "product-active" : "product-inactive"}`}>
-                        {tx.product_status}
+                        {tx.product_status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
                     </div>
                 </td>
                 <td>{new Date(tx.createdAt).toLocaleString()}</td>
                 <td className="action-cell">
-                    {
-                        isMobile ? 
-                            <div className="action-buttons-container">
-                        <FaEye className="view-btn action-button"/>
-                        <FaEdit  className="edit-btn action-button"/>
-                        <MdDelete className="delete-btn action-button"/>
-                            </div> 
-                            :
-                            <>
-                                <button
-                        className="action-container"
-                        onClick={() => setOpenActionId(openActionId === tx.productId ? null : tx.productId)}
-                    >
-                        <HiDotsVertical />
-                    </button>
-                    {openActionId === tx.productId && (
-                        <div ref={modalRef} className="action-modal">
-                            <button className="view-btn">Xem</button>
-                            <button className="edit-btn">Chỉnh sửa</button>
-                            <button className="delete-btn">Xóa</button>
-                        </div>
-                    )}
-                            </>
-                    }
+                    <div className="action-buttons-container">
+                            <button onClick={() => navigate(`/super-admin/products/view/${tx.productId}`)} className="view-btn action-button"><FaEye className="action-icon" /></button>
+                            <button className="edit-btn action-button"><FaEdit className="action-icon" /></button>
+                            <button className="delete-btn action-button"><MdDelete className="action-icon" /></button>
+                    </div>
                 </td>
             </tr>
         ))

@@ -6,10 +6,14 @@ const UploadMiddleware = require('../middlewares/upload.middleware');
 
 const router = express.Router();
 
-
+// Client
 router.get('/all-products', ProductController.getAllProducts);
 
-router.post('/add-product', verifyMiddleware, verifyAdminMiddleware, UploadMiddleware.upload.single("product_img"), ProductController.addNewProduct);
+
+// Admin
+router.get('/admin/get-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.getProductForAdmin);
+
+router.post('/admin/add-product', verifyMiddleware, verifyAdminMiddleware, UploadMiddleware.upload.single("product_img"), ProductController.addNewProduct);
 
 
 

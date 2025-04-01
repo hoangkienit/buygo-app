@@ -24,7 +24,7 @@ export const addNewAccountProduct = async (
         formData.append("product_price", product_price);
         formData.append("product_attributes", JSON.stringify(product_attributes));
 
-    const response = await api.post(`/product/add-product`, formData, {
+    const response = await api.post(`/product/admin/add-product`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -40,6 +40,20 @@ export const addNewAccountProduct = async (
 export const getProducts = async () => {
   try {
     const response = await api.get(`/product/all-products`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProductForAdmin = async (productId) => {
+  try {
+    const response = await api.get(`/product/admin/get-product/${productId}`,
       {
         withCredentials: true
       }

@@ -24,7 +24,8 @@ const AccountPage = () => {
               <h2>{user?.username || "User" }</h2>
               <span className="user-rank">Thành viên ELITE</span>
             </div>
-            <button className="update-btn">Cập nhật tài khoản</button>
+          <button className="update-btn">Cập nhật tài khoản</button>
+          {user?.role === 'admin' && <button onClick={() => navigate('/super-admin/dashboard')} className="update-btn">Trang admin</button>}
           </div>
         </section>
 

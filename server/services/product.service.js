@@ -11,22 +11,27 @@ class ProductService {
         let products = await Product.find().lean();
 
         for (let product of products) {
-            if (product.product_type === "game_account") {
-                let gameAccount = await GameAccount.findOne({ _id: product.product_attributes }).lean();
-                if (gameAccount) {
-                    delete gameAccount.account.username; // Remove sensitive data
-                    delete gameAccount.account.password;
-                    product.product_attributes = gameAccount;
-                }
-            } else if (product.product_type === "topup_package") {
-                let topUpPackage = await TopUpPackage.findOne({ _id: product.product_attributes }).lean();
-                if (topUpPackage) {
-                    product.product_attributes = topUpPackage;
-                }
+        if (product.product_type === "game_account" && product.product_attributes?.account) {
+            // 🔹 Mask account details
+            product.product_attributes.account = product.product_attributes.account.map(acc => ({
+                ...acc,
+                username: undefined,
+                password: undefined
+            }));
             }
+            // 🔹 No need to modify "topup_package" since it doesn't have sensitive data
         }
+
         if (!products) products = [];
         return { message: "Get products successfully", products: products };
+    }
+
+    // 🔹 Get product for admin
+    static async getProductForAdmin({ productId }) {
+        const product = await Product.findOne(productId).lean();
+        if (!product) throw new Error("No product found");
+        
+        return { message: "Get products successfully", product: product };
     }
 
     static async addNewProduct(
@@ -98,7 +103,22 @@ class ProductService {
 
             existingProduct.product_attributes = newGameAccount;
             await existingProduct.save();
-        } else {
+        } else if (existingProduct.product_type === "topup_package") {
+            if (!Array.isArray(product_attributes)) {
+                throw new Error("product_attributes must be an array");
+            }
+
+            const newTopUpPackage = new TopUpPackage({
+                packages: product_attributes
+            });
+
+            await newTopUpPackage.save();
+
+            existingProduct.product_attributes = newTopUpPackage;
+            await existingProduct.save();
+        }
+        
+        else {
             throw new Error("Invalid product type")
         }
 

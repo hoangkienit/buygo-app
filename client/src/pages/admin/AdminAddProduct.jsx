@@ -24,6 +24,10 @@ export const AdminAddProduct = () => {
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
+    useEffect(() => {
+        document.title = 'Admin - Thêm sản phẩm';
+    }, []);
+
     const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
