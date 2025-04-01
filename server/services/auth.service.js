@@ -46,7 +46,7 @@ class AuthService {
 
     // 📲 Generate Access Token & Refresh Token
     const accessToken = JWT.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1m",
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1h",
     });
 
     const refreshToken = JWT.sign({ id: user._id, role: user.role }, process.env.JWT_REFRESH_SECRET, {

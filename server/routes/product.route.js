@@ -15,6 +15,8 @@ router.get('/admin/get-product/:productId', verifyMiddleware, verifyAdminMiddlew
 
 router.post('/admin/add-product', verifyMiddleware, verifyAdminMiddleware, UploadMiddleware.upload.single("product_img"), ProductController.addNewProduct);
 
+router.post('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
 
+router.post('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
 
 module.exports = router;

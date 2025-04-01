@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import './admin-product-detail.css'
+import './admin-product-detail.css';
+import './admin-edit-product.css';
 import { HashLoader } from 'react-spinners';
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { deleteProductForAdmin, getProductForAdmin } from '../../api/product.api';
 import { FaCopy } from "react-icons/fa6";
 import { productTypeText } from '../../utils';
-import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import ConfirmModal from '../../components/modal/confirm-modal';
 
-export const AdminProductDetail = () => {
+export const AdminEditProduct = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
     const [orders, setOrders] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
+
+    const [productName, setProductName] = useState("");
+    const [productDescription, setProductDescription] = useState("");
+    const [productPrice, setProductPrice] = useState(0);
+    const [productStatus, setProductStatus] = useState("");
 
     useEffect(() => {
         document.title = `Admin - ${productId}`;
@@ -51,9 +53,8 @@ export const AdminProductDetail = () => {
         showToast("Đã copy dữ liệu", "success");
     };
 
-    const handleDeleteProduct = async (productId) => {
+    const handleUpdateProductStatus = async (productId, status) => {
                 setLoading(true);
-                setIsModalOpen(false);
                 try {
                     const res = await deleteProductForAdmin(productId);
         
@@ -80,13 +81,6 @@ export const AdminProductDetail = () => {
     return (
         <div className='admin-product-detail-container'>
             <span className='tab-nav-title'><a href='/super-admin/products'>Sản phẩm</a> / {product?.product_name}</span>
-            <div className='action-button-container'>
-                                            <button onClick={() => navigate(`/super-admin/products/edit/${productId}`)} className="edit-btn product-detail-action-button"><FaEdit className="action-icon" /></button>
-                                        <button onClick={() => { 
-                                            setIsModalOpen(true);
-                                        }} className="delete-btn product-detail-action-button"><MdDelete className="action-icon" /></button>
-
-            </div>
             <div className='product-detail-info-container'>
                 <div className='product-detail-left-side'>
                     <img loading='lazy' className='product-detail-image' src={require('./../../assets/images/test-img.jpg')} alt='product-img'></img>
@@ -103,16 +97,25 @@ export const AdminProductDetail = () => {
                     {/** Product Name */}
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Tên sản phẩm`} disabled />
-                        <input className='product-detail-input' value={`${product?.product_name}`} disabled />
+                        <input onChange={(e) => setProductName(e.target.value)} placeholder={product?.product_name} className='product-detail-input' value={productName} />
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_name}`)}/> */}
                     </div>
 
                     {/** Product Des */}
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Mô tả`} disabled />
-                        <input className='product-detail-input' value={`${product?.product_description}`} disabled />
+                        <input className='product-detail-input' placeholder={product?.product_description} value={productDescription} onChange={(e) => setProductDescription(e.target.value)}/>
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_description}`)}/> */}
                     </div>
+
+                    {/** Product Price */}
+                    {product?.product_type === 'game_account' &&
+                    <div className='product-detail-input-container'>
+                        <input className='product-detail-input-title' value={`Giá`} disabled />
+                        <input type='number' className='product-detail-input' placeholder={product?.product_attributes?.price?.toLocaleString()} value={productDescription} onChange={(e) => setProductPrice(e.target.value)}/>
+                        {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_description}`)}/> */}
+                    </div>
+                    }
 
                     {/** Product Type */}
                     <div className='product-detail-input-container'>
@@ -131,8 +134,10 @@ export const AdminProductDetail = () => {
                     {/** Product Status */}
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Trạng thái`} disabled />
-                        <input className='product-detail-input' value={`${product?.product_status === 'active' ? "Hoạt động" : "Không hoạt động"}`} disabled />
-                        {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
+                        <select onChange={(e) => setProductStatus(e.target.value)} className='product-detail-input' value={product?.product_status}>
+                            <option value={'active'}>Hoạt động</option>
+                            <option value={'inactive'}>Không hoạt động</option>
+                        </select>
                     </div>
 
                     {/** Product Stock */}
@@ -232,7 +237,7 @@ export const AdminProductDetail = () => {
                 </div>
             </div>
             <ToastNotification></ToastNotification>
-            <ConfirmModal isOpen={isModalOpen} onConfirm={() => handleDeleteProduct(productId)} onClose={() => setIsModalOpen(false)} message={'Xác nhận bạn đang xóa một sản phẩm'} title={'Xóa sản phẩm'}/>
+            
         </div>
     )
 }

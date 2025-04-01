@@ -8,20 +8,24 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { showToast } from '../../components/toasts/ToastNotification';
-import { getTransactionListForAdmin } from './../../api/transaction.api';
+import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
+import { deleteTransactionForAdmin, getTransactionListForAdmin } from './../../api/transaction.api';
 import { paymentMethodText, statusText, statusType } from '../../utils';
+import ConfirmModal from '../../components/modal/confirm-modal';
 
 const ITEMS_PER_PAGE = 8;
 export const AdminPayment = () => {
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedTransactionStatusType, setSelectedTransactionStatusType] = useState("");
-  const [transactions, setTransaction] = useState([]);
-  const [openActionId, setOpenActionId] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const modalRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [searchInput, setSearchInput] = useState("");
+    const [selectedTransactionStatusType, setSelectedTransactionStatusType] = useState("");
+    const [transactions, setTransaction] = useState([]);
+    const [openActionId, setOpenActionId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
+    
+    const modalRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchTransactionList();
@@ -91,7 +95,27 @@ export const AdminPayment = () => {
           if (currentPage > 1) {
               setCurrentPage((prev) => prev - 1);
           }
-  };
+    };
+
+    const handleDeleteTransaction = async (transactionId) => {
+        setLoading(true);
+        setIsModalOpen(false);
+        try {
+            const res = await deleteTransactionForAdmin(transactionId);
+
+            if (res.success) {
+                // Remove transaction from state
+                setTransaction(transactions.filter((transaction) => transaction.transactionId !== transactionId));
+                showToast("Xóa giao dịch thành công", "success");
+                setSelectedIdToDelete("");
+            }
+        } catch (error) {
+            showToast(error.message, "error");
+        }
+        finally {
+            setLoading(false);
+        }
+    }
   
   
       if (loading) {
@@ -137,7 +161,8 @@ export const AdminPayment = () => {
       <div className="product-table-container">
                       <table className="product-table">
                       <thead>
-                          <tr>
+                      <tr>
+                          <th>STT</th>
                               <th>Mã giao dịch</th>
                               <th>Tên người dùng</th>
                               <th>Mệnh giá</th>
@@ -151,8 +176,9 @@ export const AdminPayment = () => {
                       <tbody>
                           {currentTransactions.length > 0 ? (
           currentTransactions
-              .map((tx) => (
+              .map((tx, index) => (
                   <tr key={tx.transactionId}>
+                      <td>{index + 1}</td>
                       <td>{tx.transactionId}</td>
                       <td><a className="table-product-name">{tx.userId.username}</a></td>
                       <td className='transaction-price'>{tx.amount.toLocaleString()|| 0}</td>
@@ -165,31 +191,13 @@ export const AdminPayment = () => {
                   <td>{tx.gateway === 'empty_gateway' ? "NA" : tx.gateway }</td>
                       <td>{new Date(tx.createdAt).toLocaleString()}</td>
                       <td className="action-cell">
-                          {
-                              isMobile ? 
-                                  <div className="action-buttons-container">
-                              <FaEye className="view-btn action-button"/>
-                              <FaEdit  className="edit-btn action-button"/>
-                              <MdDelete className="delete-btn action-button"/>
-                                  </div> 
-                                  :
-                                  <>
-                                      <button
-                              className="action-container"
-                              onClick={() => setOpenActionId(openActionId === tx.transactionId ? null : tx.transactionId)}
-                          >
-                              <HiDotsVertical />
-                          </button>
-                          {openActionId === tx.transactionId && (
-                              <div ref={modalRef} className="action-modal">
-                                  <button className="view-btn">Xem</button>
-                                  <button className="edit-btn">Chỉnh sửa</button>
-                                  <button className="delete-btn">Xóa</button>
-                              </div>
-                          )}
-                                  </>
-                          }
-                      </td>
+                                          <div className="action-buttons-container">
+                              <button onClick={() => {
+                                  setIsModalOpen(true);
+                                  setSelectedIdToDelete(tx.transactionId);
+                              }} className="delete-btn action-button"><MdDelete className="action-icon" /></button>
+                                          </div>
+                                      </td>
                   </tr>
               ))
       ) : (
@@ -220,7 +228,9 @@ export const AdminPayment = () => {
                               <GrFormNext className="pagination-icon"/>
                           </button>
                       </div>
-                  )}
+          )}
+          <ToastNotification />
+          <ConfirmModal isOpen={isModalOpen} onConfirm={() => handleDeleteTransaction(selectedIdToDelete)} onClose={() => setIsModalOpen(false)} message={'Xác nhận bạn đang xóa một giao dịch'} title={'Xóa giao dịch'}/>
     </div>
   )
 }

@@ -1,6 +1,3 @@
-import axios from 'axios';
-import { BASE_API_URL_V1 } from "../constants/constants";
-import { handleError } from '../utils/handleError';
 import api from './../utils/api'
 
 
@@ -69,6 +66,20 @@ export const cancelTransaction = async (transactionId) => {
 export const getTransactionListForAdmin = async (limit = 50) => {
   try {
     const response = await api.get(`/transaction/admin/get-transaction/transactions?limit=${limit}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteTransactionForAdmin = async (transactionId) => {
+  try {
+    const response = await api.post(`/transaction/admin/delete-transaction/${transactionId}`,
       {
         withCredentials: true
       }

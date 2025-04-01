@@ -1,0 +1,8 @@
+.status-switch-container{
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}

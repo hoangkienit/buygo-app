@@ -134,7 +134,17 @@ class ProductService {
         }
     }
     
+    static async deleteProductForAdmin(productId) {
+        const product = await Product.deleteOne({ productId });
 
+        if (product.deletedCount === 0) {
+            throw new Error("Product not found");
+        }
+        
+        return {
+            message: "Delete product successfully"
+        }
+    }
 }
 
 const decryptPassword = (encryptedPassword) => {

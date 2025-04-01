@@ -84,13 +84,25 @@ class TransactionService {
                 .sort({ createdAt: -1 }) // Sort by most recent transactions
                 .lean();
 
-        if (!transactions || transactions.length === 0) {
-            return { transactions: [] };
-        }
-        console.log(transactions);
-        return { transactions };
+            if (!transactions || transactions.length === 0) {
+                return { transactions: [] };
+            }
+
+            return { transactions };
         } catch (error) {
             throw new Error("Cant get transaction list. System error");
+        }
+    }
+
+    static async deleteTransactionForAdmin(transactionId) {
+        const transaction = await Transaction.deleteOne({ transactionId });
+
+        if (transaction.deletedCount === 0) {
+            throw new Error("Transaction not found");
+        }
+        
+        return {
+            message: "Delete transaction successfully"
         }
     }
 }

@@ -64,3 +64,17 @@ export const getProductForAdmin = async (productId) => {
     throw error;
   }
 };
+
+export const deleteProductForAdmin = async (productId) => {
+  try {
+    const response = await api.post(`/product/admin/delete-product/${productId}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

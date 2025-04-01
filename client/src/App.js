@@ -22,6 +22,7 @@ import { AdminPayment } from "./pages/admin/AdminPayment";
 import { AdminProduct } from "./pages/admin/AdminProduct";
 import { AdminAddProduct } from "./pages/admin/AdminAddProduct";
 import { AdminProductDetail } from "./pages/admin/AdminProductDetail";
+import { AdminEditProduct } from "./pages/admin/AdminEditProduct";
 
 
 
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/super-admin/products" element={<AdminProduct />} />
                 <Route path="/super-admin/products/add-product" element={<AdminAddProduct />} />
                 <Route path="/super-admin/products/view/:productId" element={<AdminProductDetail />} />
+                <Route path="/super-admin/products/edit/:productId" element={<AdminEditProduct/>} />
               </Route>
             </Routes>
           </Router>

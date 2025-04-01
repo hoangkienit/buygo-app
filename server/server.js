@@ -8,6 +8,8 @@ const cookieParser = require("cookie-parser");
 const http = require("http");
 const multer = require('multer');
 const { initializeSocket } = require("./services/socket.service");
+const requestLogger = require('./middlewares/request.middleware');
+const errorHandler = require('./middlewares/error.middleware');
 require("./jobs/transactionQueue");
 
 // Load environment variables
@@ -28,11 +30,12 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+app.use(requestLogger);
 
 const upload = multer({ dest: "uploads/" });
 
 app.use(express.json());
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 // Routes
 app.get('/', (req, res) => res.status(200).send("Hello world!"));
@@ -42,6 +45,19 @@ app.use('/api/v1/user', require('./routes/user.route'));
 app.use('/api/v1/payment', require('./routes/payment.route'));
 app.use('/api/v1/transaction', require('./routes/transaction.route'));
 app.use('/api/v1/product', require('./routes/product.route'));
+
+// Error handling middleware
+app.use(errorHandler);
+
+// Global error handlers for unexpected errors
+process.on("uncaughtException", (err) => {
+    console.error("Uncaught Exception:", err);
+    process.exit(1);
+});
+
+process.on("unhandledRejection", (err) => {
+    console.error("Unhandled Rejection:", err);
+});
 
 // Start Server
 const PORT = process.env.PORT || 5000;

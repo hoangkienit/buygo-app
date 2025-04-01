@@ -109,6 +109,32 @@ class TransactionController {
             return res.status(400).json({ success: false, message: error.message });
         }
     }
+
+    static async deleteTransactionForAdmin(req, res) {
+        const { transactionId } = req.params;
+
+        const errors = validateId(transactionId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: errors[0].message
+            });
+        }
+
+        try {
+            const response = await TransactionService.deleteTransactionForAdmin(transactionId);
+            
+            return res.status(200).json({
+                success: true,
+                message: response.message
+            })
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            })
+        }
+    }
 }
 
 module.exports = TransactionController;

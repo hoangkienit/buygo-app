@@ -125,5 +125,31 @@ class ProductController {
             return res.status(400).json({ success: false, message: error.message });
         }
     }
+
+    static async deleteProductForAdmin(req, res) {
+            const { productId } = req.params;
+    
+            const errors = validateId(productId);
+            if (errors && errors.length > 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: errors[0].message
+                });
+            }
+    
+            try {
+                const response = await ProductService.deleteProductForAdmin(productId);
+                
+                return res.status(200).json({
+                    success: true,
+                    message: response.message
+                })
+            } catch (error) {
+                return res.status(400).json({
+                    success: false,
+                    message: error.message
+                })
+            }
+        }
 }
 module.exports = ProductController;

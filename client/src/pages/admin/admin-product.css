@@ -106,16 +106,14 @@
 
 /* TABLE */
 .product-table {
-    width: 100%;
+    width: 95%;
     border-collapse: collapse;
-    min-width: 1200px;
 }
 
 .product-table th,
 .product-table td {
     padding: 10px;
     text-align: start;
-    white-space: nowrap;
 }
 
 .product-table th {
@@ -324,10 +322,24 @@
     font-size: 20px;
 }
 
+.product-table-container {
+    width: 100%;
+    overflow-x: auto !important;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 1440px) {
+    /* Laptop styles */
+    .product-table td{
+        padding: 0;
+    }
+}
+
 @media (max-width: 768px){
     .product-table-container {
             width: 95%;
-            overflow-x: auto !important;
+            overflow-y: auto !important;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
