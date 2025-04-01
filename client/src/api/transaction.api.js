@@ -36,7 +36,7 @@ export const getTransaction = async (transactionId) => {
   }
 };
 
-export const getTransactionList = async (limit = 20) => {
+export const getTransactionList = async (limit = 50) => {
   try {
     const response = await api.get(`/transaction/get-transaction/transactions?limit=${limit}`,
       {
@@ -66,7 +66,7 @@ export const cancelTransaction = async (transactionId) => {
 };
 
 // For admin
-export const getTransactionListForAdmin = async (limit = 20) => {
+export const getTransactionListForAdmin = async (limit = 50) => {
   try {
     const response = await api.get(`/transaction/admin/get-transaction/transactions?limit=${limit}`,
       {

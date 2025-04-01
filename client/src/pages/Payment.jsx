@@ -11,7 +11,7 @@ import CountdownTimer from "../components/timer-count/timer-count";
 import { truncateText } from "../utils/text";
 import { useUser } from "../context/UserContext";
 import ConfirmationModal from "../components/confirm-box/confirm-box";
-import { showToast } from "../components/toasts/ToastNotification";
+import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
 
 const Payment = () => {
     const { transactionId } = useParams();
@@ -165,7 +165,8 @@ const Payment = () => {
         />
       )}
   </div>
-        }
+      }
+      <ToastNotification/>
       </AccountLayout>
   );
 };

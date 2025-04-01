@@ -1,4 +1,6 @@
 const ProductService = require("../services/product.service");
+const ReviewService = require('./../services/review.service');
+
 const { validateProduct, validateProductAttributes, validateId } = require("../utils/validation");
 
 class ProductController {
@@ -22,7 +24,7 @@ class ProductController {
     // 🔹 Get Product For Admin
     static async getProductForAdmin(req, res) {
         const { productId } = req.params;
-
+        
         const errors = validateId(productId);
         if (errors && errors.length > 0) {
             return res.status(400).json({
@@ -30,14 +32,20 @@ class ProductController {
                 message: errors[0].message
             });
         }
-        
+
         try {
             const response = await ProductService.getProductForAdmin(productId);
+
+            const ratingResponse = await ReviewService.getProductReviewsWithStats(productId);
+
             return res.status(200).json({
                 success: true,
                 message: response.message,
                 data: {
-                    product: response.product
+                    product: {
+                        ...response.product,
+                        ...ratingResponse
+                    }
                 }
             });
         } catch (error) {

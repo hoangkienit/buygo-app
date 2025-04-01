@@ -4,6 +4,7 @@ import { IoTicketSharp } from "react-icons/io5";
 import StarRating from "../components/star-rating/star-rating";
 import { BsFillCartCheckFill, BsCartXFill } from "react-icons/bs";
 import RankingIcon from "../components/ranking/ranking";
+import ToastNotification from "../components/toasts/ToastNotification";
 
 const Product = () => {
   const [isViewImage, setIsViewImage] = useState(false);
@@ -224,6 +225,7 @@ const Product = () => {
           />
         </div>
       )}
+      <ToastNotification/>
     </div>
   );
 };

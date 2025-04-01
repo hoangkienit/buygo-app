@@ -3,7 +3,7 @@ const { generateProductId } = require('../utils/random');
 const { slugify } = require('../utils/text');
 const { Product, TopUpPackage, GameAccount } = require('./../models/product.model');
 const imageService = require('./image.service');
-const bcrypt = require("bcryptjs");
+const CryptoJS = require("crypto-js");
 
 class ProductService {
     // 🔹 Get all products
@@ -27,9 +27,18 @@ class ProductService {
     }
 
     // 🔹 Get product for admin
-    static async getProductForAdmin({ productId }) {
-        const product = await Product.findOne(productId).lean();
+    static async getProductForAdmin(productId) {
+        const product = await Product.findOne({productId}).lean();
         if (!product) throw new Error("No product found");
+        
+        if (product.product_type === 'game_account') {
+            product.product_attributes.account = product.product_attributes.account.map((acc) => ({
+                username: acc.username,
+                password: decryptPassword(acc.password), // Show decrypted password
+                sold: acc.sold
+            }));
+        }
+
         
         return { message: "Get products successfully", product: product };
     }
@@ -79,24 +88,20 @@ class ProductService {
                 throw new Error("product_attributes must be an array");
             }
 
-            // Hash passwords for each account entry
-            const hashedAccounts = await Promise.all(
-                product_attributes.map(async (attr) => {
-                    const salt = await bcrypt.genSalt(10);
-                    const hashedPassword = await bcrypt.hash(attr.password, salt);
+            const encryptedAccounts = product_attributes.map((attr) => {
+                const encryptedPassword = CryptoJS.AES.encrypt(attr.password, process.env.CRYPTO_SECRET).toString();
 
-                    return {
-                        username: attr.username,
-                        password: hashedPassword,
-                        sold: false
+                return {
+                    username: attr.username,
+                    password: encryptedPassword,
+                    sold: false
                     };
-                })
-            );
+                });
 
             // Create new GameAccount entry
             const newGameAccount = new GameAccount({
                 price: product_price || 0, // Assuming price is same for all
-                account: hashedAccounts
+                account: encryptedAccounts
             });
 
             await newGameAccount.save();
@@ -128,7 +133,13 @@ class ProductService {
             product: existingProduct
         }
     }
+    
 
 }
+
+const decryptPassword = (encryptedPassword) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedPassword, process.env.CRYPTO_SECRET);
+    return bytes.toString(CryptoJS.enc.Utf8);
+};
 
 module.exports = ProductService;

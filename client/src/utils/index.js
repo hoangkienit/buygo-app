@@ -58,4 +58,18 @@ export const paymentMethodText = (type) => {
       default:
         break;
     }
+}
+  
+
+export const productTypeText = (type) => {
+    switch (type) {
+      case "topup_package":
+        return "Gói nạp";
+      case "game_account":
+        return "Tài khoản game";
+      case "utility":
+        return "Tiện ích";
+      default:
+        break;
+    }
   }

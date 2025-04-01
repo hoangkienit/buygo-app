@@ -20,7 +20,7 @@ const Transaction = () => {
         const fetchTransactions = async () => {
             try {
                 setLoading(true);
-                const res = await getTransactionList(20);
+                const res = await getTransactionList(50);
                 if (res.success) {
                     setTransactions(res.data.transactions);
                 }

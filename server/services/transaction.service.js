@@ -41,7 +41,7 @@ class TransactionService {
     }
 
     // 🔹 Get transaction list
-    static async getTransactionList(userId, limit = 20) {  
+    static async getTransactionList(userId, limit = 50) {  
         try {
             const transactions = await Transaction.find({ userId: convertToObjectId(userId) })// Find transactions by userId
                 .limit(limit) // Limit the number of transactions returned
@@ -76,7 +76,7 @@ class TransactionService {
 
     // For admin
     // 🔹 Get transaction list
-    static async getTransactionListForAdmin(limit = 20) {  
+    static async getTransactionListForAdmin(limit = 50) {  
         try {
             const transactions = await Transaction.find()// Find transactions
                 .limit(limit) // Limit the number of transactions returned

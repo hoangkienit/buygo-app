@@ -31,7 +31,7 @@ export const AdminPayment = () => {
     try {
       setLoading(true);
 
-      const res = await getTransactionListForAdmin(20);
+      const res = await getTransactionListForAdmin(50);
 
       if (res.success) {
         setTransaction(res.data.transactions);

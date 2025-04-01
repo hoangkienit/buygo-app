@@ -185,7 +185,7 @@ export const AdminProduct = () => {
                         loading="lazy"
                     />
                 </td>
-                <td className="productId">{tx.productId}</td>
+                <td className="productId">{tx.product_type === selectedProductType && tx.productId}</td>
                 <td><a className="table-product-name">{tx.product_name}</a></td>
                 {selectedProductType === 'game_account' &&
                     <>
@@ -207,7 +207,7 @@ export const AdminProduct = () => {
                 <td>{new Date(tx.createdAt).toLocaleString()}</td>
                 <td className="action-cell">
                     <div className="action-buttons-container">
-                            <button onClick={() => navigate(`/super-admin/products/view/${tx.productId}`)} className="view-btn action-button"><FaEye className="action-icon" /></button>
+                            <button onClick={() => navigate(`/super-admin/products/view/${tx.product_type === selectedProductType && tx.productId}`)} className="view-btn action-button"><FaEye className="action-icon" /></button>
                             <button className="edit-btn action-button"><FaEdit className="action-icon" /></button>
                             <button className="delete-btn action-button"><MdDelete className="action-icon" /></button>
                     </div>
