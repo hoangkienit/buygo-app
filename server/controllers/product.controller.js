@@ -65,8 +65,6 @@ class ProductController {
             product_price,
             product_attributes
         } = req.body;
-        console.log(product_price)
-        console.log(JSON.parse(product_attributes));
 
         if (!req.file) {
             return res.status(400).json({ success: false, error: 'No file uploaded' });
@@ -236,6 +234,152 @@ class ProductController {
                 message: response.message,
                 data: {
                     updatedProduct: response.product
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    success: false,
+                    message: error.message
+            })
+        }
+    }
+
+    static async addAccountToProductForAdmin(req, res) {
+        const { productId } = req.params;
+        const { product_attributes_data } = req.body;
+
+        let errors = validateId(productId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        const product_type = "game_account";
+        const productAttributes = product_attributes_data;
+
+        errors = validateProductAttributes({ product_type, productAttributes });
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        try {
+            const response = await ProductService.addAccountToProductForAdmin(
+                productId,
+                product_attributes_data
+            );
+
+            console.log(response.accounts)
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    updatedAccounts: response.accounts
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    success: false,
+                    message: error.message
+            })
+        }
+    }
+
+    static async addPackageToProductForAdmin(req, res) {
+        const { productId } = req.params;
+        const { product_attributes_data } = req.body;
+
+        let errors = validateId(productId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        const product_type = "topup_package";
+        const productAttributes = product_attributes_data;
+
+        errors = validateProductAttributes({ product_type, productAttributes });
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        try {
+            const response = await ProductService.addPackageToProductForAdmin(
+                productId,
+                product_attributes_data
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    updatedPackages: response.packages
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    success: false,
+                    message: error.message
+            })
+        }
+    }
+
+    static async deleteAccountFromProductForAdmin(req, res) {
+        const { productId, accountId } = req.params;
+
+        let errors = validateId(productId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        errors = validateId(accountId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        try {
+            const response = await ProductService.deleteAccountFromProductForAdmin(
+                productId,
+                accountId
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    updatedAccounts: response.accounts
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    success: false,
+                    message: error.message
+            })
+        }
+    }
+
+    static async deletePackageFromProductForAdmin(req, res) {
+        const { productId, packageId } = req.params;
+
+        let errors = validateId(productId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        errors = validateId(packageId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({ success: false, error: errors[0].message });
+        }
+
+        try {
+            const response = await ProductService.deletePackageFromProductForAdmin(
+                productId,
+                packageId
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    updatedPackages: response.packages
                 }
             })
         } catch (error) {

@@ -4,6 +4,7 @@ import "./confirm-modal.css";
 const ConfirmModal = ({ isOpen, onClose, onConfirm, message, title }) => {
     if (!isOpen) return null;
 
+
     return (
         <div className="modal-overlay">
             <div className="modal-content">

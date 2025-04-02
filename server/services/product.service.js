@@ -1,4 +1,5 @@
 const { convertToObjectId } = require('../utils/convert');
+const mongoose = require("mongoose");
 const { generateProductId } = require('../utils/random');
 const { slugify } = require('../utils/text');
 const { Product, TopUpPackage, GameAccount } = require('./../models/product.model');
@@ -33,9 +34,8 @@ class ProductService {
         
         if (product.product_type === 'game_account') {
             product.product_attributes.account = product.product_attributes.account.map((acc) => ({
-                username: acc.username,
+                ...acc,
                 password: decryptPassword(acc.password), // Show decrypted password
-                sold: acc.sold
             }));
         }
 
@@ -156,6 +156,7 @@ class ProductService {
         }
 
         product.product_name = productName;
+        product.product_slug = slugify(productName);
         product.product_description = productDescription;
         product.product_status = productStatus;
 
@@ -184,6 +185,7 @@ class ProductService {
         }
 
         product.product_name = productName;
+        product.product_slug = slugify(productName);
         product.product_description = productDescription;
         product.product_status = productStatus;
 
@@ -191,6 +193,102 @@ class ProductService {
         return {
             message: "Update product successfully",
             product: product
+        }
+    }
+
+    static async addAccountToProductForAdmin(
+        productId,
+        product_attributes_data
+    ) {
+        const product = await Product.findOneAndUpdate(
+            {productId},
+            { $push: { "product_attributes.account": { $each: product_attributes_data.map(acc => ({
+                ...acc,
+                password: CryptoJS.AES.encrypt(acc.password, process.env.CRYPTO_SECRET).toString(),
+                _id: new mongoose.Types.ObjectId(),
+                sold: false,
+                })) } } },
+            { new: true, useFindAndModify: false }
+        );
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        return {
+            message: "Add account to product successfully",
+            accounts: product.product_attributes.account.map((acc) => ({
+                ...acc,
+                password: decryptPassword(acc.password)             
+            }))
+        }
+    }
+
+    static async addPackageToProductForAdmin(
+        productId,
+        product_attributes_data
+    ) {
+        const product = await Product.findOneAndUpdate(
+            {productId},
+            { $push: { "product_attributes.packages": { $each: product_attributes_data.map(pack => ({
+                ...pack,
+                status: "available",
+                _id: new mongoose.Types.ObjectId(),
+                sold: false,
+                })) } } },
+            { new: true, useFindAndModify: false }
+        );
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        return {
+            message: "Add package to product successfully",
+            packages: product.product_attributes.packages
+        }
+    }
+
+    static async deleteAccountFromProductForAdmin(
+        productId,
+        accountId
+    ) {
+        const product = await Product.findOneAndUpdate(
+            {productId},
+            { $pull: { "product_attributes.account": {_id: convertToObjectId(accountId)} } },
+            { new: true }
+        );
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        return {
+            message: "Delete account from product successfully",
+            accounts: product.product_attributes.account.map((acc) => ({
+                ...acc,
+                password: decryptPassword(acc.password)             
+            }))
+        }
+    }
+
+    static async deletePackageFromProductForAdmin(
+        productId,
+        packageId
+    ) {
+        const product = await Product.findOneAndUpdate(
+            {productId},
+            { $pull: { "product_attributes.packages": {_id: convertToObjectId(packageId)} } },
+            { new: true }
+        );
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        return {
+            message: "Delete package from product successfully",
+            packages: product.product_attributes.packages
         }
     }
 }

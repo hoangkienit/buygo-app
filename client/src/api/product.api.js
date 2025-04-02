@@ -115,3 +115,64 @@ export const updateTopUpProductForAdmin = async (productId, productName, product
     throw error;
   }
 };
+
+export const addAccountToProductForAdmin = async (productId, product_attributes_data) => {
+  try {
+    const response = await api.patch(`/product/admin/update-product/add-account/${productId}`, {
+      product_attributes_data
+    },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const addPackageToProductForAdmin = async (productId, product_attributes_data) => {
+  try {
+    const response = await api.patch(`/product/admin/update-product/add-package/${productId}`, {
+      product_attributes_data
+    },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteAccountFromProductForAdmin = async (productId, accountId) => {
+  try {
+    const response = await api.patch(`/product/admin/update-product/delete-account/${productId}/${accountId}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deletePackageFromProductForAdmin = async (productId, packageId) => {
+  try {
+    const response = await api.patch(`/product/admin/update-product/delete-package/${productId}/${packageId}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

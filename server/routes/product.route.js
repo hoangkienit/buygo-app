@@ -21,4 +21,12 @@ router.patch('/admin/update-product/account/:productId', verifyMiddleware, verif
 
 router.patch('/admin/update-product/topup/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.updateTopUpProductForAdmin);
 
+router.patch('/admin/update-product/add-account/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.addAccountToProductForAdmin);
+
+router.patch('/admin/update-product/add-package/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.addPackageToProductForAdmin);
+
+router.patch('/admin/update-product/delete-account/:productId/:accountId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteAccountFromProductForAdmin);
+
+router.patch('/admin/update-product/delete-package/:productId/:packageId', verifyMiddleware, verifyAdminMiddleware, ProductController.deletePackageFromProductForAdmin);
+
 module.exports = router;

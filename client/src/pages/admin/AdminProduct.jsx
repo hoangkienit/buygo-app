@@ -18,7 +18,7 @@ const ITEMS_PER_PAGE = 8;
 export const AdminProduct = () => {
     const [products, setProducts] = useState([]);
     const [selected, setSelected] = useState("");
-    const [selectedProductType, setSelectedProductType] = useState("game_account");
+    const [selectedProductType, setSelectedProductType] = useState("all");
     const [searchInput, setSearchInput] = useState("");
     const [openActionId, setOpenActionId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -267,10 +267,11 @@ export const AdminProduct = () => {
             {/* Confirmation Modal */}
             {isModalOpen && (
                 <ConfirmModal
+                    isOpen={isModalOpen}
                     title="Xóa sản phẩm"
-                    content="Bạn có chắc chắn muốn xóa sản phẩm này?"
+                    message="Bạn có chắc chắn muốn xóa sản phẩm này?"
                     onConfirm={() => handleDeleteProduct(selectedIdToDelete)}
-                    onCancel={() => setIsModalOpen(false)}
+                    onClose={() => setIsModalOpen(false)}
                 />
             )}
         </div>

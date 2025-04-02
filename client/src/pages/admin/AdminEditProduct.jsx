@@ -4,23 +4,29 @@ import './admin-product-detail.css';
 import './admin-edit-product.css';
 import { HashLoader } from 'react-spinners';
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
-import { deleteProductForAdmin, getProductForAdmin, updateAccountProductForAdmin, updateTopUpProductForAdmin } from '../../api/product.api';
+import { deleteAccountFromProductForAdmin, deletePackageFromProductForAdmin, getProductForAdmin, updateAccountProductForAdmin, updateTopUpProductForAdmin } from '../../api/product.api';
 import { FaCopy } from "react-icons/fa6";
-import { productTypeText } from '../../utils';
+import { productAttributesStatusText, productTypeText } from '../../utils';
 import { MdDelete } from "react-icons/md";
 import { MdOutlineAdd } from "react-icons/md";
+import AddItemModal from '../../components/modal/add-item-modal';
+import ConfirmModal from '../../components/modal/confirm-modal';
 
 export const AdminEditProduct = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [orders, setOrders] = useState([]);
     const navigate = useNavigate();
 
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
     const [productPrice, setProductPrice] = useState(0);
     const [productStatus, setProductStatus] = useState("");
+
+    const [isModalOpen, setIsModalOpen] = useState(false); // Add item modal
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // Delete item modal
+
+    const [selectedItemToDelete, setSelectedItemToDelete] = useState("");
 
     useEffect(() => {
         document.title = `Admin - ${productId}`;
@@ -93,6 +99,42 @@ export const AdminEditProduct = () => {
         }
         finally {
                 setLoading(false);
+        }
+    }
+
+    const handleDeleteProductAttributes = async () => {
+        setLoading(true);
+        setIsConfirmModalOpen(false);
+        try {
+            let res = null;
+            if (product?.product_type === 'game_account') {
+                res = await deleteAccountFromProductForAdmin(productId, selectedItemToDelete);
+                setProduct({
+                    ...product,
+                    product_attributes: {
+                        ...product.product_attributes,
+                        account: res.data.updatedAccounts
+                    }
+                })
+            } else if (product?.product_type === 'topup_package') {
+                res = await deletePackageFromProductForAdmin(productId, selectedItemToDelete);
+                setProduct({
+                    ...product,
+                    product_attributes: {
+                        ...product.product_attributes,
+                        packages: res.data.updatedPackages
+                    }
+                })
+            }
+            
+            if (res.success) {
+                showToast("Xóa thành công", "success");
+            }
+        } catch (error) {
+            showToast(error.message, "error");
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -212,7 +254,7 @@ export const AdminEditProduct = () => {
                 <div className='product-attributes-container'>
                     <div className='product-attribute-title-button-container'>
                         {product?.product_type === 'game_account' ? <p className='attribute-title'>Tài khoản</p> : <p className='attribute-title'>Gói nạp</p>}
-                        <a href="/super-admin/products/add-product" className="add-product-button-container">
+                        <a style={{cursor: "pointer"}} onClick={() => setIsModalOpen(true)} className="add-product-button-container">
                             <MdOutlineAdd className="add-icon" />
                             <p className="add-text">Thêm mới</p>
                         </a>
@@ -234,8 +276,11 @@ export const AdminEditProduct = () => {
                                     <td>{ index+1}</td>
                                     <td>{acc.username }</td>
                                     <td>{acc.password }</td>
-                                    <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
-                                    <td><button className='delete-btn action-button'><MdDelete className="action-icon"/></button></td>
+                                        <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
+                                        <td><button onClick={() => {
+                                            setIsConfirmModalOpen(true);
+                                            setSelectedItemToDelete(acc._id);
+                                        }} className='delete-btn action-button'><MdDelete className="action-icon"/></button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -249,8 +294,8 @@ export const AdminEditProduct = () => {
                                 <th>STT</th>
                                 <th>Tên gói nạp</th>
                                 <th>Giá</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thao tác</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody className='product-attributes-table-tbody'>
@@ -258,9 +303,12 @@ export const AdminEditProduct = () => {
                                 <tr key={index}>
                                     <td>{ index+1 }</td>
                                     <td>{ pack.name}</td>
-                                    <td>{ pack.price}</td>
-                                        <td>1</td>
-                                        <td><button className='delete-btn action-button'><MdDelete className="action-icon"/></button></td>
+                                    <td>{ pack.price.toLocaleString()}</td>
+                                        <td>{productAttributesStatusText(pack.status)}</td>
+                                        <td><button onClick={() => {
+                                            setIsConfirmModalOpen(true);
+                                            setSelectedItemToDelete(pack._id);
+                                        }} className='delete-btn action-button'><MdDelete className="action-icon" /></button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -276,7 +324,8 @@ export const AdminEditProduct = () => {
                 </div>
             </div>
             <ToastNotification></ToastNotification>
-            
+            <AddItemModal productId={productId} isOpen={isModalOpen} selectedType={product?.product_type} onClose={() => setIsModalOpen(false)} setProduct={setProduct} product={product}/>
+            <ConfirmModal isOpen={isConfirmModalOpen} onConfirm={handleDeleteProductAttributes} onClose={() => setIsConfirmModalOpen(false)} message={'Bạn có chắc chắn muốn tiếp tục không?'} title={''}/>
         </div>
     )
 }

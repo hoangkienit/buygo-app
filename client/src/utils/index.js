@@ -73,4 +73,15 @@ export const productTypeText = (type) => {
         break;
     }
 }
+
+export const productAttributesStatusText = (type) => {
+    switch (type) {
+      case "available":
+        return "Có sẵn";
+      case "order":
+        return "Order";
+      default:
+        break;
+    }
+}
   

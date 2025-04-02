@@ -5,7 +5,7 @@ import { HashLoader } from 'react-spinners';
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { deleteProductForAdmin, getProductForAdmin } from '../../api/product.api';
 import { FaCopy } from "react-icons/fa6";
-import { productTypeText } from '../../utils';
+import { productAttributesStatusText, productTypeText } from '../../utils';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ConfirmModal from '../../components/modal/confirm-modal';
@@ -218,8 +218,8 @@ export const AdminProductDetail = () => {
                                 <tr key={index}>
                                     <td>{ index+1 }</td>
                                     <td>{ pack.name}</td>
-                                    <td>{ pack.price}</td>
-                                    <td>1</td>
+                                    <td>{ pack.price.toLocaleString()}</td>
+                                    <td>{ productAttributesStatusText(pack.status)}</td>
                                 </tr>
                             ))}
                         </tbody>
