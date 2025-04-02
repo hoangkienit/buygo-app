@@ -161,6 +161,12 @@ const idSchema = Joi.string()
             otherwise: Joi.forbidden(), // Explicitly disallow other values
         }),
     }),
+  });
+
+  const productUpdateValidationSchema = Joi.object({
+  productName: Joi.string().min(3).max(255).required(),
+  productDescription: Joi.string().max(1000).optional(),
+  productStatus: Joi.string().valid("active", "inactive").required(),
 });
 
 module.exports = {
@@ -171,4 +177,5 @@ module.exports = {
     validateWebhookDescription: (data) => validate(webhookDescriptionSchema, data),
     validateProduct: (data) => validate(productValidationSchema, data),
     validateProductAttributes: (data) => validate(productAttributesSchema, data),
+    validateProductUpdate: (data) => validate(productUpdateValidationSchema, data),
 };

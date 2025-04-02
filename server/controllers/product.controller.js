@@ -1,7 +1,7 @@
 const ProductService = require("../services/product.service");
 const ReviewService = require('./../services/review.service');
 
-const { validateProduct, validateProductAttributes, validateId } = require("../utils/validation");
+const { validateProduct, validateProductAttributes, validateId, validateProductUpdate } = require("../utils/validation");
 
 class ProductController {
     // 🔹 Get All Product For Client
@@ -150,6 +150,100 @@ class ProductController {
                     message: error.message
                 })
             }
+    }
+
+    static async updateAccountProductForAdmin(req, res) {
+        const { productId } = req.params;
+        const { productName, productDescription, productStatus, productPrice } = req.body;
+
+        let errors = validateProductUpdate({ productName, productDescription, productStatus });
+        if (errors && errors.length > 0) {
+            return res.status(400).json({
+                    success: false,
+                    message: errors[0].message
+                });
         }
+
+        errors = validateId(productId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({
+                    success: false,
+                    message: errors[0].message
+                });
+        }
+
+        if (isNaN(productPrice) || productPrice < 0) {
+            return res.status(400).json({
+                    success: false,
+                    message: "Invalid price"
+                });
+        }
+
+        try {
+            const response = await ProductService.updateAccountProductForAdmin(
+                productId,
+                productName,
+                productDescription,
+                productStatus,
+                productPrice
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    updatedProduct: response.product
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    success: false,
+                    message: error.message
+            })
+        }
+    }
+
+    static async updateTopUpProductForAdmin(req, res) {
+        const { productId } = req.params;
+        const { productName, productDescription, productStatus } = req.body;
+
+        let errors = validateProductUpdate({ productName, productDescription, productStatus });
+        if (errors && errors.length > 0) {
+            return res.status(400).json({
+                    success: false,
+                    message: errors[0].message
+                });
+        }
+
+        errors = validateId(productId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({
+                    success: false,
+                    message: errors[0].message
+                });
+        }
+
+        try {
+            const response = await ProductService.updateTopUpProductForAdmin(
+                productId,
+                productName,
+                productDescription,
+                productStatus
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    updatedProduct: response.product
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    success: false,
+                    message: error.message
+            })
+        }
+    }
 }
 module.exports = ProductController;

@@ -6,3 +6,30 @@
     top: 50%;
     transform: translateY(-50%);
 }
+
+.product-attribute-title-button-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-product-update-button{
+    width: 70%;
+    background-color: var(--eight);
+    color: #fff;
+}
+
+.edit-product-update-button:hover {
+    background-color: var(--eight);
+}
+
+.edit-product-discard-button{
+    width: 30%;
+    background-color: grey;
+    color: #fff;
+}
+
+.edit-product-discard-button:hover{
+    background-color: grey;
+}

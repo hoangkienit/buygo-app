@@ -78,3 +78,40 @@ export const deleteProductForAdmin = async (productId) => {
     throw error;
   }
 };
+
+export const updateAccountProductForAdmin = async (productId, productName, productDescription, productStatus, productPrice) => {
+  try {
+    const response = await api.patch(`/product/admin/update-product/account/${productId}`, {
+      productName,
+      productDescription,
+      productStatus,
+      productPrice
+    },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateTopUpProductForAdmin = async (productId, productName, productDescription, productStatus) => {
+  try {
+    const response = await api.patch(`/product/admin/update-product/topup/${productId}`, {
+      productName,
+      productDescription,
+      productStatus
+    },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

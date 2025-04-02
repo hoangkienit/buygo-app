@@ -104,8 +104,6 @@ class ProductService {
                 account: encryptedAccounts
             });
 
-            await newGameAccount.save();
-
             existingProduct.product_attributes = newGameAccount;
             await existingProduct.save();
         } else if (existingProduct.product_type === "topup_package") {
@@ -116,8 +114,6 @@ class ProductService {
             const newTopUpPackage = new TopUpPackage({
                 packages: product_attributes
             });
-
-            await newTopUpPackage.save();
 
             existingProduct.product_attributes = newTopUpPackage;
             await existingProduct.save();
@@ -143,6 +139,58 @@ class ProductService {
         
         return {
             message: "Delete product successfully"
+        }
+    }
+
+    static async updateAccountProductForAdmin(
+        productId,
+        productName,
+        productDescription,
+        productStatus,
+        productPrice
+    ) {
+        const product = await Product.findOne({productId});
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        product.product_name = productName;
+        product.product_description = productDescription;
+        product.product_status = productStatus;
+
+        product.product_attributes = {
+            ...product.product_attributes,
+            price: productPrice
+        }
+
+        await product.save();
+        return {
+            message: "Update product successfully",
+            product: product
+        }
+    }
+
+    static async updateTopUpProductForAdmin(
+        productId,
+        productName,
+        productDescription,
+        productStatus,
+    ) {
+        const product = await Product.findOne({productId});
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        product.product_name = productName;
+        product.product_description = productDescription;
+        product.product_status = productStatus;
+
+        await product.save();
+        return {
+            message: "Update product successfully",
+            product: product
         }
     }
 }

@@ -4,9 +4,11 @@ import './admin-product-detail.css';
 import './admin-edit-product.css';
 import { HashLoader } from 'react-spinners';
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
-import { deleteProductForAdmin, getProductForAdmin } from '../../api/product.api';
+import { deleteProductForAdmin, getProductForAdmin, updateAccountProductForAdmin, updateTopUpProductForAdmin } from '../../api/product.api';
 import { FaCopy } from "react-icons/fa6";
 import { productTypeText } from '../../utils';
+import { MdDelete } from "react-icons/md";
+import { MdOutlineAdd } from "react-icons/md";
 
 export const AdminEditProduct = () => {
     const { productId } = useParams();
@@ -32,6 +34,14 @@ export const AdminEditProduct = () => {
 
             if (res.success) {
                 setProduct(res.data.product);
+
+                setProductName(res.data.product.product_name);
+                setProductDescription(res.data.product.product_description);
+                setProductStatus(res.data.product.product_status);
+
+                if (res.data.product.product_type === 'game_account') {
+                    setProductPrice(res.data.product.product_attributes.price);
+                }
             }
         }
         catch (error) {
@@ -53,22 +63,38 @@ export const AdminEditProduct = () => {
         showToast("Đã copy dữ liệu", "success");
     };
 
-    const handleUpdateProductStatus = async (productId, status) => {
-                setLoading(true);
-                try {
-                    const res = await deleteProductForAdmin(productId);
-        
-                    if (res.success) {
-                        navigate("/super-admin/products")
-                        showToast("Xóa sản phẩm thành công", "success");
-                    }
-                } catch (error) {
-                    showToast(error.message, "error");
-                }
-                finally {
-                    setLoading(false);
-                }
+    const handleUpdateProduct = async () => {
+        setLoading(true);
+        try {
+            let res = null;
+            if (product?.product_type === 'game_account') {
+                res = await updateAccountProductForAdmin(
+                    productId,
+                    productName,
+                    productDescription,
+                    productStatus,
+                    productPrice
+                );        
+            } else if (product?.product_type === 'topup_package') {
+                res = await updateTopUpProductForAdmin(
+                    productId,
+                    productName,
+                    productDescription,
+                    productStatus,
+                );
             }
+                    
+            if (res.success) {
+                showToast("Cập nhật sản phẩm thành công", "success");
+                setProduct(res.data.updatedProduct);
+            }
+        } catch (error) {
+            showToast(error.message, "error");
+        }
+        finally {
+                setLoading(false);
+        }
+    }
 
     if (loading) {
         return (
@@ -112,7 +138,7 @@ export const AdminEditProduct = () => {
                     {product?.product_type === 'game_account' &&
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Giá`} disabled />
-                        <input type='number' className='product-detail-input' placeholder={product?.product_attributes?.price?.toLocaleString()} value={productDescription} onChange={(e) => setProductPrice(e.target.value)}/>
+                        <input type='text' className='product-detail-input' placeholder={product?.product_attributes?.price?.toLocaleString()} value={productPrice.toLocaleString('vi-VN')} onChange={(e) => setProductPrice(Number(e.target.value.replace(/\D/g, '')))}/>
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_description}`)}/> */}
                     </div>
                     }
@@ -134,7 +160,7 @@ export const AdminEditProduct = () => {
                     {/** Product Status */}
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Trạng thái`} disabled />
-                        <select onChange={(e) => setProductStatus(e.target.value)} className='product-detail-input' value={product?.product_status}>
+                        <select onChange={(e) => setProductStatus(e.target.value)} className='product-detail-input' value={productStatus} placeholder={product?.product_status}>
                             <option value={'active'}>Hoạt động</option>
                             <option value={'inactive'}>Không hoạt động</option>
                         </select>
@@ -184,7 +210,13 @@ export const AdminEditProduct = () => {
             </div>
             <div className='product-attributes-transactions-container'>
                 <div className='product-attributes-container'>
-                    {product?.product_type === 'game_account' ? <p className='attribute-title'>Tài khoản</p> : <p className='attribute-title'>Gói nạp</p>}
+                    <div className='product-attribute-title-button-container'>
+                        {product?.product_type === 'game_account' ? <p className='attribute-title'>Tài khoản</p> : <p className='attribute-title'>Gói nạp</p>}
+                        <a href="/super-admin/products/add-product" className="add-product-button-container">
+                            <MdOutlineAdd className="add-icon" />
+                            <p className="add-text">Thêm mới</p>
+                        </a>
+                    </div>
                     {product?.product_type === 'game_account' &&
                         <table className='product-attributes-table'>
                         <thead className='product-attributes-table-thead'>
@@ -193,6 +225,7 @@ export const AdminEditProduct = () => {
                                 <th>Tài khoản</th>
                                 <th>Mật khẩu</th>
                                 <th>Tình trạng</th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody className='product-attributes-table-tbody'>
@@ -202,6 +235,7 @@ export const AdminEditProduct = () => {
                                     <td>{acc.username }</td>
                                     <td>{acc.password }</td>
                                     <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
+                                    <td><button className='delete-btn action-button'><MdDelete className="action-icon"/></button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -215,7 +249,8 @@ export const AdminEditProduct = () => {
                                 <th>STT</th>
                                 <th>Tên gói nạp</th>
                                 <th>Giá</th>
-                                <th>Trạng thái</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody className='product-attributes-table-tbody'>
@@ -224,7 +259,8 @@ export const AdminEditProduct = () => {
                                     <td>{ index+1 }</td>
                                     <td>{ pack.name}</td>
                                     <td>{ pack.price}</td>
-                                    <td>1</td>
+                                        <td>1</td>
+                                        <td><button className='delete-btn action-button'><MdDelete className="action-icon"/></button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -233,7 +269,10 @@ export const AdminEditProduct = () => {
                 </div>
 
                 <div className='product-transactions-container'>
-                    <p className='attribute-title'>Đơn hàng gần đây</p>
+                    <div className='action-button-container'>
+                        <button onClick={handleUpdateProduct} className='edit-product-update-button'>Cập nhật</button>
+                        <button className='edit-product-discard-button'>Hủy bỏ</button>
+                    </div>
                 </div>
             </div>
             <ToastNotification></ToastNotification>

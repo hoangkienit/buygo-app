@@ -17,6 +17,8 @@ router.post('/admin/add-product', verifyMiddleware, verifyAdminMiddleware, Uploa
 
 router.post('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
 
-router.post('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
+router.patch('/admin/update-product/account/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.updateAccountProductForAdmin);
+
+router.patch('/admin/update-product/topup/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.updateTopUpProductForAdmin);
 
 module.exports = router;

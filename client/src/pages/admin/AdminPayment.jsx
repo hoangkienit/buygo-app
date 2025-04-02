@@ -202,7 +202,7 @@ export const AdminPayment = () => {
               ))
       ) : (
           <tr>
-              <td colSpan="8">Không có sản phẩm nào</td>
+              <td colSpan="9">Không có sản phẩm nào</td>
           </tr>
       )}
                       </tbody>
