@@ -4,6 +4,7 @@ import "./../styles/admin.css"; // Import CSS file
 import { Sidebar } from "../components/admin/sidebar";
 import { AdminHeader } from "../components/admin/header";
 import { useUser } from "../context/UserContext";
+import ToastNotification from "../components/toasts/ToastNotification";
 
 
 const AdminLayout = () => {
@@ -30,7 +31,8 @@ const AdminLayout = () => {
             <main className="admin-content">
                 <Outlet />
             </main>
-        </div>
+      </div>
+      <ToastNotification/>
     </div>
   );
 };

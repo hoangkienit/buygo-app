@@ -16,4 +16,13 @@ export const showToast = (message, type = "error") => {
   });
 };
 
+export const showTopCenterToast = (message, type = "error") => {
+  toast[type](message, {
+    position: "top-center",
+    autoClose: 7000,
+    closeButton: false,
+    className: `custom-toast`,
+  });
+};
+
 export default ToastNotification;

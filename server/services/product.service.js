@@ -9,7 +9,7 @@ const CryptoJS = require("crypto-js");
 class ProductService {
     // 🔹 Get all products
     static async getAllProducts() {
-        let products = await Product.find().lean();
+        let products = await Product.find({product_status: "active"}).lean();
 
         for (let product of products) {
         if (product.product_type === "game_account" && product.product_attributes?.account) {
@@ -18,7 +18,7 @@ class ProductService {
                 ...acc,
                 username: undefined,
                 password: undefined
-            }));
+                }));
             }
             // 🔹 No need to modify "topup_package" since it doesn't have sensitive data
         }
@@ -131,11 +131,22 @@ class ProductService {
     }
     
     static async deleteProductForAdmin(productId) {
-        const product = await Product.deleteOne({ productId });
+        const product = await Product.findOne({ productId });
 
-        if (product.deletedCount === 0) {
+        if (!product) {
             throw new Error("Product not found");
         }
+
+        if (product.product_img) {
+            await imageService.deleteFromCloudinary(product.product_img);
+        }
+
+        const result = await Product.deleteOne({ productId });
+
+        if (result.deletedCount === 0) {
+            throw new Error("Failed to delete product");
+        }
+
         
         return {
             message: "Delete product successfully"

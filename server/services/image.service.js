@@ -90,6 +90,26 @@ class ImageService {
       throw new Error('Lỗi xử lý ảnh: ' + error.message);
     }
   }
+
+  async deleteFromCloudinary(imageUrl) {
+    try {
+      if (!imageUrl) throw new Error('Image URL is required');
+      
+      const matches = imageUrl.match(/\/v\d+\/(.+)\.\w+$/);
+      if (!matches) throw new Error('Invalid Cloudinary image URL');
+      
+      const publicId = matches[1];
+      const response = await cloudinary.uploader.destroy(publicId);
+      
+      if (response.result !== 'ok') throw new Error('Failed to delete image from Cloudinary');
+      
+      console.log(`Deleted image from Cloudinary: ${publicId}`);
+      return { success: true };
+    } catch (error) {
+      console.log(error.message);
+      throw new Error(`Error deleting image from Cloudinary: ${error.message}`);
+    }
+  }
 }
 
 module.exports = new ImageService();

@@ -42,6 +42,9 @@ class PaymentService {
         // Notify the client via WebSocket
         getIO().to(userId).emit("recharge_success", { userId, newBalance, gateway, transferAmount });
 
+        // Notify the admin
+        getIO().to("admin_room").emit("new_transaction", { type: "payment", count: 1 });
+
     return {
         message: "Recharge successfully"
     };

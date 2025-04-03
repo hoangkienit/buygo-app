@@ -28,12 +28,13 @@ const Payment = () => {
     const handleRechargeSuccess = useCallback(async ({ newBalance, gateway, transferAmount }) => {
         await updateBalance(newBalance);
         setSuccessObj({ amount: transferAmount, gateway });
-        setPending(false);
+      setPending(false);
+      setStatus("Thành công");
     }, [updateBalance]);
 
 
-     useEffect(() => {
-    if (user?._id) {
+    useEffect(() => {
+    if (user?._id && socket) {
       socket.connect();
       console.log("🔄 Connecting to socket...");
       socket.emit("join", user._id);
@@ -44,7 +45,7 @@ const Payment = () => {
         socket.disconnect();
       };
     }
-     }, [user?._id, handleRechargeSuccess]);
+    }, [user?._id, handleRechargeSuccess, socket]);
     
     useEffect(() => {
         checkNewTransaction();
@@ -79,7 +80,8 @@ const Payment = () => {
         }
     }
     
-    const copyToClipboard = (text) => {
+  const copyToClipboard = (text) => {
+    showToast("Copy thành công", "success");
         navigator.clipboard.writeText(text);
     };
 

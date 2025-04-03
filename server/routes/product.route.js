@@ -15,7 +15,7 @@ router.get('/admin/get-product/:productId', verifyMiddleware, verifyAdminMiddlew
 
 router.post('/admin/add-product', verifyMiddleware, verifyAdminMiddleware, UploadMiddleware.upload.single("product_img"), ProductController.addNewProduct);
 
-router.post('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
+router.delete('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
 
 router.patch('/admin/update-product/account/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.updateAccountProductForAdmin);
 

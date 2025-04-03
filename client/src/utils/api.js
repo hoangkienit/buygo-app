@@ -7,7 +7,7 @@ const api = axios.create({
 });
 
 // 🟢 Hàm refresh token
-const refreshAccessToken = async () => {
+export const refreshAccessToken = async () => {
     try {
         const response = await axios.post(`${BASE_API_URL_V1}/auth/refresh-token`, {}, { withCredentials: true });
         return response.data.accessToken;

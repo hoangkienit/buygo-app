@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './../../styles/admin.css';
 import LOGO from './../../assets/images/BUYGO_LOGO.png';
@@ -9,11 +9,78 @@ import { FaUserAlt } from "react-icons/fa";
 import { RiTeamFill } from "react-icons/ri";
 import { BiSolidCommentDetail } from "react-icons/bi";
 import { MdAnalytics } from "react-icons/md";
+import { useUser } from '../../context/UserContext';
+import socket from '../../services/socket';
+import { showTopCenterToast } from '../toasts/ToastNotification';
+import { playNotificationSound } from '../../utils/audio';
 
 export const Sidebar = ({ isSidebarOpen }) => {
   const location = useLocation();
   const sidebarRef = useRef(null);
   const isMobile = () => window.innerWidth <= 768;
+  const { user } = useUser();
+
+  // Retrieve notifications from localStorage on mount
+  const getStoredNotifications = () => {
+    const storedNotifications = localStorage.getItem("notifications");
+    return storedNotifications ? JSON.parse(storedNotifications) : { payment: 0, orders: 0, reviews: 0 };
+  };
+
+  const [notifications, setNotifications] = useState(getStoredNotifications);
+
+  const handleNewNotification = useCallback(({ type, count }) => {
+    showTopCenterToast("Có một giao dịch nạp tiền mới", "success");
+    playNotificationSound();
+    setNotifications((prevNotifications) => {
+      const updatedNotifications = { ...prevNotifications, [type]: count };
+
+      // Save updated notifications to localStorage
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+
+      return updatedNotifications;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (user?.role === 'admin' && socket) {
+      socket.connect();
+      socket.emit("admin_join", user?.id);
+
+      socket.on("new_transaction", handleNewNotification);
+
+      return () => {
+        socket.off("new_transaction", handleNewNotification);
+        socket.disconnect();
+      };
+    }
+  }, [user?.role, handleNewNotification, socket]);
+
+  const resetNotification = (path) => {
+    const notificationResetMap = {
+      "/super-admin/payment": "payment",
+      "/super-admin/orders": "orders",
+      "/super-admin/reviews": "reviews",
+    };
+
+    const matchedKey = Object.keys(notificationResetMap).find((key) => 
+      path.includes(key)
+    );
+
+    if (matchedKey) {
+      setNotifications((prev) => {
+        const updatedNotifications = { ...prev, [notificationResetMap[matchedKey]]: 0 };
+
+        // Save reset notifications to localStorage
+        localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+
+        return updatedNotifications;
+      });
+    }
+  };
+
+  useEffect(() => {
+    resetNotification(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!isMobile()) return;
@@ -53,7 +120,7 @@ export const Sidebar = ({ isSidebarOpen }) => {
       to: "/super-admin/payment",
       icon: <BsCreditCard2FrontFill />,
       label: "Giao dịch nạp tiền",
-      notification: "1"
+      notificationKey: "payment"
     },
     {
       to: "/super-admin/products",
@@ -64,7 +131,7 @@ export const Sidebar = ({ isSidebarOpen }) => {
       to: "/super-admin/orders",
       icon: <IoReceipt />,
       label: "Đơn hàng",
-      notification: "1"
+      notificationKey: "orders"
     },
     {
       to: "/super-admin/users",
@@ -82,10 +149,10 @@ export const Sidebar = ({ isSidebarOpen }) => {
       label: "Quản lí thành viên"
     },
     {
-      to: "/super-admin/ratings",
+      to: "/super-admin/reviews",
       icon: <BiSolidCommentDetail />,
       label: "Đánh giá",
-      notification: "1"
+      notificationKey: "reviews"
     },
     {
       to: "/super-admin/analytics",
@@ -121,9 +188,9 @@ export const Sidebar = ({ isSidebarOpen }) => {
                 {link.icon}
                 <p className="nav-selection-text">{link.label}</p>
               </div>
-              {link.notification && (
+              {link.notificationKey && notifications[link.notificationKey] > 0 &&  (
                 <div className="nav-selection-notification">
-                  <p className="notification-count">{link.notification}</p>
+                  <p className="notification-count">{notifications[link.notificationKey]}</p>
                 </div>
               )}
             </Link>
@@ -133,4 +200,3 @@ export const Sidebar = ({ isSidebarOpen }) => {
     </aside>
   );
 };
-

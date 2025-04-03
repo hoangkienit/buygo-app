@@ -67,7 +67,7 @@ export const getProductForAdmin = async (productId) => {
 
 export const deleteProductForAdmin = async (productId) => {
   try {
-    const response = await api.post(`/product/admin/delete-product/${productId}`,
+    const response = await api.delete(`/product/admin/delete-product/${productId}`,
       {
         withCredentials: true
       }
