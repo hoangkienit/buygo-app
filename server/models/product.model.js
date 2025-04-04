@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
   {
-    productId: { type: String, required: true },
+    productId: { type: String, required: true, index: 1 },
     product_name: { type: String, required: true },
     product_description: { type: String, default: "" },
     product_type: {
@@ -11,7 +11,7 @@ const ProductSchema = new mongoose.Schema(
       enum: ["topup_package", "game_account"],
       required: true,
     },
-    product_slug: { type: String, required: true },
+    product_slug: { type: String, required: true, index: 1 },
     product_category: { type: String, required: true },
     product_status: {
       type: String,
@@ -19,7 +19,7 @@ const ProductSchema = new mongoose.Schema(
       default: "active",
     },
     product_stock: { type: Number, default: 0, required: true },
-    product_img: { type: String, required: true },
+    product_imgs: [{ type: String, required: true }],
     product_sold_amount: {type: Number, default: 0},
     product_attributes: { type: mongoose.Schema.Types.Mixed, required: true },
   },

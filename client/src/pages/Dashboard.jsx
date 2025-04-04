@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "../styles/dashboard.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { fakeData } from "../data/fake";
 import AccountSection from "../components/dashboard/account-section";
+import { HashLoader } from "react-spinners";
+import { getProducts } from "../api/product.api";
+import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
 
 const banners = [
   "https://elements-resized.envatousercontent.com/elements-preview-images/29961ce9-4919-49b0-a72d-fd9104b7042d?w=632&cf_fit=scale-down&q=85&format=auto&s=fbd666bd56dbb781cc84d18ff9d6d4e9a60a88293c5e9ba895b60afe320e9ab3",
@@ -22,9 +25,30 @@ const categories = [
 
 
 const Dashboard = () => {
+  const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-      document.title = "Buygo.vn";
+    document.title = "Buygo.vn";
+    fetchProductData();
   }, []);
+
+  const fetchProductData = async () => {
+    setLoading(true);
+
+    try {
+      const res = await getProducts();
+      
+      if (res.success) {
+        setProducts(res.data.products);
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
   
   const settings = {
     dots: true,
@@ -45,8 +69,17 @@ const Dashboard = () => {
     arrows: false
   };
 
+  if (loading) {
+        return (
+            <div style={{height: "100vh"}} className="loader-container">
+            <HashLoader color="#fff"/>
+            </div>
+        )
+  }
+
   return (
     <div className="dashboard-container">
+      <ToastNotification/>
       {/* Banner Slider */}
       <div className="banner-slider">
         <Slider {...settings}>
@@ -72,7 +105,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <AccountSection title={'eFootball'}/>
+      <AccountSection title={'eFootball'} products={ products} />
 
       <section className="fake-data-section">
   {Array.from(new Set(fakeData.map(item => item.category))).map(category => (

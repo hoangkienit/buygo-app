@@ -9,6 +9,8 @@ import { productAttributesStatusText, productTypeText } from '../../utils';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import ConfirmModal from '../../components/modal/confirm-modal';
+import Slider from "react-slick";
+import { sliderSettings } from '../../utils/slider-settings';
 
 export const AdminProductDetail = () => {
     const { productId } = useParams();
@@ -89,7 +91,16 @@ export const AdminProductDetail = () => {
             </div>
             <div className='product-detail-info-container'>
                 <div className='product-detail-left-side'>
-                    <img loading='lazy' className='product-detail-image' src={require('./../../assets/images/test-img.jpg')} alt='product-img'></img>
+                    {/* <div className='product-detail-img-slider'>
+                        <Slider {...sliderSettings}>
+                        {product?.product_imgs.map((banner, index) => (
+                        <div key={index} className='img-container'>
+                            <img src={banner} alt={`Banner ${index + 1}`} className="product-detail-image" />
+                        </div>
+                        ))}
+                    </Slider>
+                    </div> */}
+                    {/* <img loading='lazy' className='product-detail-image' src={require('./../../assets/images/test-img.jpg')} alt='product-img'></img> */}
                 </div>
                 <div className='product-detail-right-side'>
                     <h3 className='product-detail-title'>Thông tin sản phẩm</h3>

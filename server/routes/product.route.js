@@ -9,11 +9,13 @@ const router = express.Router();
 // Client
 router.get('/all-products', ProductController.getAllProducts);
 
+router.get('/get-product/:product_slug', ProductController.getProductBySlug);
+
 
 // Admin
 router.get('/admin/get-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.getProductForAdmin);
 
-router.post('/admin/add-product', verifyMiddleware, verifyAdminMiddleware, UploadMiddleware.upload.single("product_img"), ProductController.addNewProduct);
+router.post('/admin/add-product', verifyMiddleware, verifyAdminMiddleware, UploadMiddleware.upload.array("product_img", 5), ProductController.addNewProduct);
 
 router.delete('/admin/delete-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.deleteProductForAdmin);
 

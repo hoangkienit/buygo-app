@@ -35,7 +35,7 @@ function App() {
               {/* Public Routes */}
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/product" element={<Product />} />
+                <Route path="/product/:product_slug" element={<Product />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/unauthorized" element={<Unauthorized/>} />
               </Route>

@@ -1,6 +1,36 @@
 import api from './../utils/api'
 
-export const addNewAccountProduct = async (
+// For client
+export const getProducts = async () => {
+  try {
+    const response = await api.get(`/product/all-products`,
+      {
+        withCredentials: true
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProductBySlug = async (product_slug) => {
+  try {
+    const response = await api.get(`/product/get-product/${product_slug}`,
+      {
+        withCredentials: true
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// For admin
+export const addNewProduct = async (
     product_img,
     product_name,
     product_description,
@@ -14,7 +44,9 @@ export const addNewAccountProduct = async (
     try {
         const formData = new FormData();
 
-        formData.append("product_img", product_img);
+        product_img.forEach((image, index) => {
+            formData.append("product_img", image);
+        });
         formData.append("product_name", product_name);
         formData.append("product_description", product_description);
         formData.append("product_type", product_type);
@@ -34,20 +66,6 @@ export const addNewAccountProduct = async (
     return response.data;
   } catch (error) {
       throw error;
-  }
-};
-
-export const getProducts = async () => {
-  try {
-    const response = await api.get(`/product/all-products`,
-      {
-        withCredentials: true
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    throw error;
   }
 };
 

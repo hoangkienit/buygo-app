@@ -3,13 +3,14 @@ import './admin-add-product.css'
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from 'react-router-dom';
-import { addNewAccountProduct as addNewProduct } from '../../api/product.api';
+import { addNewProduct } from '../../api/product.api';
 import { getProductTypeObject } from '../../utils';
+import { TiDelete } from "react-icons/ti";
 
 
 export const AdminAddProduct = () => {
-    const [image, setImage] = useState(null);
-    const [preview, setPreview] = useState(null);
+    const [images, setImages] = useState([]); // Store image files
+    const [previews, setPreviews] = useState([]); // Store image previews
     const [selectedType, setSelectedType] = useState("game_account");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [price, setPrice] = useState(0);
@@ -29,11 +30,26 @@ export const AdminAddProduct = () => {
     }, []);
 
     const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        setImage(file);
-        setPreview(URL.createObjectURL(file)); // Generate preview
+        const files = Array.from(event.target.files);
+
+        // Limit to 5 images
+        if (files.length + images.length > 5) {
+            showToast("Chỉ được tải lên tối đa 5 ảnh", "error");
+            return;
         }
+
+        const newImages = [...images, ...files].slice(0, 5);
+        const newPreviews = newImages.map((file) => URL.createObjectURL(file));
+
+        setImages(newImages);
+        setPreviews(newPreviews);
+    };
+
+    const handleRemoveImage = (index) => {
+        const newImages = images.filter((_, i) => i !== index);
+        const newPreviews = previews.filter((_, i) => i !== index);
+        setImages(newImages);
+        setPreviews(newPreviews);
     };
     
     const handleImgClick = (event) => {
@@ -78,7 +94,7 @@ export const AdminAddProduct = () => {
 
     const handleAddProduct = async () => {
         setLoading(true);
-        if (!image || !productName || !selectedType || !selectedStatus || !stock) {
+        if (!productName || !selectedType || !selectedStatus || !stock) {
             showToast("Bạn phải cung cấp đầy đủ thông tin");
             setLoading(false);
             return;
@@ -90,10 +106,16 @@ export const AdminAddProduct = () => {
             return;
         }
 
+        if (images.length === 0) {
+            showToast("Bạn phải tải lên ít nhất 1 ảnh", "error");
+            setLoading(false);
+            return;
+        }
+
         try {
             let response = null;
             response = await addNewProduct(
-                    image,
+                    images,
                     productName,
                     productDescription,
                     selectedType,
@@ -106,15 +128,7 @@ export const AdminAddProduct = () => {
 
             if (response?.success) {
                 showToast("Thêm sản phẩm thành công", "success");
-                setProductName("");
-                setProductDescription("");
-                setPrice(0);
-                setDisplayPrice("");
-                setPreview(null);
-                setImage(null);
-                setSelectedStatus("");
-                setAmount("");
-                setStock(0);
+                resetForm();
             }
         }
         catch (error) {
@@ -126,6 +140,18 @@ export const AdminAddProduct = () => {
 
         }
     }
+
+    const resetForm = () => {
+    setProductName("");
+    setProductDescription("");
+    setSelectedType("");
+    setSelectedStatus("");
+    setStock("");
+    setPrice("");
+    setFormData({});
+    setImages([]);
+    setPreviews([]);
+    };
 
     const validateInputs = () => {
         const newErrors = formData.map((item) => {
@@ -169,16 +195,22 @@ export const AdminAddProduct = () => {
                             type="file"
                             ref={fileInputRef}
                             accept="image/*"
+                            multiple
                             style={{ display: "none" }} // Hide input
                             onChange={handleFileChange}
                         />
                         </div>
                         <h4 style={{color: "red", fontFamily: 'montserrat-md', fontSize: "13px"}}>*Lưu ý khi tải ảnh lên ảnh sẽ xuất hiện phía dưới</h4>
-                        {/* Preview Image */}
-                        {preview && (
-                            <div className="preview-container">
-                                <img src={preview} alt="Preview" className="preview-image" />
-                            </div>
+                        {/* Image Previews */}
+                        {previews.length > 0 && (
+                        <div className="preview-container">
+                        {previews.map((src, index) => (
+                        <div key={index} className="preview-wrapper">
+                            <img src={src} alt={`Preview ${index + 1}`} className="preview-image" />
+                            <TiDelete  className="remove-btn" onClick={() => handleRemoveImage(index)}></TiDelete>
+                        </div>
+                        ))}
+                        </div>
                         )}
                     </div>
                 </div>

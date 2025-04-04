@@ -5,11 +5,12 @@ const { slugify } = require('../utils/text');
 const { Product, TopUpPackage, GameAccount } = require('./../models/product.model');
 const imageService = require('./image.service');
 const CryptoJS = require("crypto-js");
+const logger = require('../utils/logger');
 
 class ProductService {
     // 🔹 Get all products
     static async getAllProducts() {
-        let products = await Product.find({product_status: "active"}).lean();
+        let products = await Product.find().lean();
 
         for (let product of products) {
         if (product.product_type === "game_account" && product.product_attributes?.account) {
@@ -25,6 +26,13 @@ class ProductService {
 
         if (!products) products = [];
         return { message: "Get products successfully", products: products };
+    }
+
+     static async getProductBySlug(product_slug) {
+        let product = await Product.findOne({product_slug}).lean();
+
+        if (!product) throw new Error("Product not found");
+        return { message: "Get product successfully", product: product };
     }
 
     // 🔹 Get product for admin
@@ -50,7 +58,7 @@ class ProductService {
         product_category,
         product_status,
         product_stock,
-        image,
+        images,
         product_price,
         product_attributes
     ) {
@@ -61,9 +69,12 @@ class ProductService {
             throw new Error("Tên sản phẩm đã tồn tại");
         }
 
-        const imageUrl = await imageService.processAndUploadImage(image, "products", null);
+        const uploadPromises = images.map(file => imageService.processAndUploadImage(file, "product", null));
+        const uploadedImages = await Promise.all(uploadPromises);
+
+        const imageUrls = uploadedImages.map(img => img.imageUrl);
             
-        if (!imageUrl) {
+        if (!imageUrls) {
             throw new Error("Upload ảnh không thành công");
         }
 
@@ -76,12 +87,11 @@ class ProductService {
                 product_category: product_category,
                 product_status: product_status,
                 product_stock: product_stock,
-                product_img: imageUrl.imageUrl,
+                product_imgs: imageUrls,
                 product_attributes: {}
         });
             
         await existingProduct.save();
-
 
         if (existingProduct.product_type === "game_account") {
             if (!Array.isArray(product_attributes)) {
@@ -137,9 +147,22 @@ class ProductService {
             throw new Error("Product not found");
         }
 
-        if (product.product_img) {
-            await imageService.deleteFromCloudinary(product.product_img);
+        const imageUrls = product.product_imgs;
+
+        if (!imageUrls || imageUrls.length === 0) {
+            throw new Error("No images to delete for this product");
         }
+
+        for (const imageUrl of imageUrls) {
+            try {
+                const deleteResult = await imageService.deleteFromCloudinary(imageUrl);
+                if (deleteResult.success) {
+                console.log(`Image deleted: ${imageUrl}`);
+                }
+            } catch (error) {
+                logger.error(`Failed to delete image ${imageUrl}: ${error.message}`);
+            }
+    }
 
         const result = await Product.deleteOne({ productId });
 

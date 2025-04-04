@@ -8,6 +8,8 @@
     display: flex;
     flex-direction: row;
     gap: 20px;
+    height: 100%;
+    min-height: 80vh;
 }
 
 .product-left{
@@ -366,8 +368,8 @@
 }
 
 .review-item-user-avatar{
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
@@ -391,7 +393,7 @@
 .review-item-username{
     color: #fff;
     font-family: 'montserrat-md';
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
@@ -407,8 +409,8 @@
 
 .user-rank-text{
     color: #b8b8b8;
-    font-family: 'montserrat-md';
-    font-size: 14px;
+    font-family: 'montserrat-bold';
+    font-size: 12px;
 }
 
 .review-item-user-comment-container{
@@ -423,7 +425,7 @@
 .user-comment{
     color: #fff;
     font-family: 'montserrat-md';
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .comment-date{
@@ -446,6 +448,25 @@
 
 .disable {
     display: none;
+}
+
+.empty-comment-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.empty-comment-img{
+    width: 70px;
+    height: 70px;
+}
+
+.empty-comment-title{
+    font-family: 'montserrat-md';
+    font-size: 14px;
+    color: #fff;
 }
 
 /* Smaller screens (tablets & phones) */

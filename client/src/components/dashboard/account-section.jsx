@@ -4,7 +4,9 @@ import test2 from './../../assets/images/test-img2.jpg'
 import StarRating from '../star-rating/star-rating';
 import { BsFillCartCheckFill, BsCartXFill } from "react-icons/bs";
 
-const AccountSection = ({title}) => {
+const AccountSection = ({ title, products }) => {
+    const activeProducts = products?.filter(prod => prod.product_status === 'active' && prod.product_type === 'game_account');
+
     return (
         <section className="account-section-container">
             <div className="account-category">
@@ -12,25 +14,17 @@ const AccountSection = ({title}) => {
                     <h2 className="category-title">{title}</h2>
                 </div>
                 <div className='account-info-container'>
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard />
-                    <AccountCard/>
+                {activeProducts?.map(prod => <AccountCard product={prod}></AccountCard>)}
                 </div>
             </div>
         </section>
     );
 };
 
-const AccountCard = () => {
+const AccountCard = ({product}) => {
     return (
-        <a href='/' className='account-item-container'>
-                        <img className='account-item-image' src={test} alt='product-img' />
+        <a href={`/product/${product?.product_slug}`} className='account-item-container'>
+                        <img loading='lazy' className='account-item-image' src={test} alt='product-img' />
                         <div className='account-item-info'>
                             <p className='item-name'>SIÊU PHẨM KHUNG NGON VÀ VIP PRO MS 795</p>
                             <div className='order-type-price-container'>

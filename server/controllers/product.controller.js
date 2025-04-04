@@ -1,7 +1,8 @@
 const ProductService = require("../services/product.service");
 const ReviewService = require('./../services/review.service');
 
-const { validateProduct, validateProductAttributes, validateId, validateProductUpdate } = require("../utils/validation");
+const { validateProduct, validateProductAttributes, validateId, validateProductUpdate, validateProductSlug } = require("../utils/validation");
+const logger = require("../utils/logger");
 
 class ProductController {
     // 🔹 Get All Product For Client
@@ -17,6 +18,38 @@ class ProductController {
             });
         } catch (error) {
             console.log(error);
+            return res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
+    static async getProductBySlug(req, res) {
+        const { product_slug } = req.params;
+
+        const errors = validateProductSlug({ product_slug });
+        if (errors && errors.length > 0) {
+            logger.error("Invalid product slug");
+            return res.status(400).json({
+                success: false,
+                message: "Invalid product slug"
+            })
+        }
+
+        try {
+            const response = await ProductService.getProductBySlug(product_slug);
+
+            const ratingResponse = await ReviewService.getProductReviewsWithStats(response.product.productId);
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    product: {
+                        ...response.product,
+                        ...ratingResponse
+                    }
+                }
+            });
+        } catch (error) {
+            logger.error(error);
             return res.status(400).json({ success: false, message: error.message });
         }
     }
@@ -66,8 +99,14 @@ class ProductController {
             product_attributes
         } = req.body;
 
-        if (!req.file) {
-            return res.status(400).json({ success: false, error: 'No file uploaded' });
+        console.log(req.body);  // Check other form data
+        console.log(req.files);
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ success: false, error: 'At least one image is required!' });
+        }
+
+        if (req.files.length > 5) {
+            return res.status(400).json({ message: "You can upload a maximum of 5 images!" });
         }
 
         let errors = validateProduct({
@@ -89,7 +128,6 @@ class ProductController {
         if (product_attributes) {
             productAttributes = JSON.parse(product_attributes);
         }
-        console.log(productAttributes);
 
         errors = validateProductAttributes({ product_type, productAttributes });
         if (errors && errors.length > 0) {
@@ -104,7 +142,7 @@ class ProductController {
                 product_category,
                 product_status,
                 product_stock,
-                req.file,
+                req.files,
                 product_price,
                 productAttributes
             );

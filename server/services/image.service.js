@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary').v2;
-const sharp = require('sharp');
 const fs = require('fs'); // Use standard fs for existsSync
 const fsp = require('fs').promises; // Use fs.promises for async functions
 const path = require('path'); // ✅ Import path để xử lý đường dẫn
@@ -15,25 +14,18 @@ class ImageService {
   async processAndUploadImage(file, entityType, oldImageUrl) {
     try {
       if (!file || !file.path) {
-        throw new Error("Không tìm thấy file để upload!");
+        throw new Error("File not found!");
       }
 
       // ✅ Kiểm tra định dạng file
       const allowedFormats = ['jpg', 'jpeg', 'png', 'webp'];
       const fileExt = path.extname(file.originalname).toLowerCase().replace('.', '');
       if (!allowedFormats.includes(fileExt)) {
-        throw new Error('Chỉ hỗ trợ upload ảnh định dạng JPG, PNG, WEBP!');
+        throw new Error('Only support type JPG, PNG, WEBP!');
       }
 
       // ✅ Xác định thư mục lưu ảnh
       let folder = entityType === 'avatar' ? 'app/avatars' : 'app/products';
-      let imageSize = entityType === 'avatar' ? { width: 300, height: 300 } : { width: 600, height: 600 };
-
-      // ✅ Resize & chuyển ảnh sang WebP
-      const processedImageBuffer = await sharp(file.path)
-        .resize(imageSize.width, imageSize.height, { fit: 'cover' })
-        .toFormat('webp', { quality: 80 }) 
-        .toBuffer();
 
       // ✅ Lấy public_id từ ảnh cũ (nếu có)
       let publicId = null;
@@ -44,14 +36,20 @@ class ImageService {
         }
       }
 
-      // ✅ Upload ảnh lên Cloudinary
+      // ✅ Upload ảnh lên Cloudinary với tự động resize dựa trên kích thước gốc của ảnh
       const cloudinaryResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: folder,
-            public_id: `product_${Date.now()}`,
+            public_id: `product_${Date.now()}_${Math.random().toString(36).substring(7)}`, // Unique public_id
             format: 'webp',
-            transformation: [{ quality: 'auto' }],
+            transformation: [
+              { 
+                quality: 'auto', // Automatic quality adjustment
+                width: '600',   // Auto width based on original aspect ratio
+                crop: 'scale'    // Limit the size of the image while maintaining aspect ratio
+              }
+            ],
           },
           (error, result) => {
             if (error) return reject(new Error(error.message));
@@ -60,7 +58,7 @@ class ImageService {
           }
         );
 
-        uploadStream.end(processedImageBuffer);
+        fs.createReadStream(file.path).pipe(uploadStream); // Use fs.createReadStream to pipe the file
       });
 
       // ✅ Xóa ảnh cũ trên Cloudinary nếu có
@@ -68,19 +66,19 @@ class ImageService {
         await cloudinary.uploader.destroy(publicId);
       }
 
+      // ✅ Xóa file tạm sau khi upload
       setTimeout(async () => {
-  try {
-    if (fs.existsSync(file.path)) { // ✅ Use fs.existsSync properly
-      await fsp.unlink(file.path); // ✅ Use fs.promises.unlink for async deletion
-      console.log(`File deleted successfully: ${file.path}`);
-    } else {
-      console.log(`File not found, skipping deletion: ${file.path}`);
-    }
-  } catch (err) {
-    console.error(`Error deleting file: ${err.message}`);
-  }
-}, 5000);
-
+        try {
+          if (fs.existsSync(file.path)) { // ✅ Use fs.existsSync properly
+            await fsp.unlink(file.path); // ✅ Use fs.promises.unlink for async deletion
+            console.log(`File deleted successfully: ${file.path}`);
+          } else {
+            console.log(`File not found, skipping deletion: ${file.path}`);
+          }
+        } catch (err) {
+          console.error(`Error deleting file: ${err.message}`);
+        }
+      }, 5000);
 
       return {
         message: 'Upload thành công!',

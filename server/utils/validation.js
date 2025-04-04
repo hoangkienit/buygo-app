@@ -164,10 +164,18 @@ const idSchema = Joi.string()
   });
 
   const productUpdateValidationSchema = Joi.object({
-  productName: Joi.string().min(3).max(255).required(),
-  productDescription: Joi.string().max(1000).optional(),
-  productStatus: Joi.string().valid("active", "inactive").required(),
-});
+    productName: Joi.string().min(3).max(255).required(),
+    productDescription: Joi.string().max(1000).optional(),
+    productStatus: Joi.string().valid("active", "inactive").required(),
+  });
+
+const productSlugSchema = Joi.object({
+        product_slug: Joi.string()
+        .pattern(/^[a-zA-Z0-9-]+$/) // Only allows letters, numbers, and hyphens (-)
+        .min(3) // Minimum length of 3 characters
+        .max(50) // Maximum length of 50 characters
+        .required() // Required field
+    });
 
 module.exports = {
     validateLogin: (data) => validate(loginSchema, data),
@@ -178,4 +186,5 @@ module.exports = {
     validateProduct: (data) => validate(productValidationSchema, data),
     validateProductAttributes: (data) => validate(productAttributesSchema, data),
     validateProductUpdate: (data) => validate(productUpdateValidationSchema, data),
+    validateProductSlug: (data) => validate(productSlugSchema, data),
 };
