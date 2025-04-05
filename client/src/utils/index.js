@@ -67,8 +67,8 @@ export const productTypeText = (type) => {
         return "Gói nạp";
       case "game_account":
         return "Tài khoản game";
-      case "utility":
-        return "Tiện ích";
+      case "utility_account":
+        return "Tài khoản tiện ích";
       default:
         break;
     }

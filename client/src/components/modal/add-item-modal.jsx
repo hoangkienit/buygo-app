@@ -54,7 +54,7 @@ const AddItemModal = ({productId, isOpen, onClose, title, selectedType, setProdu
 
         try {
             let res = null;
-            if (selectedType === 'game_account') {
+            if (selectedType === 'utility_account') {
                 res = await addAccountToProductForAdmin(productId, formData);
 
                 if (res.success) {
@@ -95,7 +95,7 @@ const AddItemModal = ({productId, isOpen, onClose, title, selectedType, setProdu
         <div className="add-item-modal-overlay">
             <div className="add-item-modal-content">
                 <h2 className="add-item-modal-title">{ title}</h2>
-                {selectedType === "game_account" &&
+                {selectedType === "utility_account" &&
                         <div className='add-product-account-container'>
                             <div className='basic-info-header-container'><h3 className='basic-info-title'>Thêm tài khoản</h3></div>
                             <input value={amount} onChange={(e) => {

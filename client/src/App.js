@@ -23,6 +23,7 @@ import { AdminProduct } from "./pages/admin/AdminProduct";
 import { AdminAddProduct } from "./pages/admin/AdminAddProduct";
 import { AdminProductDetail } from "./pages/admin/AdminProductDetail";
 import { AdminEditProduct } from "./pages/admin/AdminEditProduct";
+import Checkout from "./pages/Checkout";
 
 
 
@@ -52,6 +53,7 @@ function App() {
                   <Route path="/account/recharge" element={<Recharge />} />
                   <Route path="/account/recharge/:transactionId" element={<Payment />} />
                   <Route path="/transaction" element={<Transaction />} />
+                  <Route path="/checkout" element={<Checkout/>} />
                 </Route>
               </Route>
 

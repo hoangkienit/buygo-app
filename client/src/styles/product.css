@@ -88,11 +88,17 @@
     font-size: 13px;
 }
 
-.checkout-button{
-    color: var(--fourth) !important;
+.checkout-button {
+    background-color: var(--eight) !important;
     color: #fff !important;
     box-shadow: none !important;
     font-size: 12px;
+    box-shadow: 0 0px 4px rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.2s ease-in-out;
+}
+
+.checkout-button:hover{  
+    transform: scale(1.02);
 }
 
 .total-price-container{
@@ -239,7 +245,7 @@
 }
 
 .product-item{
-    height: 100px;
+    height: 90px;
     background-color: var(--eleven);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -256,7 +262,7 @@
 
 
 .product-item-img{
-    width: 100px;
+    width: 90px;
     height: 100%;
     border-radius: 8px 0px 0px 8px;
     object-fit: cover;
@@ -269,7 +275,7 @@
 
 .product-item-info{
     width: 70%;
-    padding: 5px 0;
+    padding: 10px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -279,6 +285,10 @@
     color: #fff;
     font-family: 'montserrat-md';
     font-size: 14px;
+}
+
+.active-package{
+    border: 1px solid var(--fourth);
 }
 
 .product-item-order-type-container{
@@ -345,7 +355,7 @@
 }
 
 .reviews-title{
-    font-size: 20px;
+    font-size: 15px !important;
     margin-bottom: 10px;
     color: #fff;
     font-family: 'montserrat-md';
@@ -459,14 +469,33 @@
 }
 
 .empty-comment-img{
-    width: 70px;
-    height: 70px;
+    width: 8%;
+    height: 8%;
 }
 
 .empty-comment-title{
     font-family: 'montserrat-md';
     font-size: 14px;
     color: #fff;
+}
+
+.checkout-button-container{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.add-to-cart-button{
+    background-color: grey;
+    color: #fff;
+    font-size: 12px;
+    transition:  transform 0.2s ease-in-out;
+}
+
+.add-to-cart-button:hover{
+    background-color: grey;
+    box-shadow: rgba(255, 255, 255, 0.377) !important;
+    transform: scale(1.02);
 }
 
 /* Smaller screens (tablets & phones) */

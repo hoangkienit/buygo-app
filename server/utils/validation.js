@@ -88,7 +88,7 @@ const idSchema = Joi.string()
     }),
 
     product_type: Joi.string()
-        .valid("topup_package", "game_account")
+        .valid("topup_package", "game_account", "utility_account")
         .required()
         .messages({
             "any.only": "Loại sản phẩm chỉ có thể là 'topup_package' hoặc 'game_account'.",
@@ -122,7 +122,7 @@ const idSchema = Joi.string()
   });
 
   const productAttributesSchema = Joi.object({
-    product_type: Joi.string().valid("game_account", "topup_package").required(),
+    product_type: Joi.string().valid("game_account", "topup_package", "utility_account").required(),
 
     productAttributes: Joi.when("product_type", {
         is: "topup_package",
@@ -141,7 +141,7 @@ const idSchema = Joi.string()
         ).min(1).required(),
         
         otherwise: Joi.when("product_type", {
-            is: "game_account",
+            is: "utility_account",
             then: Joi.array().items(
                 Joi.object({
                     username: Joi.string()
@@ -158,7 +158,7 @@ const idSchema = Joi.string()
                         }),
                 })
             ).min(1).required(),
-            otherwise: Joi.forbidden(), // Explicitly disallow other values
+            otherwise: Joi.allow(), // Explicitly disallow other values
         }),
     }),
   });

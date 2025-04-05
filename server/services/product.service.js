@@ -6,14 +6,15 @@ const { Product, TopUpPackage, GameAccount } = require('./../models/product.mode
 const imageService = require('./image.service');
 const CryptoJS = require("crypto-js");
 const logger = require('../utils/logger');
+const ReviewService = require('./review.service');
 
 class ProductService {
     // 🔹 Get all products
-    static async getAllProducts() {
-        let products = await Product.find().lean();
+    static async getAllProducts(limit = 50) {
+        let products = await Product.find({product_status: "active"}).limit(limit).lean();
 
         for (let product of products) {
-        if (product.product_type === "game_account" && product.product_attributes?.account) {
+        if (product.product_type === "utility_account" && product.product_attributes?.account) {
             // 🔹 Mask account details
             product.product_attributes.account = product.product_attributes.account.map(acc => ({
                 ...acc,
@@ -35,12 +36,41 @@ class ProductService {
         return { message: "Get product successfully", product: product };
     }
 
+    static async getProductsByType(type, limit) {
+        const products = await Product.find({ product_type: type })
+            .limit(Number(limit))
+            .sort({ createAt: -1 })
+            .lean();
+        
+        if (!products) {
+            throw new Error("Products not found");
+        }
+
+        const productsWithReviews = await Promise.all(
+            products.map(async (product) => {
+                const reviewStats = await ReviewService.getProductReviewsWithStats(product._id);
+
+                return {
+                    ...product,
+                    reviews: reviewStats.reviews,
+                    averageRating: reviewStats.averageRating,
+                    totalReviews: reviewStats.totalReviews
+                };
+            })
+        );
+
+        return {
+            message: "Get products success",
+            products: productsWithReviews
+        };
+    }
+
     // 🔹 Get product for admin
     static async getProductForAdmin(productId) {
         const product = await Product.findOne({productId}).lean();
         if (!product) throw new Error("No product found");
         
-        if (product.product_type === 'game_account') {
+        if (product.product_type === 'utility_account') {
             product.product_attributes.account = product.product_attributes.account.map((acc) => ({
                 ...acc,
                 password: decryptPassword(acc.password), // Show decrypted password
@@ -93,7 +123,7 @@ class ProductService {
             
         await existingProduct.save();
 
-        if (existingProduct.product_type === "game_account") {
+        if (existingProduct.product_type === "utility_account") {
             if (!Array.isArray(product_attributes)) {
                 throw new Error("product_attributes must be an array");
             }
@@ -108,7 +138,7 @@ class ProductService {
                     };
                 });
 
-            // Create new GameAccount entry
+            // Create new utility account, I use GameAccount because they have same fields
             const newGameAccount = new GameAccount({
                 price: product_price || 0, // Assuming price is same for all
                 account: encryptedAccounts
@@ -126,6 +156,18 @@ class ProductService {
             });
 
             existingProduct.product_attributes = newTopUpPackage;
+            await existingProduct.save();
+        } else if (existingProduct.product_type === "game_account") {
+            if (!Array.isArray(product_attributes)) {
+                throw new Error("product_attributes must be an array");
+            }
+
+            const newGameAccount = new GameAccount({
+                price: product_price,
+                account: []
+            });
+
+            existingProduct.product_attributes = newGameAccount;
             await existingProduct.save();
         }
         
@@ -181,7 +223,8 @@ class ProductService {
         productName,
         productDescription,
         productStatus,
-        productPrice
+        productPrice,
+        productStock
     ) {
         const product = await Product.findOne({productId});
 
@@ -193,6 +236,7 @@ class ProductService {
         product.product_slug = slugify(productName);
         product.product_description = productDescription;
         product.product_status = productStatus;
+        product.product_stock = productStock;
 
         product.product_attributes = {
             ...product.product_attributes,

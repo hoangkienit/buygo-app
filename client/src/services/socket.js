@@ -22,7 +22,7 @@ socket.on("connect", () => {
 
 socket.on("connect_error", async (error) => {
     console.error("❌ WebSocket Connection Error:", error.message);
-    if (error.message === "Token expired") {
+    if (error.message === "Token expired" || error.message === "No token provided") {
         try {
             const newToken = await refreshAccessToken(); // Gọi API để lấy token mới
             if (newToken) {

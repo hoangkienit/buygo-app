@@ -7,8 +7,9 @@ const logger = require("../utils/logger");
 class ProductController {
     // 🔹 Get All Product For Client
     static async getAllProducts(req, res) {
+        const { limit } = req.body;
         try {
-            const response = await ProductService.getAllProducts();
+            const response = await ProductService.getAllProducts(limit);
             return res.status(200).json({
                 success: true,
                 message: response.message,
@@ -19,6 +20,34 @@ class ProductController {
         } catch (error) {
             console.log(error);
             return res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
+    static async getProductsByType(req, res) {
+        const { type, limit = 9 } = req.query;
+
+        if (!type) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing product type"
+            });
+        }
+
+        try {
+            const response = await ProductService.getProductsByType(type, limit);
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    products: response.products
+                }
+            })
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
         }
     }
 
@@ -82,7 +111,7 @@ class ProductController {
                 }
             });
         } catch (error) {
-            console.log(error);
+            logger.log(error);
             return res.status(400).json({ success: false, message: error.message });
         }
     }
@@ -131,7 +160,7 @@ class ProductController {
 
         errors = validateProductAttributes({ product_type, productAttributes });
         if (errors && errors.length > 0) {
-            return res.status(400).json({ success: false, error: errors[0].message });
+            return res.status(400).json({ success: false, error: "fsdfds" });
         }
 
         try {
@@ -190,7 +219,7 @@ class ProductController {
 
     static async updateAccountProductForAdmin(req, res) {
         const { productId } = req.params;
-        const { productName, productDescription, productStatus, productPrice } = req.body;
+        const { productName, productDescription, productStatus, productPrice, productStock } = req.body;
 
         let errors = validateProductUpdate({ productName, productDescription, productStatus });
         if (errors && errors.length > 0) {
@@ -221,7 +250,8 @@ class ProductController {
                 productName,
                 productDescription,
                 productStatus,
-                productPrice
+                productPrice,
+                productStock
             );
 
             return res.status(200).json({

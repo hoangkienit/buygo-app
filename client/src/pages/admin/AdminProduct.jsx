@@ -12,6 +12,7 @@ import { MdDelete } from "react-icons/md";
 import ToastNotification, { showToast } from "../../components/toasts/ToastNotification";
 import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../../components/modal/confirm-modal";
+import { productTypeText } from "../../utils";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -174,6 +175,7 @@ export const AdminProduct = () => {
                             <th>Hình ảnh</th>
                             <th>Mã sản phẩm</th>
                             <th>Tên sản phẩm</th>
+                            <th>Loại sản phẩm</th>
                             {selectedProductType === 'game_account' && (
                                 <>
                                     <th>Số tiền</th>
@@ -206,6 +208,7 @@ export const AdminProduct = () => {
                                         <td>
                                             <a onClick={() => navigate(`/super-admin/products/view/${tx.productId}`)} className="table-product-name">{tx.product_name}</a>
                                         </td>
+                                        <td>{productTypeText(tx.product_type) }</td>
                                         {selectedProductType === 'game_account' && (
                                             <>
                                                 <td>{tx.product_attributes?.price?.toLocaleString()}</td>

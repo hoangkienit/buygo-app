@@ -8,7 +8,7 @@ const ProductSchema = new mongoose.Schema(
     product_description: { type: String, default: "" },
     product_type: {
       type: String,
-      enum: ["topup_package", "game_account"],
+      enum: ["topup_package", "game_account", "utility_account"],
       required: true,
     },
     product_slug: { type: String, required: true, index: 1 },

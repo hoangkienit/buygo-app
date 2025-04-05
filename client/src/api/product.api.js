@@ -1,9 +1,25 @@
 import api from './../utils/api'
 
 // For client
-export const getProducts = async () => {
+export const getProducts = async (limit) => {
   try {
-    const response = await api.get(`/product/all-products`,
+    const response = await api.get(`/product/all-products`, {
+      limit
+    },
+      {
+        withCredentials: true
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProductsByType = async (product_type, limit) => {
+  try {
+    const response = await api.get(`/product/products?type=${product_type}&limit=${limit}`,
       {
         withCredentials: true
       }
@@ -97,13 +113,21 @@ export const deleteProductForAdmin = async (productId) => {
   }
 };
 
-export const updateAccountProductForAdmin = async (productId, productName, productDescription, productStatus, productPrice) => {
+export const updateAccountProductForAdmin = async (
+  productId,
+  productName,
+  productDescription,
+  productStatus,
+  productPrice,
+  productStock
+) => {
   try {
     const response = await api.patch(`/product/admin/update-product/account/${productId}`, {
       productName,
       productDescription,
       productStatus,
-      productPrice
+      productPrice,
+      productStock
     },
       {
         withCredentials: true

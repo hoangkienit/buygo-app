@@ -31,6 +31,7 @@ export const AdminProductDetail = () => {
             const res = await getProductForAdmin(productId);
 
             if (res.success) {
+                console.log(res.data.product);
                 setProduct(res.data.product);
             }
         }
@@ -100,7 +101,7 @@ export const AdminProductDetail = () => {
                         ))}
                     </Slider>
                     </div> */}
-                    {/* <img loading='lazy' className='product-detail-image' src={require('./../../assets/images/test-img.jpg')} alt='product-img'></img> */}
+                    <img loading='lazy' className='product-detail-image' src={require('./../../assets/images/test-img.jpg')} alt='product-img'></img>
                 </div>
                 <div className='product-detail-right-side'>
                     <h3 className='product-detail-title'>Thông tin sản phẩm</h3>
@@ -151,7 +152,16 @@ export const AdminProductDetail = () => {
                         product?.product_type === 'game_account' &&
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Số lượng tài khoản`} disabled />
-                        <input className='product-detail-input' value={`${product?.product_attributes?.account?.length}`} disabled />
+                        <input className='product-detail-input' value={`${product?.product_stock}`} disabled />
+                        {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
+                    </div>
+                    }
+
+                    {
+                        product?.product_type === 'utility_account' &&
+                    <div className='product-detail-input-container'>
+                        <input className='product-detail-input-title' value={`Số lượng tài khoản`} disabled />
+                        <input className='product-detail-input' value={`${product?.product_attributes?.account.length}`} disabled />
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
                     </div>
                     }
@@ -190,7 +200,7 @@ export const AdminProductDetail = () => {
             </div>
             <div className='product-attributes-transactions-container'>
                 <div className='product-attributes-container'>
-                    {product?.product_type === 'game_account' ? <p className='attribute-title'>Tài khoản</p> : <p className='attribute-title'>Gói nạp</p>}
+                    <p className='attribute-title'>{productTypeText(product?.product_type) }</p>
                     {product?.product_type === 'game_account' &&
                         <table className='product-attributes-table'>
                         <thead className='product-attributes-table-thead'>
@@ -201,18 +211,35 @@ export const AdminProductDetail = () => {
                                 <th>Tình trạng</th>
                             </tr>
                         </thead>
+                            <tbody className='product-attributes-table-tbody'>
+                                <td colSpan={4}>Không có tài khoản</td>
+                        </tbody>
+                    </table>
+                    }
+
+                    {product?.product_type === 'utility_account' &&
+                        <table className='product-attributes-table'>
+                        <thead className='product-attributes-table-thead'>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tài khoản</th>
+                                <th>Mật khẩu</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
                         <tbody className='product-attributes-table-tbody'>
                                 {product?.product_attributes?.account?.map((acc, index) => (
                                 <tr key={index}>
-                                    <td>{ index+1}</td>
-                                    <td>{acc.username }</td>
-                                    <td>{acc.password }</td>
-                                    <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
+                                    <td>{ index+1 }</td>
+                                    <td>{ acc.username}</td>
+                                    <td>{ acc.password}</td>
+                                    <td>{ acc.sold ? "Đã bán" : "Chưa bán"}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                     }
+                    
 
                     {product?.product_type === 'topup_package' &&
                         <table className='product-attributes-table'>

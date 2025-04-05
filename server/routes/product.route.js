@@ -11,6 +11,8 @@ router.get('/all-products', ProductController.getAllProducts);
 
 router.get('/get-product/:product_slug', ProductController.getProductBySlug);
 
+router.get('/products', ProductController.getProductsByType);
+
 
 // Admin
 router.get('/admin/get-product/:productId', verifyMiddleware, verifyAdminMiddleware, ProductController.getProductForAdmin);

@@ -21,6 +21,7 @@ export const AdminEditProduct = () => {
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
     const [productPrice, setProductPrice] = useState(0);
+    const [productStock, setProductStock] = useState(0);
     const [productStatus, setProductStatus] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false); // Add item modal
@@ -44,6 +45,7 @@ export const AdminEditProduct = () => {
                 setProductName(res.data.product.product_name);
                 setProductDescription(res.data.product.product_description);
                 setProductStatus(res.data.product.product_status);
+                setProductStock(res.data.product.product_stock);
 
                 if (res.data.product.product_type === 'game_account') {
                     setProductPrice(res.data.product.product_attributes.price);
@@ -79,9 +81,21 @@ export const AdminEditProduct = () => {
                     productName,
                     productDescription,
                     productStatus,
-                    productPrice
+                    productPrice,
+                    productStock
                 );        
-            } else if (product?.product_type === 'topup_package') {
+            } else if (product?.product_type === 'utility_account') {
+                res = await updateAccountProductForAdmin(
+                    productId,
+                    productName,
+                    productDescription,
+                    productStatus,
+                    productPrice,
+                    1
+                ); 
+            }
+            
+            else if (product?.product_type === 'topup_package') {
                 res = await updateTopUpProductForAdmin(
                     productId,
                     productName,
@@ -107,7 +121,7 @@ export const AdminEditProduct = () => {
         setIsConfirmModalOpen(false);
         try {
             let res = null;
-            if (product?.product_type === 'game_account') {
+            if (product?.product_type === 'utility_account') {
                 res = await deleteAccountFromProductForAdmin(productId, selectedItemToDelete);
                 setProduct({
                     ...product,
@@ -213,7 +227,16 @@ export const AdminEditProduct = () => {
                         product?.product_type === 'game_account' &&
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Số lượng tài khoản`} disabled />
-                        <input className='product-detail-input' value={`${product?.product_attributes?.account?.length}`} disabled />
+                        <input className='product-detail-input' value={productStock} onChange={(e) => setProductStock(Number(e.target.value.replace(/\D/g, '')))}/>
+                        {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
+                    </div>
+                    }
+
+                    {
+                        product?.product_type === 'utility_account' &&
+                    <div className='product-detail-input-container'>
+                        <input className='product-detail-input-title' value={`Số lượng tài khoản`} disabled />
+                        <input className='product-detail-input' value={product?.product_attributes?.account.length} disabled/>
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
                     </div>
                     }
@@ -253,11 +276,13 @@ export const AdminEditProduct = () => {
             <div className='product-attributes-transactions-container'>
                 <div className='product-attributes-container'>
                     <div className='product-attribute-title-button-container'>
-                        {product?.product_type === 'game_account' ? <p className='attribute-title'>Tài khoản</p> : <p className='attribute-title'>Gói nạp</p>}
-                        <a style={{cursor: "pointer"}} onClick={() => setIsModalOpen(true)} className="add-product-button-container">
-                            <MdOutlineAdd className="add-icon" />
-                            <p className="add-text">Thêm mới</p>
-                        </a>
+                        <p className='attribute-title'>{productTypeText(product?.product_type) }</p>
+                        {product?.product_type !== 'game_account' &&
+                            <a style={{cursor: "pointer"}} onClick={() => setIsModalOpen(true)} className="add-product-button-container">
+                                <MdOutlineAdd className="add-icon" />
+                                <p className="add-text">Thêm mới</p>
+                            </a>
+                        }
                     </div>
                     {product?.product_type === 'game_account' &&
                         <table className='product-attributes-table'>
@@ -271,16 +296,33 @@ export const AdminEditProduct = () => {
                             </tr>
                         </thead>
                         <tbody className='product-attributes-table-tbody'>
+                            <td colSpan={5}>Không có tài khoản</td>
+                        </tbody>
+                    </table>
+                    }
+
+                    {product?.product_type === 'utility_account' &&
+                        <table className='product-attributes-table'>
+                        <thead className='product-attributes-table-thead'>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tài khoản</th>
+                                <th>Mật khẩu</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody className='product-attributes-table-tbody'>
                                 {product?.product_attributes?.account?.map((acc, index) => (
                                 <tr key={index}>
-                                    <td>{ index+1}</td>
-                                    <td>{acc.username }</td>
-                                    <td>{acc.password }</td>
-                                        <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
-                                        <td><button onClick={() => {
-                                            setIsConfirmModalOpen(true);
-                                            setSelectedItemToDelete(acc._id);
-                                        }} className='delete-btn action-button'><MdDelete className="action-icon"/></button></td>
+                                    <td>{ index+1 }</td>
+                                    <td>{ acc.username}</td>
+                                    <td>{ acc.password}</td>
+                                    <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
+                                    <td><button onClick={() => {
+                                        setIsConfirmModalOpen(true);
+                                        setSelectedItemToDelete(acc._id);
+                                    }} className='delete-btn action-button'><MdDelete className="action-icon" /></button></td>
                                 </tr>
                             ))}
                         </tbody>

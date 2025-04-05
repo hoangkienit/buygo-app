@@ -156,7 +156,7 @@ export const AdminAddProduct = () => {
     const validateInputs = () => {
         const newErrors = formData.map((item) => {
         let error = {};
-            if (selectedType === 'game_account') {
+            if (selectedType === 'utility_account') {
                 if (!item.username) error.username = "Username is required.";
                 if (!item.password) error.password = "Password is required.";
             }
@@ -228,6 +228,7 @@ export const AdminAddProduct = () => {
                             <option value="" disabled>Loại sản phẩm</option>
                             <option value="topup_package">Gói nạp</option>
                             <option value="game_account">Tài khoản game</option>
+                            <option value="utility_account">Tài khoản tiện ích</option>
                         </select>                   
 
                         {selectedType !== 'topup_package' ? <div className='pricing-container'>
@@ -243,7 +244,7 @@ export const AdminAddProduct = () => {
                         </div> : null}
                     </div>
                     {/** This is for admin provide account info */}
-                        {selectedType === "game_account" &&
+                        {selectedType === "utility_account" &&
                         <div className='add-product-account-container'>
                             <div className='basic-info-header-container'><h3 className='basic-info-title'>Thêm tài khoản</h3></div>
                             <input value={amount} onChange={(e) => {

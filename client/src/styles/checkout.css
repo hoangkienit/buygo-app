@@ -1,0 +1,186 @@
+.checkout-wrapper{
+    width: 100%;
+    height: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.check-out-container {
+    max-width: 600px;
+    margin: 40px 20px;
+    padding: 24px;
+    border-radius: 12px;
+    background: var(--eight);
+    border: 1px solid #4478a7;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.178);
+}
+
+.check-out-title {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 28px;
+    color: #fff;
+}
+
+.check-out-section {
+    margin-bottom: 24px;
+}
+
+.check-out-section-title {
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #fff;
+    font-family: 'montserrat-bold';
+
+}
+
+.apply-voucher-button{
+    width: 30%;
+}
+
+.check-out-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.check-out-row label {
+    width: 80px;
+    font-weight: 500;
+    line-height: 32px;
+
+}
+
+.check-out-row input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.check-out-btn {
+    padding: 8px 16px;
+    background-color: var(--fourth);
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+.check-out-balance {
+    font-size: 14px;
+    color: #c4f5d2;
+    font-family: 'montserrat-md';
+}
+
+.check-out-summary {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px 0;
+}
+
+.check-out-summary li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.check-out-summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 14px;
+}
+
+.check-out-summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 10px;
+    border-top: 1px solid #4478a7;
+    padding-top: 10px;
+    color: #fff;
+    font-family: 'montserrat-md';
+}
+
+.check-out-pay-btn {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.check-out-disclaimer {
+    font-size: 13px;
+    color: #d0d9e5;;
+    margin-top: 12px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.check-out-disclaimer a {
+    color: #99e0ff;
+    text-decoration: none;
+}
+
+.check-out-disclaimer a:hover {
+    text-decoration: underline;
+}
+
+.checkout-item-container{
+    color: #fff;
+    font-family: 'montserrat-bold';
+    font-size: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #4478a7;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.checkout-item-img{
+    width: 60px;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.checkout-item-price-amount{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 10px;
+    padding: 0px 10px;
+}
+
+.lack-balance{
+    color: #FF6347 !important;
+}
+
+.deposit-button{
+    font-family: 'montserrat-bold';
+    cursor: pointer;
+    color: var(--fourth);
+}
+
+.deposit-button:hover{
+    text-decoration: underline;
+}
+
+.disabled-button{
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+
+.disabled-button:hover{
+    background-color: lightgray !important;
+}
+

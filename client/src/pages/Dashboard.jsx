@@ -3,11 +3,11 @@ import Slider from "react-slick";
 import "../styles/dashboard.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { fakeData } from "../data/fake";
 import AccountSection from "../components/dashboard/account-section";
 import { HashLoader } from "react-spinners";
-import { getProducts } from "../api/product.api";
+import { getProducts, getProductsByType } from "../api/product.api";
 import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
+import TopUpSection from "../components/dashboard/topup-section";
 
 const banners = [
   "https://elements-resized.envatousercontent.com/elements-preview-images/29961ce9-4919-49b0-a72d-fd9104b7042d?w=632&cf_fit=scale-down&q=85&format=auto&s=fbd666bd56dbb781cc84d18ff9d6d4e9a60a88293c5e9ba895b60afe320e9ab3",
@@ -25,7 +25,8 @@ const categories = [
 
 
 const Dashboard = () => {
-  const [products, setProducts] = useState(null);
+  const [accounts, setAccounts] = useState(null);
+  const [packages, setPackages] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -37,10 +38,12 @@ const Dashboard = () => {
     setLoading(true);
 
     try {
-      const res = await getProducts();
+      const accountRes = await getProductsByType("game_account", 9) // Limit = 9
+      const packageRes = await getProductsByType("topup_package", 6);
       
-      if (res.success) {
-        setProducts(res.data.products);
+      if (accountRes.success && packageRes.success) {
+        setAccounts(accountRes.data.products);
+        setPackages(packageRes.data.products);
       }
     } catch (error) {
       showToast(error.message, "error");
@@ -105,40 +108,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <AccountSection title={'eFootball'} products={ products} />
-
-      <section className="fake-data-section">
-  {Array.from(new Set(fakeData.map(item => item.category))).map(category => (
-    <div key={category} className="fake-data-category">
-      <h2 className="category-title">{category}</h2>
-
-      <div className="fake-data-grid">
-        {fakeData.filter(item => item.category === category).map((item, index) => (
-          <a href="/product" key={index} className="fake-data-item">
-            {/* Image on the Left */}
-            <img src={item.image} alt={item.name} className="fake-data-image" />
-
-            {/* Content on the Right */}
-            <div className="fake-data-content">
-              <h3 className="fake-data-name">{item.name}</h3>
-              <p className="fake-data-price">{item.price}</p>
-
-              {/* Order Type & Rating */}
-              <div className="fake-data-extra">
-                <span className="fake-data-order">Còn hàng</span>
-                <span className="fake-data-rating">
-                  <i className="fa fa-star"></i> {Math.floor(Math.random() * 2) + 4}.{
-                    Math.floor(Math.random() * 10)
-                  }
-                </span>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  ))}
-</section>
+      <AccountSection title={'Tài khoản game'} accounts={accounts} />
+      <TopUpSection title={'Gói nạp'} packages={packages} />
     </div>
   );
 };

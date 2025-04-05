@@ -157,7 +157,7 @@ a {text-decoration: none;}
 .item-price{
     color: var(--secondary);
     font-family: 'montserrat-bold';
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .item-name{
@@ -183,6 +183,48 @@ a {text-decoration: none;}
     font-family: 'montserrat-md';
     font-size: 11px;
     color: #bfbfbf;
+}
+
+.topup-item-container{
+    display: flex;
+    flex-direction: row;
+    background-color: var(--eleven);
+    border-radius: 8px;
+    height: 100%;
+}
+
+.topup-item-container:hover{
+    border: 1px solid var(--fourth);
+}
+
+.topup-item-image{
+    width: 200px;
+    height:100%;
+    border-radius: 8px 0px 0px 8px;
+    transition: transform 0.2s ease-in-out;
+    overflow-x: auto;
+    object-fit: cover;
+}
+
+.topup-item-image:hover {
+    transform: scale(1.03);
+}
+
+.category-title{
+    color: #fff;
+}
+
+.category-title-container{
+    padding-bottom: 10px;
+}
+
+.topup-item-info{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 0;
 }
 
 @media (max-width: 768px) {
@@ -263,164 +305,7 @@ a {text-decoration: none;}
     transform: scale(1.4);
 }
 
-/* Fake Data Section */
-.fake-data-section {
-    margin-top: 40px;
-    padding: 20px;
-    background: var(--seven);
-    border-radius: 10px;
-}
-
-/* Category Title */
-.category-title {
-    font-size: 22px;
-    color: #fff;
-    font-weight: bold;
-    margin-bottom: 15px;
-    font-family: 'montserrat-bold';
-}
-
-/* Fake Data Grid */
-.fake-data-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    /* Responsive grid */
-    gap: 15px;
-
-    margin-bottom: 50px;
-}
-
-/* Fake Data Item (Grid Layout) */
-.fake-data-item {
-    display: grid;
-    grid-template-columns: 100px auto;
-    /* Left: Image (100px), Right: Text (auto) */
-    align-items: center;
-    background: var(--primary);
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    border: 1px solid transparent;
-}
-
-/* Hover Effect */
-.fake-data-item:hover {
-    border: 1px solid #4b7dff;
-    transform: scale(1.02);
-}
-
-/* Fake Data Image (Full Left Side) */
-.fake-data-image {
-    width: 100px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px 0px 0px 8px;
-    background: rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s ease-in-out;
-}
-
-.fake-data-image:hover {
-    transform: scale(0.9);
-}
-
-/* Fake Data Content (Right Side in Grid) */
-.fake-data-content {
-    display: grid;
-    grid-template-rows: auto auto auto;
-    /* Name, Price, Extra Info */
-    padding-left: 15px;
-    gap: 5px;
-}
-
-/* Fake Data Name */
-.fake-data-name {
-    font-size: 16px;
-    color: #fff;
-    font-weight: 600;
-    font-family: 'montserrat-bold';
-}
-
-/* Fake Data Price */
-.fake-data-price {
-    font-size: 14px;
-    color: #ffcc00;
-    font-family: 'montserrat-md';
-}
-
-/* Order Type & Rating */
-.fake-data-extra {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 10px;
-}
-
-/* Order Type */
-.fake-data-order {
-    font-size: 12px;
-    color: #bfbfbf;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-/* Rating */
-.fake-data-rating {
-    font-size: 14px;
-    color: #ffcc00;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Star Icon */
-.fake-data-rating i {
-    color: #ffcc00;
-}
-
 /* Responsive Tweaks */
 @media (max-width: 768px) {
 
-    /* Make each item stack vertically */
-    .fake-data-item {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* Center the image and reduce its size */
-    .fake-data-image {
-        width: 80px;
-        height: 80px;
-    }
-
-    .fake-data-name{
-        font-size: 11px;
-    }
-
-    .fake-data-price {
-        font-size: 11px;
-    }
-
-    /* Remove left padding and adjust spacing */
-    .fake-data-content {
-        padding-left: 0;
-        padding-top: 10px;
-    }
-
-    /* Stack the extra info (Order Type & Rating) vertically */
-    .fake-data-extra {
-        flex-direction: column;
-        align-items: center;
-    }
-
-        .fake-data-order {
-            font-size: 10px;
-            padding: 2px 5px;
-        }
-
-                .fake-data-rating {
-                    font-size: 12px;
-                }
 }
