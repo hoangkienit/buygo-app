@@ -1,4 +1,5 @@
 const TransactionService = require('../services/transaction.service');
+const logger = require('../utils/logger');
 const { validateTransaction, validateId } = require('../utils/validation');
 
 class TransactionController {
@@ -51,11 +52,11 @@ class TransactionController {
     }
 
     // 🔹 Get transaction list
-    static async getTransactionList(req, res) {
+    static async getDepositHistoryList(req, res) {
         const userId = req.user?.id;
-        const limit = parseInt(req.query.limit) || 20;
+        const limit = parseInt(req.query.limit) || 50;
         try {
-            const response = await TransactionService.getTransactionList(userId, limit);
+            const response = await TransactionService.getDepositHistoryList(userId, limit);
 
             return res.status(200).json({
                 success: true,
@@ -65,6 +66,26 @@ class TransactionController {
                 }
             });
         } catch (error) {
+            logger.error(error);
+            return res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
+    static async getTransactionHistoryList(req, res) {
+        const userId = req.user?.id;
+        const limit = parseInt(req.query.limit) || 50;
+        try {
+            const response = await TransactionService.getTransactionHistoryList(userId, limit);
+
+            return res.status(200).json({
+                success: true,
+                message: "Get transaction list successfully",
+                data: {
+                    transactions: response.transactions
+                }
+            });
+        } catch (error) {
+            logger.error(error);
             return res.status(400).json({ success: false, message: error.message });
         }
     }
@@ -87,6 +108,7 @@ class TransactionController {
                 data: null
             });
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({ success: false, message: error.message });
         }
     }
@@ -106,6 +128,7 @@ class TransactionController {
                 }
             });
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({ success: false, message: error.message });
         }
     }
@@ -129,6 +152,7 @@ class TransactionController {
                 message: response.message
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                 success: false,
                 message: error.message

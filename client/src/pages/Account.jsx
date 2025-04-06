@@ -62,7 +62,7 @@ const AccountPage = () => {
             <p>Đăng xuất</p>
             <div className="button-group">
               <button className="logout-button" onClick={handleLogout}>
-                <MdLogout className="logout-icon" />
+                Đăng xuất
               </button>
             </div>
           </div>

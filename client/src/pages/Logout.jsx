@@ -16,7 +16,7 @@ const Logout = () => {
     const logOutUser = async() => {
         const res = await logout();
 
-        if (res.success) {
+        if (res?.success) {
           localStorage.removeItem("accessToken");
             removeUser();
             setTimeout(() => {

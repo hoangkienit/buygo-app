@@ -33,9 +33,23 @@ export const getTransaction = async (transactionId) => {
   }
 };
 
-export const getTransactionList = async (limit = 50) => {
+export const getDepositHistoryList = async (limit = 50) => {
   try {
-    const response = await api.get(`/transaction/get-transaction/transactions?limit=${limit}`,
+    const response = await api.get(`/transaction/deposit-history?limit=${limit}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTransactionHistoryList = async (limit = 50) => {
+  try {
+    const response = await api.get(`/transaction/transaction-history?limit=${limit}`,
       {
         withCredentials: true
       }

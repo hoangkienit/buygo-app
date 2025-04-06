@@ -13,7 +13,6 @@ import { UserProvider } from "./context/UserContext";
 import Recharge from "./pages/Recharge";
 import Payment from "./pages/Payment";
 import Logout from "./pages/Logout";
-import Transaction from "./pages/Transaction";
 import Product from "./pages/Product";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import AdminLayout from "./layouts/AdminLayout";
@@ -24,6 +23,9 @@ import { AdminAddProduct } from "./pages/admin/AdminAddProduct";
 import { AdminProductDetail } from "./pages/admin/AdminProductDetail";
 import { AdminEditProduct } from "./pages/admin/AdminEditProduct";
 import Checkout from "./pages/Checkout";
+import DepositHistory from "./pages/DepositHistory";
+import TransactionHistory from "./pages/TransactionHistory";
+import OrderSuccess from "./pages/OrderSuccess";
 
 
 
@@ -52,8 +54,10 @@ function App() {
                   <Route path="/account" element={<Account />} />
                   <Route path="/account/recharge" element={<Recharge />} />
                   <Route path="/account/recharge/:transactionId" element={<Payment />} />
-                  <Route path="/transaction" element={<Transaction />} />
-                  <Route path="/checkout" element={<Checkout/>} />
+                  <Route path="/deposit-history" element={<DepositHistory />} /> 
+                  <Route path="/transaction-history" element={<TransactionHistory />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/order-success" element={<OrderSuccess/>} />
                 </Route>
               </Route>
 

@@ -1,54 +1,85 @@
 const { getIO } = require("./socket.service");
 const User = require("../models/user.model");
-const Transaction = require("../models/transaction.model");
+const { DepositHistory, TransactionHistory } = require("../models/transaction.model");
 const { convertToObjectId } = require("../utils/convert");
 const { splitString } = require("../utils/text");
-
+const { generateTransactionId } = require("../utils/random");
+const mongoose = require("mongoose");
+const logger = require("../utils/logger");
 
 class PaymentService {
-  // 🔹 Add user balance
-    static async updateUserBalance(gateway, description, transferAmount) {
-        //TODO: make mongo session
-        let userId = '';
-        let transactionId = '';
-        
-        const splittedString = splitString(description);
-        userId = splittedString[2];
-        transactionId = splittedString[1];
+  static async updateUserBalance(gateway, description, transferAmount) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-        const user = await User.findOne({ _id: convertToObjectId(userId) });
-        if (!user) {
-            throw new Error("User not found");
-        }
+    try {
+      // 🔹 Extract userId and transactionId from description
+      const [ , transactionId, userIdRaw ] = splitString(description);
+      const userId = convertToObjectId(userIdRaw);
 
-        // Update user balance
-        user.balance += transferAmount;
-        await user.save();
-        const newBalance = user.balance;
+      // 🔹 Find user
+      const user = await User.findById(userId).session(session);
+      if (!user) throw new Error("User not found");
 
-        // Update transaction status
-        // 🔹 Find and update
-        const transaction = await Transaction.findOneAndUpdate(
-            { transactionId: transactionId, userId: convertToObjectId(userId), transactionStatus: "pending" }, 
-            { transactionStatus: "success", updatedAt: new Date(), gateway: gateway },
-            { new: true }
-        );
+      // 🔹 Update deposit history
+      const deposit = await DepositHistory.findOneAndUpdate(
+        {
+          transactionId,
+          userId,
+          transactionStatus: "pending",
+          amount: transferAmount,
+        },
+        {
+          transactionStatus: "success",
+          updatedAt: new Date(),
+          gateway,
+        },
+        { new: true, session }
+      );
 
-        if (!transaction) {
-            throw new Error("Không tìm thấy giao dịch hợp lệ");
-        }
+      if (!deposit) throw new Error("Không tìm thấy giao dịch hợp lệ");
 
-        // Write to log
+      // 🔹 Update user balance
+      user.balance += transferAmount;
+      await user.save({ session });
 
-        // Notify the client via WebSocket
-        getIO().to(userId).emit("recharge_success", { userId, newBalance, gateway, transferAmount });
+      // 🔹 Log transaction
+      const newTransaction = new TransactionHistory({
+        transactionId: generateTransactionId(),
+        userId,
+        amount: transferAmount,
+        transactionType: 'add',
+        note: 'Nạp tiền qua ngân hàng',
+        balance: user.balance,
+      });
 
-        // Notify the admin
-        getIO().to("admin_room").emit("new_transaction", { type: "payment", count: 1 });
+      await newTransaction.save({ session });
 
-    return {
-        message: "Recharge successfully"
-    };
+      // 🔹 Commit all changes
+      await session.commitTransaction();
+      session.endSession();
+
+      // 🔹 Notify user and admin via socket
+      const io = getIO();
+      io.to(userIdRaw).emit("recharge_success", {
+        userId: userIdRaw,
+        newBalance: user.balance,
+        gateway,
+        transferAmount,
+      });
+
+      io.to("admin_room").emit("new_transaction", {
+        type: "payment",
+        count: 1,
+      });
+
+      return { message: "Recharge successfully" };
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      logger.error("PaymentService Error:", error.message);
+      throw error;
+    }
   }
 }
 

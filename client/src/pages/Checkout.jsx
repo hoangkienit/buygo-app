@@ -2,11 +2,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import './../styles/checkout.css';
 import { useUser } from '../context/UserContext';
+import ToastNotification, { showToast } from '../components/toasts/ToastNotification';
+import { createNewOrder } from '../api/order.api';
+import { ClipLoader } from 'react-spinners';
 
 const Checkout = () => {
     const { user } = useUser();
     const [coupon, setCoupon] = useState('');
-    const [discount, setDiscount] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [loading, setLoading] = useState(false);
     
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -34,11 +38,31 @@ const Checkout = () => {
       setDiscount(0);
       alert('Mã giảm giá không hợp lệ');
     }
-    };
+  };
+  
+  const handleCreateOrder = async () => {
+    setLoading(true);
+
+    try {
+      console.log("run")
+      const res = await createNewOrder(productId, product_type, finalPayment);
+
+      if (res?.success) {
+        
+      }
+    }
+    catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
     
 
   return (
-      <div className='checkout-wrapper'>
+    <div className='checkout-wrapper'>
+      <ToastNotification/>
           <div className="check-out-container">
       <h1 className="check-out-title">Thanh toán</h1>
 
@@ -70,7 +94,8 @@ const Checkout = () => {
             type="text"
             value={coupon}
             onChange={(e) => setCoupon(e.target.value)}
-            placeholder="Nhập mã giảm giá..."
+              placeholder="Nhập mã giảm giá..."
+              style={{fontFamily: 'montserrat-md', outline: 'none'}}
           />
           <button className="check-out-btn apply-voucher-button" onClick={handleApplyCoupon}>Áp dụng</button>
         </div>
@@ -117,8 +142,8 @@ const Checkout = () => {
       </div>
 
       {/* Nút thanh toán */}
-      <button disabled={!!checkBalance()} className={`check-out-btn check-out-pay-btn ${!checkBalance() && "disabled-button"}`}>
-        Thanh toán ngay
+      <button onClick={handleCreateOrder} disabled={checkBalance() ? false:true} className={`check-out-btn check-out-pay-btn ${!checkBalance() && "disabled-button"}`}>
+        {loading ? <ClipLoader color='#fff' size={20}/> : "Thanh toán ngay"}
           </button>
           <p className="check-out-disclaimer">
   Bằng cách bấm <strong>Thanh toán</strong>, tôi xác nhận rằng tôi đã đọc và đồng ý với

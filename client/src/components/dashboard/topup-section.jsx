@@ -13,7 +13,7 @@ const TopUpSection = ({ title, packages }) => {
                     <h2 className="category-title">{title}</h2>
                 </div>
                 <div className='account-info-container'>
-                {activePackages?.map(pack => <TopUpCard pack={pack}></TopUpCard>)}
+                {activePackages?.map(pack => <TopUpCard key={pack._id} pack={pack}></TopUpCard>)}
                 </div>
             </div>
         </section>

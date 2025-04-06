@@ -4,14 +4,14 @@ const { generateProductId } = require('../utils/random');
 const { slugify } = require('../utils/text');
 const { Product, TopUpPackage, GameAccount } = require('./../models/product.model');
 const imageService = require('./image.service');
-const CryptoJS = require("crypto-js");
 const logger = require('../utils/logger');
 const ReviewService = require('./review.service');
+const { encrypt, decrypt } = require('../utils/crypto');
 
 class ProductService {
     // 🔹 Get all products
     static async getAllProducts(limit = 50) {
-        let products = await Product.find({product_status: "active"}).limit(limit).lean();
+        let products = await Product.find().limit(limit).lean();
 
         for (let product of products) {
         if (product.product_type === "utility_account" && product.product_attributes?.account) {
@@ -73,7 +73,7 @@ class ProductService {
         if (product.product_type === 'utility_account') {
             product.product_attributes.account = product.product_attributes.account.map((acc) => ({
                 ...acc,
-                password: decryptPassword(acc.password), // Show decrypted password
+                password: decrypt(acc.password), // Show decrypted password
             }));
         }
 
@@ -129,7 +129,7 @@ class ProductService {
             }
 
             const encryptedAccounts = product_attributes.map((attr) => {
-                const encryptedPassword = CryptoJS.AES.encrypt(attr.password, process.env.CRYPTO_SECRET).toString();
+                const encryptedPassword = encrypt(attr.password);
 
                 return {
                     username: attr.username,
@@ -282,7 +282,7 @@ class ProductService {
             {productId},
             { $push: { "product_attributes.account": { $each: product_attributes_data.map(acc => ({
                 ...acc,
-                password: CryptoJS.AES.encrypt(acc.password, process.env.CRYPTO_SECRET).toString(),
+                password: encrypt(acc.password),
                 _id: new mongoose.Types.ObjectId(),
                 sold: false,
                 })) } } },
@@ -297,7 +297,7 @@ class ProductService {
             message: "Add account to product successfully",
             accounts: product.product_attributes.account.map((acc) => ({
                 ...acc,
-                password: decryptPassword(acc.password)             
+                password: decrypt(acc.password)             
             }))
         }
     }
@@ -345,7 +345,7 @@ class ProductService {
             message: "Delete account from product successfully",
             accounts: product.product_attributes.account.map((acc) => ({
                 ...acc,
-                password: decryptPassword(acc.password)             
+                password: decrypt(acc.password)            
             }))
         }
     }
@@ -371,9 +371,5 @@ class ProductService {
     }
 }
 
-const decryptPassword = (encryptedPassword) => {
-    const bytes = CryptoJS.AES.decrypt(encryptedPassword, process.env.CRYPTO_SECRET);
-    return bytes.toString(CryptoJS.enc.Utf8);
-};
 
 module.exports = ProductService;

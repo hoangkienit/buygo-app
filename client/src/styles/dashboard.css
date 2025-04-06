@@ -198,8 +198,8 @@ a {text-decoration: none;}
 }
 
 .topup-item-image{
-    width: 200px;
-    height:100%;
+    width: 180px;
+    height:130px;
     border-radius: 8px 0px 0px 8px;
     transition: transform 0.2s ease-in-out;
     overflow-x: auto;

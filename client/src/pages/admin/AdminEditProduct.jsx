@@ -53,6 +53,7 @@ export const AdminEditProduct = () => {
             }
         }
         catch (error) {
+            navigate("/super-admin/products");
             showToast(error.message, "error");
         }
         finally {
@@ -191,7 +192,7 @@ export const AdminEditProduct = () => {
                     </div>
 
                     {/** Product Price */}
-                    {product?.product_type === 'game_account' &&
+                    {product?.product_type === 'game_account' || product?.product_type === 'utility_account' &&
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Giá`} disabled />
                         <input type='text' className='product-detail-input' placeholder={product?.product_attributes?.price?.toLocaleString()} value={productPrice.toLocaleString('vi-VN')} onChange={(e) => setProductPrice(Number(e.target.value.replace(/\D/g, '')))}/>

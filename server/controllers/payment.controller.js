@@ -1,4 +1,5 @@
 const PaymentService = require('../services/payment.service');
+const logger = require('../utils/logger');
 const { validateWebhookDescription } = require('./../utils/validation');
 
 class PaymentController {
@@ -26,7 +27,7 @@ class PaymentController {
         const response = await PaymentService.updateUserBalance(gateway, description, transferAmount);
         return res.status(200).json({ success: true, message: response.message, data: null });
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         return res.status(400).json({ success: false, message: error.message });
     }
   }

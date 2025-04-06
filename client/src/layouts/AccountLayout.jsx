@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaUser, FaBox, FaGift, FaHistory, FaHeart, FaMoneyCheck } from "react-icons/fa";
+import { PiBankFill } from "react-icons/pi";
 import "../styles/account.css";
 
 const AccountLayout = ({ title, children }) => {
@@ -20,14 +21,17 @@ const AccountLayout = ({ title, children }) => {
           <li className={location.pathname === "/account/recharge" ? "active" : ""}>
             <NavLink to="/account/recharge" className={() => "navlink"}><FaMoneyCheck /> Nạp tiền</NavLink>
           </li>
+          <li className={location.pathname === "/deposit-history" ? "active" : ""}>
+            <NavLink to="/deposit-history" className={() => "navlink"}><PiBankFill /> Lịch sử nạp tiền</NavLink>
+          </li>
+          <li className={location.pathname === "/transaction-history" ? "active" : ""}>
+            <NavLink to="/transaction-history" className={() => "navlink"}><FaHistory /> Lịch sử giao dịch</NavLink>
+          </li>
           <li className={location.pathname === "/storage" ? "active" : ""}>
-            <NavLink to="/storage" className={() => "navlink"}><FaBox /> Kho hàng</NavLink>
+            <NavLink to="/order" className={() => "navlink"}><FaBox /> Đơn hàng</NavLink>
           </li>
           <li className={location.pathname === "/redeem" ? "active" : ""}>
             <NavLink to="/redeem" className={() => "navlink"}><FaGift /> Đổi điểm</NavLink>
-          </li>
-          <li className={location.pathname === "/history" ? "active" : ""}>
-            <NavLink to="/transaction" className={() => "navlink"}><FaHistory /> Lịch sử giao dịch</NavLink>
           </li>
           <li className={location.pathname === "/favorites" ? "active" : ""}>
             <NavLink to="/favorites" className={() => "navlink"}><FaHeart /> Sản phẩm yêu thích</NavLink>

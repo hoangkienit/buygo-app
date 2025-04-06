@@ -1,5 +1,5 @@
 const cron = require("node-cron");
-const Transaction = require("./../models/transaction.model");
+const {DepositHistory} = require("./../models/transaction.model");
 
 // Avoid duplicate scheduling
 let isTaskRunning = false;
@@ -10,7 +10,7 @@ cron.schedule("* * * * *", async () => {
 
   try {
     const expiredTime = new Date(Date.now() - 60* 60 * 1000); // 60 min ago
-    await Transaction.updateMany(
+    await DepositHistory.updateMany(
       { transactionStatus: "pending", createdAt: { $lte: expiredTime } },
       { transactionStatus: "failed" }
     );

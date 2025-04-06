@@ -84,4 +84,17 @@ export const productAttributesStatusText = (type) => {
         break;
     }
 }
+
+export const transactionHistoryPaymentMethodText = (type) => {
+    switch (type) {
+      case "bank_transfer":
+        return "Ngân hàng";
+      case "momo":
+        return "Momo";
+      case "card":
+        return "Thẻ cào";
+      default:
+        break;
+    }
+}
   

@@ -186,7 +186,7 @@ export const AdminProduct = () => {
                                 <th>Số lượng gói nạp</th>
                             )}
                             <th>Trạng thái</th>
-                            <th>Thời gian</th>
+                            <th>Thời gian tạo</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>

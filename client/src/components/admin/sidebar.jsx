@@ -32,7 +32,7 @@ export const Sidebar = ({ isSidebarOpen }) => {
     showTopCenterToast("Có một giao dịch nạp tiền mới", "success");
     playNotificationSound();
     setNotifications((prevNotifications) => {
-      const updatedNotifications = { ...prevNotifications, [type]: count };
+      const updatedNotifications = { ...prevNotifications, [type]: (prevNotifications[type] || 0) + count };
 
       // Save updated notifications to localStorage
       localStorage.setItem("notifications", JSON.stringify(updatedNotifications));

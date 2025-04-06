@@ -4,8 +4,9 @@ const TransactionController = require('../controllers/transaction.controller');
 
 const router = express.Router();
 
-
-router.get('/get-transaction/transactions', verifyMiddleware, TransactionController.getTransactionList);
+// For client
+router.get('/deposit-history', verifyMiddleware, TransactionController.getDepositHistoryList);
+router.get('/transaction-history', verifyMiddleware, TransactionController.getTransactionHistoryList);
 
 router.get('/get-transaction/:transactionId', verifyMiddleware, TransactionController.getTransaction);
 

@@ -25,7 +25,6 @@ const initializeSocket = (server) => {
                 return next(new Error("Authentication error: No token provided"));
             }
 
-            console.log("Toekn: ", token);
             // Verify JWT
             const user = jwt.verify(token, process.env.JWT_SECRET);
             socket.user = user; // Attach user info to socket

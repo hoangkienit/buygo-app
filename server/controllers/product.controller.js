@@ -128,8 +128,6 @@ class ProductController {
             product_attributes
         } = req.body;
 
-        console.log(req.body);  // Check other form data
-        console.log(req.files);
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ success: false, error: 'At least one image is required!' });
         }
@@ -187,6 +185,7 @@ class ProductController {
             }
         }
         catch (error) {
+            logger.error(error);
             return res.status(400).json({ success: false, message: error.message });
         }
     }
@@ -210,6 +209,7 @@ class ProductController {
                     message: response.message
                 })
             } catch (error) {
+                logger.error(error);
                 return res.status(400).json({
                     success: false,
                     message: error.message
@@ -262,6 +262,7 @@ class ProductController {
                 }
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                     success: false,
                     message: error.message
@@ -305,6 +306,7 @@ class ProductController {
                 }
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                     success: false,
                     message: error.message
@@ -345,6 +347,7 @@ class ProductController {
                 }
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                     success: false,
                     message: error.message
@@ -383,6 +386,7 @@ class ProductController {
                 }
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                     success: false,
                     message: error.message
@@ -417,6 +421,7 @@ class ProductController {
                 }
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                     success: false,
                     message: error.message
@@ -451,6 +456,7 @@ class ProductController {
                 }
             })
         } catch (error) {
+            logger.error(error);
             return res.status(400).json({
                     success: false,
                     message: error.message

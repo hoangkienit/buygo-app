@@ -4,13 +4,14 @@ import "./../styles/transaction.css";
 import AccountLayout from "../layouts/AccountLayout";
 import { HashLoader } from "react-spinners";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { getTransactionList } from "../api/transaction.api";
-import showToast from './../components/toasts/ToastNotification';
+import { getTransactionHistoryList } from "../api/transaction.api";
+import showToast from '../components/toasts/ToastNotification';
+import { transactionHistoryPaymentMethodText } from "../utils";
 
 
 const ITEMS_PER_PAGE = 8;
 
-const Transaction = () => {
+const TransactionHistory = () => {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -20,7 +21,7 @@ const Transaction = () => {
         const fetchTransactions = async () => {
             try {
                 setLoading(true);
-                const res = await getTransactionList(50);
+                const res = await getTransactionHistoryList(50);
                 if (res.success) {
                     setTransactions(res.data.transactions);
                 }
@@ -92,10 +93,11 @@ const Transaction = () => {
                             <thead>
                                 <tr>
                                     <th>Mã giao dịch</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thời gian</th>
                                     <th>Số tiền</th>
-                                    <th>Ngân hàng</th>
+                                    <th>Loại</th>
+                                    <th>Nội dung</th>
+                                    <th>Số dư</th>
+                                    <th>Thời gian</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,10 +105,15 @@ const Transaction = () => {
                                     currentTransactions.map((tx) => (
                                         <tr key={tx.transactionId}>
                                             <td>{tx.transactionId}</td>
-                                            <td className={`${statusClass(tx.transactionStatus)} transaction-status`}>{formatStatus(tx.transactionStatus)}</td>
+                                            {tx.transactionType === 'add' ?
+                                                <td className="add-balance">+{tx.amount.toLocaleString() || 0}đ</td>
+                                                :
+                                                <td className="sub-balance">-{tx.amount.toLocaleString() || 0}đ</td>
+                                            }
+                                            <td>{tx.transactionType === 'add' ? "Tiền vào":"Tiền ra"}</td>
+                                            <td>{tx.note}</td>
+                                            <td className="transaction-balance">{tx.balance.toLocaleString() || 0}đ</td>
                                             <td>{new Date(tx.updatedAt).toLocaleString()}</td>
-                                            <td>{tx.amount.toLocaleString()}đ</td>
-                                            <td>{tx.gateway === 'empty_gateway' ? "NA" : tx.gateway}</td>
                                         </tr>
                                     ))
                                 ) : (
@@ -146,4 +153,4 @@ const Transaction = () => {
     );
 };
 
-export default Transaction;
+export default TransactionHistory;

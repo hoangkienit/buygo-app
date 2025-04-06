@@ -14,7 +14,7 @@ const AccountSection = ({ title, accounts }) => {
                     <h2 className="category-title">{title}</h2>
                 </div>
                 <div className='account-info-container'>
-                {activeAccounts?.map(acc => <AccountCard acc={acc}></AccountCard>)}
+                {activeAccounts?.map(acc => <AccountCard key={acc._id} acc={acc}></AccountCard>)}
                 </div>
             </div>
         </section>

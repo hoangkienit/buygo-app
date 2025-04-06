@@ -12,7 +12,7 @@
     margin: 40px 20px;
     padding: 24px;
     border-radius: 12px;
-    background: var(--eight);
+    background: var(--seven);
     border: 1px solid #4478a7;
     font-family: 'Segoe UI', sans-serif;
     box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.178);
@@ -63,12 +63,16 @@
 
 .check-out-btn {
     padding: 8px 16px;
-    background-color: var(--fourth);
+    background-color: var(--eight);
     border: none;
     color: white;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
+}
+
+.check-out-btn:hover{
+    background-color: var(--eleven);
 }
 
 

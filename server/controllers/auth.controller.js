@@ -1,4 +1,5 @@
 const AuthService = require("../services/auth.service");
+const logger = require("../utils/logger");
 const { validateLogin, validateRegister } = require("../utils/validation");
 const jwt = require("jsonwebtoken");
 
@@ -17,7 +18,7 @@ class AuthController {
       const response = await AuthService.register({ username, email, password });
       return res.status(201).json({ success: true, message: response.message });
     } catch (error) {
-        console.log(error);
+        logger.error(error);
       return res.status(400).json({ success: false, message: error.message });
     }
   }
@@ -52,6 +53,7 @@ class AuthController {
         }
       });
     } catch (error) {
+      logger.error(error);
       return res.status(400).json({ success: false, message: error.message });
     }
   }
@@ -86,7 +88,7 @@ class AuthController {
          accessToken: newAccessToken
        });
      } catch (error) {
-       console.log(error);
+        logger.error(error);
         return res.status(401).json({ message: "Invalid or expired refresh token!" });
     }
   }

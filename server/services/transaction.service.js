@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const Transaction = require("../models/transaction.model");
+const {DepositHistory, TransactionHistory} = require("../models/transaction.model");
 const { convertToObjectId } = require("../utils/convert");
 const { generateTransactionId } = require("../utils/random");
 
@@ -11,7 +11,7 @@ class TransactionService {
             throw new Error("Không tìm thấy người dùng");
         }
 
-        const transaction = new Transaction({
+        const transaction = new DepositHistory({
             transactionId: generateTransactionId(),
             userId,
             amount,
@@ -30,7 +30,7 @@ class TransactionService {
     
     // 🔹 Get transaction
     static async getTransaction(transactionId) {       
-        const transaction = await Transaction.findOne({ transactionId });
+        const transaction = await DepositHistory.findOne({ transactionId });
         if (!transaction) {
             throw new Error("Transaction not found");
         }
@@ -41,9 +41,9 @@ class TransactionService {
     }
 
     // 🔹 Get transaction list
-    static async getTransactionList(userId, limit = 50) {  
+    static async getDepositHistoryList(userId, limit = 50) {  
         try {
-            const transactions = await Transaction.find({ userId: convertToObjectId(userId) })// Find transactions by userId
+            const transactions = await DepositHistory.find({ userId: convertToObjectId(userId) })// Find transactions by userId
                 .limit(limit) // Limit the number of transactions returned
                 .sort({ createdAt: -1 }) // Sort by most recent transactions
                 .lean();
@@ -51,7 +51,22 @@ class TransactionService {
         if (!transactions || transactions.length === 0) {
             return { transactions: [] };
         }
-            console.log(transactions);
+        return { transactions };
+        } catch (error) {
+            throw new Error("Cant get transaction list. System error");
+        }
+    }
+
+    static async getTransactionHistoryList(userId, limit = 50) {  
+        try {
+            const transactions = await TransactionHistory.find({ userId: convertToObjectId(userId) })// Find transactions by userId
+                .limit(limit) // Limit the number of transactions returned
+                .sort({ createdAt: -1 }) // Sort by most recent transactions
+                .lean();
+
+        if (!transactions || transactions.length === 0) {
+            return { transactions: [] };
+        }
         return { transactions };
         } catch (error) {
             throw new Error("Cant get transaction list. System error");
@@ -60,7 +75,7 @@ class TransactionService {
 
     // 🔹 Cancel transaction
     static async cancelTransaction(transactionId) {       
-        const transaction = await Transaction.findOneAndUpdate(
+        const transaction = await DepositHistory.findOneAndUpdate(
             { transactionId: transactionId },
             { transactionStatus: "failed" },
             { new: true }
@@ -78,7 +93,7 @@ class TransactionService {
     // 🔹 Get transaction list
     static async getTransactionListForAdmin(limit = 50) {  
         try {
-            const transactions = await Transaction.find()// Find transactions
+            const transactions = await DepositHistory.find()// Find transactions
                 .limit(limit) // Limit the number of transactions returned
                 .populate("userId", "username")
                 .sort({ createdAt: -1 }) // Sort by most recent transactions
@@ -95,7 +110,7 @@ class TransactionService {
     }
 
     static async deleteTransactionForAdmin(transactionId) {
-        const transaction = await Transaction.deleteOne({ transactionId });
+        const transaction = await DepositHistory.deleteOne({ transactionId });
 
         if (transaction.deletedCount === 0) {
             throw new Error("Transaction not found");

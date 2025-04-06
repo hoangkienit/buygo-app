@@ -1,6 +1,7 @@
+const { required } = require("joi");
 const mongoose = require("mongoose");
 
-const TransactionSchema = new mongoose.Schema(
+const DepositSchema = new mongoose.Schema(
   {
     transactionId: { type: String, required: true, index: 1 },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -22,5 +23,22 @@ const TransactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Transaction = mongoose.model("Transaction", TransactionSchema);
-module.exports = Transaction;
+const TransactionSchema = new mongoose.Schema(
+  {
+    transactionId: { type: String, required: true, index: 1 },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    amount: { type: Number, required: true },
+    transactionType: {
+      type: String,
+      enum: ['add', 'subtract'],
+      required: true
+    },
+    note: {type: String, default: ''},
+    balance: {type: Number, required: true}
+  },
+  { timestamps: true }
+);
+
+const DepositHistory = mongoose.model("DepositHistory", DepositSchema);
+const TransactionHistory = mongoose.model("TransactionHistory", TransactionSchema);
+module.exports = {DepositHistory, TransactionHistory};

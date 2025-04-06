@@ -8,6 +8,7 @@ import { HashLoader } from "react-spinners";
 import { getProducts, getProductsByType } from "../api/product.api";
 import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
 import TopUpSection from "../components/dashboard/topup-section";
+import UtilitySection from "../components/dashboard/utility-section";
 
 const banners = [
   "https://elements-resized.envatousercontent.com/elements-preview-images/29961ce9-4919-49b0-a72d-fd9104b7042d?w=632&cf_fit=scale-down&q=85&format=auto&s=fbd666bd56dbb781cc84d18ff9d6d4e9a60a88293c5e9ba895b60afe320e9ab3",
@@ -27,6 +28,7 @@ const categories = [
 const Dashboard = () => {
   const [accounts, setAccounts] = useState(null);
   const [packages, setPackages] = useState(null);
+  const [utilities, setUtilities] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -40,10 +42,12 @@ const Dashboard = () => {
     try {
       const accountRes = await getProductsByType("game_account", 9) // Limit = 9
       const packageRes = await getProductsByType("topup_package", 6);
+      const utilityRes = await getProductsByType("utility_account", 6);
       
-      if (accountRes.success && packageRes.success) {
+      if (accountRes.success && packageRes.success && utilityRes) {
         setAccounts(accountRes.data.products);
         setPackages(packageRes.data.products);
+        setUtilities(utilityRes.data.products);
       }
     } catch (error) {
       showToast(error.message, "error");
@@ -110,6 +114,7 @@ const Dashboard = () => {
 
       <AccountSection title={'Tài khoản game'} accounts={accounts} />
       <TopUpSection title={'Gói nạp'} packages={packages} />
+      <UtilitySection title={'Tiện ích'} utilities={utilities} />
     </div>
   );
 };
