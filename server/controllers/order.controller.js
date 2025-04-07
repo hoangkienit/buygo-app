@@ -3,10 +3,11 @@ const logger = require("../utils/logger");
 
 class OrderController {
   // 🔹 Create New Order
-    static async createNewOrder(req, res) {
+  static async createNewOrder(req, res) {
         const userId = req.user.id;
-        const { productId, product_type, amount } = req.body;
+        const { productId, product_type, amount, requestId, packageId = null } = req.body;
 
+    //TODO: validate
         // ✅ Validate input
         // const errors = validateRegister(req.body);
         //   if (errors && errors.length > 0) {
@@ -14,8 +15,15 @@ class OrderController {
         // }
 
     try {
-        const response = await OrderService.createNewOrder(userId, productId, product_type, amount);
-        console.log(response)
+      const response = await OrderService.createNewOrder(
+        userId,
+        productId,
+        product_type,
+        amount,
+        requestId,
+        packageId
+      );
+      
         return res.status(201).json({
             success: true,
             message: response.message,
@@ -26,6 +34,47 @@ class OrderController {
     } catch (error) {
         logger.error(error);
         return res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  static async getAllOrdersForAdmin(req, res) {
+    const { limit } = req.query;
+
+    try {
+      const response = await OrderService.getAllOrdersForAdmin(limit);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message,
+        data: {
+          orders: response.orders
+        }
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      })
+    }
+  }
+
+  static async deleteOrderForAdmin(req, res) {
+    const { orderId } = req.params;
+
+    try {
+      const response = await OrderService.deleteOrderForAdmin(orderId);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      })
     }
   }
 

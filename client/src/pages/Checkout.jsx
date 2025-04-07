@@ -44,11 +44,28 @@ const Checkout = () => {
     setLoading(true);
 
     try {
-      console.log("run")
-      const res = await createNewOrder(productId, product_type, finalPayment);
+      let res = null;
+      switch (product_type) {
+        case "game_account" || "utility_account":
+          res = await createNewOrder(productId, product_type, finalPayment);
+          break;
+        case "topup_package":
+          res = await createNewOrder(productId, product_type, finalPayment, product_package?._id);
+          break;
+        default:
+          break;
+      }
 
       if (res?.success) {
-        
+        navigate('/order-success',
+          {
+            state: {
+              orderId: res.orderId,
+              product_type: product_type,
+              order_attributes: res.item
+            }
+          }
+        )
       }
     }
     catch (error) {

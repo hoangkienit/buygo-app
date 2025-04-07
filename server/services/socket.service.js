@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie"); // For cookie parsing
+const logger = require("../utils/logger");
 
 let io;
 
@@ -21,8 +22,8 @@ const initializeSocket = (server) => {
             let token = socket.handshake.auth?.token;
 
             if (!token) {
-                console.error("❌ Authentication error: No token provided");
-                return next(new Error("Authentication error: No token provided"));
+                logger.error("❌ Authentication error: No token provided");
+                return next(new Error("No token provided"));
             }
 
             // Verify JWT
@@ -30,7 +31,7 @@ const initializeSocket = (server) => {
             socket.user = user; // Attach user info to socket
             next();
         } catch (error) {
-            console.error("❌ Authentication error:", error.message);
+            logger.error("❌ Authentication error:", error.message);
             return next(new Error("Token expired"));
         }
     });

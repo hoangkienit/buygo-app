@@ -125,7 +125,7 @@
 
 .product-table tr {
     color: #000;
-    background-color: rgb(230, 230, 230);
+    background-color: #fff;
     font-family: 'montserrat-md';
     font-size: 14px;
     border-bottom: 1px solid rgb(197, 197, 197);
@@ -138,7 +138,7 @@
 .transaction-table tr:nth-child(even) {}
 
 .product-table tr:hover {
-    background: rgb(214, 214, 214);
+    background: rgb(243, 243, 243);
 }
 
 .table-product-img {

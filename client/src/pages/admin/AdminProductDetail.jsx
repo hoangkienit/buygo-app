@@ -82,7 +82,7 @@ export const AdminProductDetail = () => {
     
     return (
         <div className='admin-product-detail-container'>
-            <span className='tab-nav-title'><a href='/super-admin/products'>Sản phẩm</a> / {product?.product_name}</span>
+            <span className='tab-nav-title'><a href='/super-admin/products'>Danh sách sản phẩm</a> / {product?.product_name}</span>
             <div className='action-button-container'>
                                             <button onClick={() => navigate(`/super-admin/products/edit/${productId}`)} className="edit-btn product-detail-action-button"><FaEdit className="action-icon" /></button>
                                         <button onClick={() => { 

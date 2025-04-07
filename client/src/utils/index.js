@@ -15,7 +15,9 @@ export const getProductTypeObject = (selectedType) => {
             case "topup_package":
                 return { name: "", price: 0 }
             case "game_account":
-                return { username: "", password: "" }     
+            return { username: "", password: "" } 
+            case "utility_account":
+                return { username: "", password: "" }
             default:
                 return {}
         }
@@ -29,6 +31,8 @@ export const statusType = (type) => {
         return "transaction-pending";
       case "failed":
         return "transaction-failed";
+      case "processing":
+        return "transaction-pending";
       default:
         break;
     }
@@ -42,6 +46,8 @@ export const statusText = (type) => {
         return "Đang chờ";
       case "failed":
         return "Thất bại";
+      case "processing":
+        return "Đang xử lí";
       default:
         break;
     }

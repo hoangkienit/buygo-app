@@ -26,6 +26,8 @@ import Checkout from "./pages/Checkout";
 import DepositHistory from "./pages/DepositHistory";
 import TransactionHistory from "./pages/TransactionHistory";
 import OrderSuccess from "./pages/OrderSuccess";
+import { AdminOrder } from "./pages/admin/AdminOrder";
+import { AdminOrderDetail } from "./pages/admin/AdminOrderDetail";
 
 
 
@@ -64,11 +66,16 @@ function App() {
               {/* Admin Routes */}
               <Route element={<AdminLayout />}>
                 <Route path="/super-admin/dashboard" element={<AdminDashboard />} />
+              
                 <Route path="/super-admin/payment" element={<AdminPayment />} />
+              
                 <Route path="/super-admin/products" element={<AdminProduct />} />
                 <Route path="/super-admin/products/add-product" element={<AdminAddProduct />} />
                 <Route path="/super-admin/products/view/:productId" element={<AdminProductDetail />} />
-                <Route path="/super-admin/products/edit/:productId" element={<AdminEditProduct/>} />
+                <Route path="/super-admin/products/edit/:productId" element={<AdminEditProduct />} />
+              
+                <Route path="/super-admin/orders" element={<AdminOrder />} />
+                <Route path="/super-admin/orders/view/:orderId" element={<AdminOrderDetail />} />
               </Route>
             </Routes>
           </Router>

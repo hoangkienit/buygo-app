@@ -17,7 +17,7 @@ const socket = io(SOCKET_URL,
 );
 
 socket.on("connect", () => {
-    console.log("✅ Connected to WebSocket:", socket.id);
+    console.log("✅ Connected to WebSocket:");
 });
 
 socket.on("connect_error", async (error) => {

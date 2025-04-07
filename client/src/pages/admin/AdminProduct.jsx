@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "./admin-product.css";
 import { FaSearch } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
-import { HiDotsVertical } from "react-icons/hi";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { HashLoader } from "react-spinners";
 import { deleteProductForAdmin, getProducts } from "../../api/product.api";
@@ -21,10 +20,8 @@ export const AdminProduct = () => {
     const [selected, setSelected] = useState("");
     const [selectedProductType, setSelectedProductType] = useState("all");
     const [searchInput, setSearchInput] = useState("");
-    const [openActionId, setOpenActionId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const modalRef = useRef(null);
     const navigate = useNavigate();
     const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,22 +48,6 @@ export const AdminProduct = () => {
             setLoading(false);
         }
     }
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target)) {
-                setOpenActionId(null);
-            }
-        };
-
-        if (openActionId) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [openActionId]);
 
     // Filter products based on search & status selection
     const filteredProducts = products.filter((product) => {
@@ -123,7 +104,7 @@ export const AdminProduct = () => {
 
     return (
         <div className="admin-product-container">
-            <p className="tab-nav-title">Sản phẩm</p>
+            <p className="tab-nav-title">Danh sách sản phẩm</p>
             <div className="admin-product-header">
                 <div className="search-filter-container">
                     <div className="header-search-input-container">

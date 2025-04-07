@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
+    requestId: {type: String, unique: true, required: true,},
     orderId: {type: String, required: true,},
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
     productId: {type: String, required: true, index: true},
     order_type: { type: String, enum: ["topup_package", "game_account", "utility_account"], required: true, index: true },
     order_amount: { type: Number, required: true },
-    order_status: { type: String, enum: ["pending", "success", "failed"], default: "pending", index: true },
+    order_status: { type: String, enum: ["processing", "success", "failed"], default: "processing", index: true },
     order_note: { type: String, default: '' },
+    processed_by: {type: String, default: ''},
     order_attributes: { type: mongoose.Schema.Types.Mixed },
 }, {
     timestamps: true

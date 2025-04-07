@@ -12,6 +12,7 @@ import { truncateText } from "../utils/text";
 import { useUser } from "../context/UserContext";
 import ConfirmationModal from "../components/confirm-box/confirm-box";
 import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
+import { statusText } from "../utils";
 
 const Payment = () => {
     const { transactionId } = useParams();
@@ -19,7 +20,7 @@ const Payment = () => {
     const [successObj, setSuccessObj] = useState(null);
     const [loading, setLoading] = useState(false);
     const [pending, setPending] = useState(true);
-    const [status, setStatus] = useState(pending ? "Đang chờ" : "Thành công");
+    const [status, setStatus] = useState("");
     const [transactionData, setTransactionData] = useState(null);
     const [timerReset, setTimerReset] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -29,7 +30,7 @@ const Payment = () => {
         await updateBalance(newBalance);
         setSuccessObj({ amount: transferAmount, gateway });
       setPending(false);
-      setStatus("Thành công");
+      setStatus("success");
     }, [updateBalance]);
 
 
@@ -71,6 +72,7 @@ const Payment = () => {
 
             if (res.success) {
                 setLoading(false);
+              setStatus(res.data.transaction.transactionStatus);
                 setTransactionData(res.data.transaction);
             }
         } catch (error) {
@@ -83,7 +85,7 @@ const Payment = () => {
   const copyToClipboard = (text) => {
     showToast("Copy thành công", "success");
         navigator.clipboard.writeText(text);
-    };
+  };
 
     const onCancelTransaction = async() => {
       try {
@@ -131,10 +133,10 @@ const Payment = () => {
       <CopyRow label="Số tài khoản" value="07014137401" copyToClipboard={() => copyToClipboard("07014137401")} />
         <CopyRow label="Nội dung" value={truncateText(`TKPBG2 ${transactionData?.transactionId} ${transactionData?.userId}`, 20)} copyToClipboard={() => copyToClipboard(`TKPBG2 ${transactionData?.transactionId} ${transactionData?.userId}`)} />
         <CopyRow label="Mã giao dịch" value={`${transactionData?.transactionId}`} copyToClipboard={() => copyToClipboard(`${transactionData?.transactionId}`)} />
-        <StatusRow label="Trạng thái" value={`${status}`} pending={pending} />
+        <StatusRow label="Trạng thái" value={statusText(status)} pending={status === 'pending' ? true: false} />
 
         {/* Warning and Success box*/}  
-        {pending ?
+        {status === 'pending' ?
             <div className="warning-box">
                 <p className="warning-text">
                 ⚠️ Sau khi thanh toán thành công, bạn hãy đợi một vài phút để cập nhật tiền lên hệ thống nhé!
@@ -150,7 +152,7 @@ const Payment = () => {
 
     </div>
 
-          {pending ? 
+          {status === 'pending' ? 
       <button className="back-button" onClick={() => setShowModal(true)}>
       Hủy giao dịch
             </button>

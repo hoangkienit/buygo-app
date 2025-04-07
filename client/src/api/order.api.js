@@ -1,12 +1,47 @@
 import api from './../utils/api';
+import { nanoid } from 'nanoid';
 
-export const createNewOrder = async (productId, product_type, amount) => {
+export const createNewOrder = async (productId, product_type, amount, packageId) => {
   try {
     const response = await api.post(`/order/create-order`, {
-        productId,
-        product_type,
-        amount
-    });
+      productId,
+      product_type,
+      amount,
+      requestId: nanoid(),
+      packageId
+    },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllOrdersForAdmin = async (limit) => {
+  try {
+    const response = await api.get(`/order/admin/orders?limit=${limit}`,
+    {
+        withCredentials: true
+    }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteOrderForAdmin = async (orderId) => {
+  try {
+    const response = await api.delete(`/order/admin/delete-order/${orderId}`,
+    {
+        withCredentials: true
+    }
+    );
 
     return response.data;
   } catch (error) {

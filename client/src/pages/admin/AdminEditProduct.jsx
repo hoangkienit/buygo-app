@@ -163,7 +163,7 @@ export const AdminEditProduct = () => {
     
     return (
         <div className='admin-product-detail-container'>
-            <span className='tab-nav-title'><a href='/super-admin/products'>Sản phẩm</a> / {product?.product_name}</span>
+            <span className='tab-nav-title'><a href='/super-admin/products'>Danh sách sản phẩm</a> / {product?.product_name}</span>
             <div className='product-detail-info-container'>
                 <div className='product-detail-left-side'>
                     <img loading='lazy' className='product-detail-image' src={require('./../../assets/images/test-img.jpg')} alt='product-img'></img>
