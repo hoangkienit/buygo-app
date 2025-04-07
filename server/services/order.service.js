@@ -1,16 +1,18 @@
 const Order = require('../models/order.model');
+const User = require('../models/user.model');
 const logger = require('../utils/logger');
 const { generateOrderId } = require('../utils/random');
 const { Product } = require('./../models/product.model');
 const { encrypt, decrypt } = require('../utils/crypto');
 const mongoose = require('mongoose');
+const { getIO } = require('./socket.service');
+const { convertToObjectId } = require('../utils/convert');
 
 class OrderService {
   // 🔹 Create a new order
     static async createNewOrder(userId, productId, product_type, amount, requestId, packageId) {
         const session = await mongoose.startSession();
         session.startTransaction();
-
         try {
             if (!requestId) throw new Error("Missing requestId");
 
@@ -18,14 +20,19 @@ class OrderService {
             const existing = await Order.findOne({ requestId }).session(session);
             if (existing) {
                 throw new Error("Duplicate request detected");
-            
             }
+
+            // Checking user balance
+            const user = await User.findOne({ _id: convertToObjectId(userId) }).session(session);
+            if (!user) throw new Error("User not found");
+
+            if (user.balance < amount) throw new Error("You don't have enough balance");
+
             const product = await Product.findOne({productId: productId}).lean().session(session);
             if (!product) {
                 throw new Error("Product not found");
             }
     
-
             let newOrder = null;
             newOrder = new Order({
                     requestId: requestId,
@@ -75,10 +82,22 @@ class OrderService {
         
             await newOrder.save({ session });
 
-            //TODO: subtract user balance
+            user.balance -= amount;
+            await user.save({ session });
 
             await session.commitTransaction();
             session.endSession();
+
+            const io = getIO();
+            io.to(user._id.toString()).emit("order_success", {
+                newBalance: user.balance,
+            });  
+            
+            io.to("admin_room").emit("new_order", {
+                type: "orders",
+                count: 1,
+            });
+            
 
             if (product_type === 'utility_account') return {
                 message: "Create order successful",
@@ -120,6 +139,17 @@ class OrderService {
         }
 
         return {message: "Delete order success"}
+    }
+
+    static async getOrderForAdmin(orderId) {
+        const order = await Order.findOne({ orderId }).lean();
+
+        if (!order) throw new Error("Order not found");
+
+        return {
+            message: "Get order success",
+            order: order
+        }
     }
 }
 

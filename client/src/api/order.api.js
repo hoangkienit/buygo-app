@@ -35,6 +35,20 @@ export const getAllOrdersForAdmin = async (limit) => {
   }
 };
 
+export const getOrderForAdmin = async (orderId) => {
+  try {
+    const response = await api.get(`/order/admin/get-order/${orderId}`,
+    {
+        withCredentials: true
+    }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteOrderForAdmin = async (orderId) => {
   try {
     const response = await api.delete(`/order/admin/delete-order/${orderId}`,

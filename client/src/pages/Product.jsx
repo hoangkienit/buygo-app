@@ -142,7 +142,7 @@ const Product = () => {
           <h3 className="product-topup-package-title">Chọn gói nạp</h3>
           <div className="product-item-container">
               {product?.product_attributes?.packages.map(
-                (pack) => (<TopUpPackage selectedTopUpPackage={selectedTopUpPackage} setSelectedTopUpPackage={() => setSelectedTopUpPackage(pack)} pack={pack}></TopUpPackage>))}
+                (pack) => (<TopUpPackage key={pack._id} selectedTopUpPackage={selectedTopUpPackage} setSelectedTopUpPackage={() => setSelectedTopUpPackage(pack)} pack={pack}></TopUpPackage>))}
           
           </div>
         </div>

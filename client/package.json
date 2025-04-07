@@ -13,6 +13,7 @@
     "lucide-react": "^0.483.0",
     "nanoid": "^5.1.5",
     "react": "^19.0.0",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-modal": "^3.16.3",

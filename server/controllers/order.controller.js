@@ -1,5 +1,7 @@
+const { error } = require("winston");
 const OrderService = require("../services/order.service");
 const logger = require("../utils/logger");
+const { validateId } = require("../utils/validation");
 
 class OrderController {
   // 🔹 Create New Order
@@ -75,6 +77,28 @@ class OrderController {
         success: false,
         message: error.message
       })
+    }
+  }
+
+  static async getOrderForAdmin(req, res) {
+    const { orderId } = req.params;
+
+    const errors = validateId(orderId);
+    if (errors && errors.length > 0) return res.status(400).json({ success: false, message: errors[0].message });
+
+    try {
+      const response = await OrderService.getOrderForAdmin(orderId);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message,
+        data: {
+          order: response.order
+        }
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({ success: false, message: error.message });
     }
   }
 

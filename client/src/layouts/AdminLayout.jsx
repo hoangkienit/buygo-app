@@ -30,9 +30,9 @@ const AdminLayout = () => {
             {/* Page Content */}
             <main className="admin-content">
                 <Outlet />
-            </main>
+        </main>
+        <ToastNotification/>
       </div>
-      <ToastNotification/>
     </div>
   );
 };

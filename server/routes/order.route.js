@@ -9,6 +9,8 @@ router.post('/create-order', verifyMiddleware, OrderController.createNewOrder);
 // For admin
 router.get('/admin/orders', verifyMiddleware, verifyAdminMiddleware, OrderController.getAllOrdersForAdmin);
 
+router.get('/admin/get-order/:orderId', verifyMiddleware, verifyAdminMiddleware, OrderController.getOrderForAdmin);
+
 router.delete('/admin/delete-order/:orderId', verifyMiddleware, verifyAdminMiddleware, OrderController.deleteOrderForAdmin); 
 
 

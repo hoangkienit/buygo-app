@@ -247,7 +247,7 @@ export const AdminProduct = () => {
                 </div>
             )}
 
-            <ToastNotification/>
+
             {/* Confirmation Modal */}
             {isModalOpen && (
                 <ConfirmModal

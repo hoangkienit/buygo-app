@@ -28,7 +28,7 @@ export const Sidebar = ({ isSidebarOpen }) => {
 
   const [notifications, setNotifications] = useState(getStoredNotifications);
 
-  const handleNewNotification = useCallback(({ type, count }) => {
+  const handleNewTransaction = useCallback(({ type, count }) => {
     showTopCenterToast("Có một giao dịch nạp tiền mới", "success");
     playNotificationSound();
     setNotifications((prevNotifications) => {
@@ -41,19 +41,35 @@ export const Sidebar = ({ isSidebarOpen }) => {
     });
   }, []);
 
+  const handleNewOrder = useCallback(({ type, count }) => {
+    showTopCenterToast("Có một đơn hàng mới", "success");
+    playNotificationSound();
+    setNotifications((prevNotifications) => {
+      const updatedNotifications = { ...prevNotifications, [type]: (prevNotifications[type] || 0) + count };
+
+      // Save updated notifications to localStorage
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+
+      return updatedNotifications;
+    });
+  }, []);
+
+
   useEffect(() => {
     if (user?.role === 'admin' && socket) {
       socket.connect();
       socket.emit("admin_join", user?.id);
-
-      socket.on("new_transaction", handleNewNotification);
+      
+      socket.on("new_transaction", handleNewTransaction);
+      socket.on("new_order", handleNewOrder);
 
       return () => {
-        socket.off("new_transaction", handleNewNotification);
+        socket.off("new_transaction", handleNewTransaction);
+        socket.off("new_order", handleNewOrder);
         socket.disconnect();
       };
     }
-  }, [user?.role, handleNewNotification, socket]);
+  }, [user?.role, socket]);
 
   const resetNotification = (path) => {
     const notificationResetMap = {

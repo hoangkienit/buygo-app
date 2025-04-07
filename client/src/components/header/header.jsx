@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './header.css';
 import Logo from '../../assets/images/BUYGO_LOGO.png';
 import { FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { useUser } from '../../context/UserContext';
 import { MdLightMode, MdDarkMode } from "react-icons/md";
+import { BalanceDisplay } from './balance-display';
+import socket from '../../services/socket';
 
 const searchSuggestions = [
   "Steam Wallet 100$", "Google Play Gift Card", "PUBG Mobile UC", 
@@ -11,7 +13,7 @@ const searchSuggestions = [
 ];
 
 const Header = () => {
-  const { user } = useUser();
+  const { user, updateBalance } = useUser();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -20,6 +22,23 @@ const Header = () => {
 
   const searchRef = useRef(null);
 
+  const handleOrderSuccess = useCallback(async ({ newBalance}) => {
+            await updateBalance(newBalance);
+        }, [updateBalance]);
+    
+    
+      useEffect(() => {
+        if (user?._id && socket) {
+          socket.connect();
+          socket.emit("join", user._id);
+          socket.on("order_success", handleOrderSuccess);
+    
+          return () => {
+            socket.off("order_success", handleOrderSuccess);
+            socket.disconnect();
+          };
+        }
+        }, [user?._id, handleOrderSuccess, socket]);
   useEffect(() => {
   const handleResize = () => {
     if (window.innerWidth > 768) {
@@ -79,6 +98,7 @@ const Header = () => {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
+
 
   return (
     <>
@@ -144,7 +164,8 @@ const Header = () => {
               {user ? (
                 <div className="user-info">
                   <a href='/account/recharge' className="user-balance">
-                    <span className="balance">{user?.balance.toLocaleString() || 0}đ</span>
+                    <BalanceDisplay/>
+                    {/* <span className="balance">{user?.balance.toLocaleString() || 0}đ</span> */}
                   </a>
                   <a href='/account'><img src={user?.profileImg || "https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png"} alt="User Avatar" className="user-avatar" /></a>
                 </div>

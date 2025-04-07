@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './../styles/checkout.css';
 import { useUser } from '../context/UserContext';
 import ToastNotification, { showToast } from '../components/toasts/ToastNotification';
@@ -7,7 +7,7 @@ import { createNewOrder } from '../api/order.api';
 import { ClipLoader } from 'react-spinners';
 
 const Checkout = () => {
-    const { user } = useUser();
+    const { user, updateBalance } = useUser();
     const [coupon, setCoupon] = useState('');
   const [discount, setDiscount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,8 @@ const Checkout = () => {
     const totalAfterDiscount = subtotal - discount;
     const finalPayment = totalAfterDiscount;
 
-    const checkBalance = () => user?.balance - finalPayment >= 0;
+  const checkBalance = () => user?.balance - finalPayment >= 0;
+  
 
   const handleApplyCoupon = () => {
     if (coupon === 'GIAM10') {
@@ -42,11 +43,13 @@ const Checkout = () => {
   
   const handleCreateOrder = async () => {
     setLoading(true);
-
     try {
       let res = null;
       switch (product_type) {
-        case "game_account" || "utility_account":
+        case "game_account":
+          res = await createNewOrder(productId, product_type, finalPayment);
+          break;
+        case "utility_account":
           res = await createNewOrder(productId, product_type, finalPayment);
           break;
         case "topup_package":
