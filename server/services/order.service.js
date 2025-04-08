@@ -125,7 +125,7 @@ class OrderService {
         const orders = await Order.find()
             .populate("userId", "username")
             .limit(Number(limit))
-            .sort({ createAt: -1 })
+            .sort({ createdAt: -1 })
             .lean();
         
         return {message: 'Get orders successful', orders: orders ? orders : []}
@@ -142,13 +142,39 @@ class OrderService {
     }
 
     static async getOrderForAdmin(orderId) {
-        const order = await Order.findOne({ orderId }).lean();
+        const order = await Order.findOne({ orderId })
+            .populate("userId", "username profileImg")
+            .lean();
 
         if (!order) throw new Error("Order not found");
 
+        const product = await Product.findOne({ productId: order.productId }).lean();
+        if (!product) throw new Error("Product not found");
+        
+        if (order.order_type === 'utility_account') {
+            const formatOrder = {
+                ...order,
+                order_attributes: {
+                    username: decrypt(order.order_attributes.username),
+                    password: decrypt(order.order_attributes.password)
+                }
+            }
+
+            return {
+            message: "Get order success",
+            order: {
+                ...formatOrder,
+                product
+            }
+        }
+        }
+
         return {
             message: "Get order success",
-            order: order
+            order: {
+                ...order,
+                product
+            }
         }
     }
 }

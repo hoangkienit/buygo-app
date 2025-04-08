@@ -33,11 +33,11 @@
 }
 
 .account-sidebar li:hover,
-.account-sidebar .active {
+.account-sidebar .sidebar-active {
     background: var(--eight);
 }
 
-.account-sidebar li.active {
+.account-sidebar li.sidebar-active {
     background: var(--eight);
 }
 

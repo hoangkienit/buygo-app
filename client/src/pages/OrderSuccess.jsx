@@ -7,7 +7,7 @@ import ToastNotification, { showToast } from '../components/toasts/ToastNotifica
 import { FaFacebookMessenger } from "react-icons/fa";
 import { FaShoppingBasket } from "react-icons/fa";
 import { IoReceiptSharp } from "react-icons/io5";
-import { IoIosCheckmarkCircle } from "react-icons/io";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 const OrderSuccess = () => {
   const { state } = useLocation();
@@ -23,7 +23,7 @@ const OrderSuccess = () => {
       <ToastNotification/>
       <div className="order-success-card">
         {/* <img className='success-icon' src={ORDER_SUCCESS} alt='Success Order Image'/> */}
-        <IoIosCheckmarkCircle className='order-success-icon'/>
+        <FaRegCheckCircle className='order-success-icon'/>
         <h2 className="success-title">Đơn Hàng Thành Công</h2>
         <div className="order-details">
           <p className="order-id">

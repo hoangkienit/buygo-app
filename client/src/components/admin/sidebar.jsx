@@ -160,6 +160,11 @@ export const Sidebar = ({ isSidebarOpen }) => {
       label: "Giftcode"
     },
     {
+      to: "/super-admin/analytics",
+      icon: <MdAnalytics />,
+      label: "Phân tích"
+    },
+    {
       to: "/super-admin/employees",
       icon: <RiTeamFill />,
       label: "Quản lí thành viên"
@@ -169,11 +174,6 @@ export const Sidebar = ({ isSidebarOpen }) => {
       icon: <BiSolidCommentDetail />,
       label: "Đánh giá",
       notificationKey: "reviews"
-    },
-    {
-      to: "/super-admin/analytics",
-      icon: <MdAnalytics />,
-      label: "Phân tích"
     },
     {
       to: "/super-admin/settings",
@@ -191,13 +191,13 @@ export const Sidebar = ({ isSidebarOpen }) => {
       </div>
 
       <div className="sidebar-feature-container">
-        <h3 className="feature-title">Chức năng chính</h3>
+        {/* <h3 className="feature-title">Chức năng chính</h3> */}
         <nav className="nav-selection-container">
           {links.map((link, index) => (
             <Link
               key={index}
               to={link.to}
-              className={`nav-selection-item ${isActive(link.to) ? "active" : ""}`}
+              className={`nav-selection-item ${isActive(link.to) ? "admin-active" : ""}`}
               onClick={handleLinkClick}
             >
               <div className="nav-selection-icon-container">

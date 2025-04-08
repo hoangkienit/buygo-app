@@ -4,7 +4,6 @@ import "./../styles/admin.css"; // Import CSS file
 import { Sidebar } from "../components/admin/sidebar";
 import { AdminHeader } from "../components/admin/header";
 import { useUser } from "../context/UserContext";
-import ToastNotification from "../components/toasts/ToastNotification";
 
 
 const AdminLayout = () => {
@@ -12,7 +11,7 @@ const AdminLayout = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   
 
-  if (user.role !== 'admin') {
+  if (user?.role !== 'admin' || !user?.role) {
     return <Navigate to={'/unauthorized'}/>
   }
 
@@ -31,7 +30,6 @@ const AdminLayout = () => {
             <main className="admin-content">
                 <Outlet />
         </main>
-        <ToastNotification/>
       </div>
     </div>
   );

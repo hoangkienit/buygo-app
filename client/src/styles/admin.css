@@ -152,7 +152,7 @@
     width: 100%;
 }
 
-.active {
+.admin-active {
     border-radius: 8px;
     background: linear-gradient(to right, rgba(46, 95, 137, 1), rgba(46, 95, 137, 0));
 }

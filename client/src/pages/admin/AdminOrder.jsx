@@ -4,7 +4,7 @@ import { deleteOrderForAdmin, getAllOrdersForAdmin } from '../../api/order.api';
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { FaSearch } from 'react-icons/fa';
 import { HashLoader } from 'react-spinners';
-import { statusText, statusType } from '../../utils';
+import { productTypeText, statusText, statusType } from '../../utils';
 import ConfirmModal from '../../components/modal/confirm-modal';
 import { MdDelete } from "react-icons/md";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
@@ -139,7 +139,8 @@ export const AdminOrder = () => {
                                   <th>STT</th>
                                       <th>Mã giao dịch</th>
                                       <th>Tên người dùng</th>
-                                      <th>Số tiền</th>
+              <th>Số tiền</th>
+              <th>Loại</th>
                                       <th>Trạng thái</th>
                                       <th>Thời gian</th>
                                       <th>Thao tác</th>
@@ -153,7 +154,8 @@ export const AdminOrder = () => {
                               <td>{index + 1}</td>
                               <td>{tx.orderId}</td>
                               <td>{tx.userId.username}</td>
-                              <td className='order-price'>{tx.order_amount.toLocaleString()|| 0}</td>
+                          <td className='order-price'>{tx.order_amount.toLocaleString() || 0}</td>
+                          <td className='order-price'>{productTypeText(tx.order_type) || ''}</td>
                               <td>
                                   <div className={`transaction-status ${statusType(tx.order_status)}`}>
                                       {statusText(tx.order_status)}
@@ -203,8 +205,8 @@ export const AdminOrder = () => {
               isOpen={isModalOpen}
               onConfirm={() => handleDeleteOrder(selectedIdToDelete)}
               onClose={() => setIsModalOpen(false)}
-              message={'Xác nhận bạn đang xóa một giao dịch'}
-              title={'Xóa giao dịch'} />
+              message={'Xác nhận bạn đang xóa một đơn hàng'}
+              title={'Xóa đơn hàng'} />
     </div>
   );
 };

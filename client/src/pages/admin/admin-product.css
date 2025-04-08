@@ -13,6 +13,10 @@
     margin: 20px 0;
 }
 
+.pagination-info{
+    color: var(--seven) !important;
+}
+
 .header-search-input-container {
     position: relative;
     display: flex;

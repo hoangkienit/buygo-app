@@ -236,7 +236,7 @@ export const AdminProduct = () => {
                     >
                         <GrFormPrevious />
                     </button>
-                    <span className="pagination-text">{`${currentPage} / ${totalPages}`}</span>
+                    <span className="pagination-info">{`${currentPage}`}</span>
                     <button
                         className="pagination-btn"
                         onClick={handleNextPage}
@@ -247,7 +247,7 @@ export const AdminProduct = () => {
                 </div>
             )}
 
-
+            <ToastNotification/>
             {/* Confirmation Modal */}
             {isModalOpen && (
                 <ConfirmModal
