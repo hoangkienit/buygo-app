@@ -65,6 +65,23 @@ export const paymentMethodText = (type) => {
         break;
     }
 }
+
+export const statusClass = (status) => {
+        switch (status) {
+            case "pending":              
+                return "pending-status";
+            case "success":               
+                return "success-status";
+            case "failed":              
+            return "failed-status";
+          case "processing":              
+                return "pending-status"; 
+                  
+            default:
+                return ""; 
+        }
+    };
+
   
 
 export const productTypeText = (type) => {

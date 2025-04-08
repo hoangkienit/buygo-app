@@ -27,7 +27,7 @@ const AccountLayout = ({ title, children }) => {
           <li className={location.pathname === "/transaction-history" ? "sidebar-active" : ""}>
             <NavLink to="/transaction-history" className={() => "navlink"}><FaHistory /> Lịch sử giao dịch</NavLink>
           </li>
-          <li className={location.pathname === "/storage" ? "sidebar-active" : ""}>
+          <li className={location.pathname === "/order" ? "sidebar-active" : ""}>
             <NavLink to="/order" className={() => "navlink"}><FaBox /> Đơn hàng</NavLink>
           </li>
           <li className={location.pathname === "/redeem" ? "sidebar-active" : ""}>

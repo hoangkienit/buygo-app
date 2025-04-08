@@ -6,6 +6,10 @@ const router = express.Router();
 
 router.post('/create-order', verifyMiddleware, OrderController.createNewOrder);
 
+router.get('/get-order/:orderId', verifyMiddleware, OrderController.getOrder);
+
+router.get('/all-orders', verifyMiddleware, OrderController.getAllOrders);
+
 // For admin
 router.get('/admin/orders', verifyMiddleware, verifyAdminMiddleware, OrderController.getAllOrdersForAdmin);
 

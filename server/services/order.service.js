@@ -120,6 +120,40 @@ class OrderService {
         }
     }
 
+    static async getOrder(orderId) {
+        const order = await Order.findOne({ orderId }).lean();
+        if (!order) throw new Error("Order not found");
+
+        const product = await Product.findOne({ productId: order.productId }).lean();
+        if (!product) throw new Error("Product not found");
+        
+        if (order.order_type === 'utility_account') {
+            const formatOrder = {
+                ...order,
+                order_attributes: {
+                    username: decrypt(order.order_attributes.username),
+                    password: decrypt(order.order_attributes.password)
+                }
+            }
+
+            return {
+            message: "Get order success",
+            order: {
+                ...formatOrder,
+                product
+            }
+        }
+        }
+
+        return {
+            message: "Get order success",
+            order: {
+                ...order,
+                product
+            }
+        }
+    }
+
     // For admin
     static async getAllOrdersForAdmin(limit = 50) {
         const orders = await Order.find()
@@ -175,6 +209,19 @@ class OrderService {
                 ...order,
                 product
             }
+        }
+    }
+
+    static async getAllOrders(userId, limit = 100) {
+        console.log(userId)
+        const orders = await Order.find({ userId: userId })
+            .limit(limit)
+            .lean();
+        if (!orders) throw new Error("Order not found");
+
+        return {
+            message: "Get orders success",
+            orders: orders
         }
     }
 }

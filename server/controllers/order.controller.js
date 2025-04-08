@@ -102,6 +102,51 @@ class OrderController {
     }
   }
 
+  static async getOrder(req, res) {
+    const { orderId } = req.params;
+
+    const errors = validateId(orderId);
+    if (errors && errors.length > 0) return res.status(400).json({ success: false, message: errors[0].message });
+
+    try {
+      const response = await OrderService.getOrder(orderId);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message,
+        data: {
+          order: response.order
+        }
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  static async getAllOrders(req, res) {
+    const userId = req.user?.id;
+    const { limit } = parseInt(req.query.limit);
+
+    // const errors = validateId(orderId);
+    // if (errors && errors.length > 0) return res.status(400).json({ success: false, message: errors[0].message });
+
+    try {
+      const response = await OrderService.getAllOrders(userId, limit);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message,
+        data: {
+          orders: response.orders
+        }
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
 }
 
 module.exports = OrderController;

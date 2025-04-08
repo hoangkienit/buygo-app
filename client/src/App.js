@@ -28,6 +28,8 @@ import TransactionHistory from "./pages/TransactionHistory";
 import OrderSuccess from "./pages/OrderSuccess";
 import { AdminOrder } from "./pages/admin/AdminOrder";
 import { AdminOrderDetail } from "./pages/admin/AdminOrderDetail";
+import Order from "./pages/Order";
+import { OrderDetail } from "./pages/OrderDetail";
 
 
 
@@ -59,7 +61,9 @@ function App() {
                   <Route path="/deposit-history" element={<DepositHistory />} /> 
                   <Route path="/transaction-history" element={<TransactionHistory />} />
                   <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/order-success" element={<OrderSuccess/>} />
+                  <Route path="/order-success" element={<OrderSuccess />} />
+                  <Route path="/order" element={<Order />} />
+                  <Route path="/order/:orderId" element={<OrderDetail/>} />
                 </Route>
               </Route>
 

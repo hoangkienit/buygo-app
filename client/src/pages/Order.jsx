@@ -4,26 +4,30 @@ import "./../styles/transaction.css";
 import AccountLayout from "../layouts/AccountLayout";
 import { HashLoader } from "react-spinners";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { getDepositHistoryList } from "../api/transaction.api";
+import { getTransactionHistoryList } from "../api/transaction.api";
 import showToast from '../components/toasts/ToastNotification';
-import { statusClass, transactionHistoryPaymentMethodText } from "../utils";
+import { productTypeText, statusClass, statusText, transactionHistoryPaymentMethodText } from "../utils";
+import { getAllOrders } from "../api/order.api";
+import { useUser } from "../context/UserContext";
+import { FaEye } from "react-icons/fa6";
 
 
 const ITEMS_PER_PAGE = 8;
 
-const DepositHistory = () => {
-    const [transactions, setTransactions] = useState([]);
+const Order = () => {
+    const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
+    const { user } = useUser();
 
     useEffect(() => {
-        const fetchTransactions = async () => {
+        const fetchOrders = async () => {
             try {
                 setLoading(true);
-                const res = await getDepositHistoryList(50);
+                const res = await getAllOrders(100);
                 if (res.success) {
-                    setTransactions(res.data.transactions);
+                    setOrders(res.data.orders || []);
                 }
             } catch (error) {
                 showToast(error.message, "error");
@@ -31,11 +35,11 @@ const DepositHistory = () => {
                 setLoading(false);
             }
         };
-        fetchTransactions();
+        fetchOrders();
     }, [navigate]);
 
-    const totalPages = Math.ceil(transactions.length / ITEMS_PER_PAGE);
-    const currentTransactions = transactions.slice(
+    const totalPages = Math.ceil(orders.length / ITEMS_PER_PAGE);
+    const currentOrders = orders.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
@@ -52,24 +56,10 @@ const DepositHistory = () => {
         }
     };
 
-    const formatStatus = (status) => {
-        switch (status) {
-            case "pending":              
-                return "Đang chờ";
-            case "success":               
-                return "Thành công";
-            case "failed":              
-                return "Thất bại";     
-            default:
-                return "Empty status"; 
-        }
-    };
-
-
     return (
-        <AccountLayout title={'Lịch sử nạp tiền'}>
+        <AccountLayout title={'Đơn hàng'}>
             <div className="transaction-container">
-                <h3 className="transaction-title">Lịch sử nạp tiền</h3>
+                <h3 className="transaction-title">Đơn hàng của bạn</h3>
                 {loading ? (
                     <div className="loader-container">
                         <HashLoader color="#fff" size={30} />
@@ -78,23 +68,29 @@ const DepositHistory = () => {
                     <>
                         <table className="transaction-table">
                             <thead>
-                                <tr>
-                                    <th>Mã giao dịch</th>
-                                    <th>Trạng thái</th>
-                                    <th>Thời gian</th>
+                                    <tr>
+                                        <th>STT</th>
+                                    <th>Mã đơn hàng</th>
                                     <th>Số tiền</th>
-                                    <th>Phương thức</th>
+                                        <th>Loại</th>
+                                        <th>Trạng thái</th>
+                                    <th>Nội dung</th>
+                                        <th>Thời gian</th>
+                                        <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentTransactions.length > 0 ? (
-                                    currentTransactions.map((tx) => (
-                                        <tr key={tx.transactionId}>
-                                            <td>{tx.transactionId}</td>
-                                            <td className={`${statusClass(tx.transactionStatus)} transaction-status`}>{formatStatus(tx.transactionStatus)}</td>
-                                            <td>{new Date(tx.updatedAt).toLocaleString()}</td>
-                                            <td>{tx.amount.toLocaleString()}đ</td>
-                                            <td>{transactionHistoryPaymentMethodText(tx.paymentMethod)}</td>
+                                {currentOrders.length > 0 ? (
+                                    currentOrders.map((tx, index) => (
+                                        <tr key={tx.orderId}>
+                                            <td>{index + 1}</td>
+                                            <td>{tx.orderId}</td>
+                                            <td>{tx.order_amount.toLocaleString() || 0}đ</td>
+                                            <td>{productTypeText(tx.order_type)}</td>
+                                            <td className={`${statusClass(tx.order_status)} transaction-status`}>{statusText(tx.order_status) }</td>
+                                            <td>{tx.note}</td>
+                                            <td>{new Date(tx.createdAt).toLocaleString()}</td>
+                                            <td><button className="action-button" onClick={() => navigate(`/order/${tx.orderId}`)}><FaEye className="action-icon" /></button></td>
                                         </tr>
                                     ))
                                 ) : (
@@ -134,4 +130,4 @@ const DepositHistory = () => {
     );
 };
 
-export default DepositHistory;
+export default Order;
