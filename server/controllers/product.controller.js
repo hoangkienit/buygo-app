@@ -125,7 +125,8 @@ class ProductController {
             product_status,
             product_stock,
             product_price,
-            product_attributes
+            product_attributes,
+            isValuable
         } = req.body;
 
         if (!req.files || req.files.length === 0) {
@@ -158,7 +159,7 @@ class ProductController {
 
         errors = validateProductAttributes({ product_type, productAttributes });
         if (errors && errors.length > 0) {
-            return res.status(400).json({ success: false, error: "fsdfds" });
+            return res.status(400).json({ success: false, error: errors[0].message });
         }
 
         try {
@@ -171,7 +172,8 @@ class ProductController {
                 product_stock,
                 req.files,
                 product_price,
-                productAttributes
+                productAttributes,
+                isValuable
             );
 
             if (response) {

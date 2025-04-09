@@ -18,6 +18,7 @@ export const AdminAddProduct = () => {
     const [displayPrice, setDisplayPrice] = useState("");
     const [productName, setProductName] = useState("");
     const [productDescription, setProductDescription] = useState("");
+    const [isValuable, setIsValuable] = useState(false);
 
     const [amount, setAmount] = useState("");
     const [formData, setFormData] = useState([]);
@@ -115,15 +116,16 @@ export const AdminAddProduct = () => {
         try {
             let response = null;
             response = await addNewProduct(
-                    images,
-                    productName,
-                    productDescription,
-                    selectedType,
-                    "Mobile Game",
-                    selectedStatus,
-                    stock,
-                    formData,
-                    price
+                images,
+                productName,
+                productDescription,
+                selectedType,
+                "Mobile Game",
+                selectedStatus,
+                stock,
+                formData,
+                price,
+                isValuable
                 );           
 
             if (response?.success) {
@@ -146,17 +148,17 @@ export const AdminAddProduct = () => {
     setProductDescription("");
     setSelectedType("");
     setSelectedStatus("");
-    setStock("");
-    setPrice("");
-    setFormData({});
+    setStock(0);
+    setPrice(0);
+    setFormData([]);
     setImages([]);
-    setPreviews([]);
+        setPreviews([]);
     };
 
     const validateInputs = () => {
         const newErrors = formData.map((item) => {
         let error = {};
-            if (selectedType === 'utility_account') {
+            if ((selectedType === 'utility_account' || selectedType === 'game_account') && !isValuable) {
                 if (!item.username) error.username = "Username is required.";
                 if (!item.password) error.password = "Password is required.";
             }
@@ -231,7 +233,7 @@ export const AdminAddProduct = () => {
                             <option value="utility_account">Tài khoản tiện ích</option>
                         </select>                   
 
-                        {selectedType !== 'topup_package' ? <div className='pricing-container'>
+                        {selectedType !== 'topup_package' ? <><div className='pricing-container'>
                             <div className='price-side'>
                                 <p className='pricing-input-title'>Giá</p>
                                 <input inputMode="numeric" onChange={(e) => handleFormatPrice(e.target.value)} value={displayPrice} className='price-amount-input' required></input>
@@ -241,10 +243,18 @@ export const AdminAddProduct = () => {
                                 <input className='price-currency-input' placeholder='đ' disabled/>
                             </div>
                             
-                        </div> : null}
+                        </div>
+                            <div className='checkbox-container'>
+                            <input value={isValuable} onChange={() => setIsValuable(!isValuable)} className='add-product-checkbox' type='checkbox'></input>
+                            <p className='checkbox-text'>Up thông tin thủ công</p>
+                            </div>
+                            </>
+                        
+                         : null}
+                        
                     </div>
                     {/** This is for admin provide account info */}
-                        {selectedType === "utility_account" &&
+                        {(selectedType === "utility_account" || selectedType === "game_account") &&
                         <div className='add-product-account-container'>
                             <div className='basic-info-header-container'><h3 className='basic-info-title'>Thêm tài khoản</h3></div>
                             <input value={amount} onChange={(e) => {

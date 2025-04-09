@@ -56,8 +56,8 @@ function App() {
                 <Route path="/logout" element={<Logout />} />
                 <Route element={<MainLayout />}>
                   <Route path="/account" element={<Account />} />
-                  <Route path="/account/recharge" element={<Recharge />} />
-                  <Route path="/account/recharge/:transactionId" element={<Payment />} />
+                  <Route path="/recharge" element={<Recharge />} />
+                  <Route path="/recharge/:transactionId" element={<Payment />} />
                   <Route path="/deposit-history" element={<DepositHistory />} /> 
                   <Route path="/transaction-history" element={<TransactionHistory />} />
                   <Route path="/checkout" element={<Checkout />} />

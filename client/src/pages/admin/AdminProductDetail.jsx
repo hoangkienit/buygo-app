@@ -152,7 +152,7 @@ export const AdminProductDetail = () => {
                         product?.product_type === 'game_account' &&
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Số lượng tài khoản`} disabled />
-                        <input className='product-detail-input' value={`${product?.product_stock}`} disabled />
+                        <input className='product-detail-input' value={`${product?.product_attributes?.account.length}`} disabled />
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
                     </div>
                     }
@@ -196,6 +196,12 @@ export const AdminProductDetail = () => {
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
                     </div>
 
+                    <div className='product-detail-input-container'>
+                        <input className='product-detail-input-title' value={`Up thông tin thủ công`} disabled />
+                        <input className='product-detail-input' value={`${product?.isValuable ? "✅" : "❌"}`} disabled />
+                        {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
+                    </div>
+
                 </div>
             </div>
             <div className='product-attributes-transactions-container'>
@@ -212,7 +218,17 @@ export const AdminProductDetail = () => {
                             </tr>
                         </thead>
                             <tbody className='product-attributes-table-tbody'>
-                                <td colSpan={4}>Không có tài khoản</td>
+                                {!product?.isValuable ? product?.product_attributes?.account?.map((acc, index) => (
+                                <tr key={index}>
+                                    <td>{ index+1 }</td>
+                                    <td>{ acc.username}</td>
+                                    <td>{ acc.password}</td>
+                                    <td>{ acc.sold ? "Đã bán" : "Chưa bán"}</td>
+                                    </tr>))
+                                :
+                                     <td colSpan={4}>Không có tài khoản</td>
+                                }
+                               
                         </tbody>
                     </table>
                     }

@@ -30,7 +30,7 @@ const AddItemModal = ({productId, isOpen, onClose, title, selectedType, setProdu
     const validateInputs = () => {
         const newErrors = formData.map((item) => {
         let error = {};
-            if (selectedType === 'game_account') {
+            if (selectedType === 'game_account' || selectedType === 'utility_account') {
                 if (!item.username) error.username = "Username is required.";
                 if (!item.password) error.password = "Password is required.";
             }
@@ -54,7 +54,7 @@ const AddItemModal = ({productId, isOpen, onClose, title, selectedType, setProdu
 
         try {
             let res = null;
-            if (selectedType === 'utility_account') {
+            if (selectedType === 'utility_account' || selectedType === 'game_account') {
                 res = await addAccountToProductForAdmin(productId, formData);
 
                 if (res.success) {
@@ -95,7 +95,7 @@ const AddItemModal = ({productId, isOpen, onClose, title, selectedType, setProdu
         <div className="add-item-modal-overlay">
             <div className="add-item-modal-content">
                 <h2 className="add-item-modal-title">{ title}</h2>
-                {selectedType === "utility_account" &&
+                {selectedType === "utility_account" || selectedType === 'game_account' &&
                         <div className='add-product-account-container'>
                             <div className='basic-info-header-container'><h3 className='basic-info-title'>Thêm tài khoản</h3></div>
                             <input value={amount} onChange={(e) => {

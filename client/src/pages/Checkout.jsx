@@ -65,7 +65,8 @@ const Checkout = () => {
             state: {
               orderId: res.orderId,
               product_type: product_type,
-              order_attributes: res.item
+              order_attributes: res.item,
+              isValuable: res.isValuable
             }
           }
         )

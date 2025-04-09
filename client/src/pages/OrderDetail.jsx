@@ -4,7 +4,7 @@ import AccountLayout from "../layouts/AccountLayout";
 import './../styles/order-detail.css';
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { Step, Stepper } from 'react-form-stepper';
-import { statusText } from '../utils';
+import { orderStatusStep, statusText } from '../utils';
 import { HashLoader } from 'react-spinners';
 import { showToast } from '../components/toasts/ToastNotification';
 import { getOrder } from '../api/order.api';
@@ -13,6 +13,7 @@ export const OrderDetail = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export const OrderDetail = () => {
 
       if (res?.success) {
         setOrder(res.data.order || null);
+        setCurrentStep(orderStatusStep(res?.data?.order?.order_status));
       }
     } catch (error) {
       showToast(error.message, "error");
@@ -59,7 +61,7 @@ export const OrderDetail = () => {
 
             <Stepper
               className="client-stepper"
-              activeStep={1}
+              activeStep={currentStep}
               styleConfig={{
                 activeBgColor: "#134977",
                 activeTextColor: "#fff",

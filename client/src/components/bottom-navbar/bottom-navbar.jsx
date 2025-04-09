@@ -79,8 +79,8 @@ const BottomNavbar = () => {
               </div>
               <ul>
                 <li><a href="/account">Tài khoản của tôi</a></li>
-                <li><a href="/account/recharge">Nạp tiền</a></li>
-                <li><a href="/account">Đơn hàng</a></li>
+                <li><a href="/recharge">Nạp tiền</a></li>
+                <li><a href="/order">Đơn hàng</a></li>
                 <li><a href="/deposit-history">Lịch sử nạp tiền</a></li>
                 <li><a href="/transaction-history">Lịch sử giao dịch</a></li>
                 <li><a href="/account">Sản phẩm yêu thích</a></li>

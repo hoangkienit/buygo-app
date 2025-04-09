@@ -18,8 +18,8 @@ const AccountLayout = ({ title, children }) => {
           <li className={location.pathname.startsWith("/account") ? "sidebar-active" : ""}>
             <NavLink to="/account" className={() => "navlink"}><FaUser /> Tài khoản của tôi</NavLink>
           </li>
-          <li className={location.pathname.startsWith("/account/recharge") ? "sidebar-active" : ""}>
-            <NavLink to="/account/recharge" className={() => "navlink"}><FaMoneyCheck /> Nạp tiền</NavLink>
+          <li className={location.pathname.startsWith("/recharge") ? "sidebar-active" : ""}>
+            <NavLink to="/recharge" className={() => "navlink"}><FaMoneyCheck /> Nạp tiền</NavLink>
           </li>
           <li className={location.pathname.startsWith("/deposit-history") ? "sidebar-active" : ""}>
             <NavLink to="/deposit-history" className={() => "navlink"}><PiBankFill /> Lịch sử nạp tiền</NavLink>

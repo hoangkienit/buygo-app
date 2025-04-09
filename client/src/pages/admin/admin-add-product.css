@@ -392,6 +392,26 @@
     background-color: var(--eight);
 }
 
+.checkbox-container{
+    width: 100%;
+    padding: 5px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-product-checkbox{
+    width: 20px;
+    height: 20px;
+}
+
+.checkbox-text{
+    font-family: 'montserrat-md';
+    font-size: 14px;
+}
+
 
 
 @media (max-width: 768px){

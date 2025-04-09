@@ -9,12 +9,14 @@ import { FaBan } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { OrderStepper } from '../../components/stepper/OrderStepper';
 import ConfirmModal from '../../components/modal/confirm-modal';
+import { orderStatusStep } from '../../utils';
 
 export const AdminOrderDetail = () => {
   const { orderId } = useParams();
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +32,8 @@ export const AdminOrderDetail = () => {
       const res = await getOrderForAdmin(orderId);
 
       if (res?.success) {
-        setOrder(res.data.order || null);
+        setOrder(res?.data?.order || null);
+        setCurrentStep(orderStatusStep(res?.data?.order?.order_status));
       }
     } catch (error) {
       
@@ -83,11 +86,11 @@ export const AdminOrderDetail = () => {
             <p className='order-detail-orderId'>Đơn hàng #{order?.orderId}</p>
             <div className='admin-action-buttons-container'>
               <button onClick={() => setIsModalOpen(true)} className='admin-action-button delete-button'><MdDelete className='admin-action-icon'/></button>
-              <button className='admin-action-button failed-button'><FaBan className='admin-action-icon'/></button>
-              <button className='admin-action-button success-button'><FaCheckCircle className='admin-action-icon'/></button>
+              <button className={`admin-action-button order-failed-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaBan className='admin-action-icon'/></button>
+              <button className={`admin-action-button order-success-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaCheckCircle className='admin-action-icon'/></button>
             </div>
           </div>
-          <OrderStepper currentStep={1} order_status={order?.order_status} />
+          <OrderStepper currentStep={currentStep} order_status={order?.order_status} />
           <div className='user-product-container'>
             <div className='user-info-container'>
               <img className='order-detail-user-avatar' src={order?.userId?.profileImg} alt='user-avatar'></img>
@@ -101,7 +104,7 @@ export const AdminOrderDetail = () => {
               <div className='order-detail-name-container'>
                 <p className='order-detail-username'>{order?.product?.product_name}</p>
                 {order?.order_type === 'topup_package' && <p className='order-attribute-text'>{order_package.name}</p>}
-                {order?.order_type === 'utility_account' &&
+                {order?.order_type === 'utility_account' || (order?.order_type === 'game_account' && !order?.product?.isValuable) &&
                   <>
                   <p className='order-attribute-text'>{order?.order_attributes?.username}</p>
                   <p className='order-attribute-text'>{order?.order_attributes?.password}</p>

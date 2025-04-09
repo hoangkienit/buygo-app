@@ -27,10 +27,11 @@ class OrderController {
       );
       
         return res.status(201).json({
-            success: true,
-            message: response.message,
-            orderId: response.orderId,
-            item: response.item
+          success: true,
+          message: response.message,
+          orderId: response.orderId,
+          item: response.item,
+          isValuable: response.isValuable
         });
 
     } catch (error) {

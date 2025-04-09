@@ -80,6 +80,20 @@ export const statusClass = (status) => {
             default:
                 return ""; 
         }
+};
+    
+export const orderStatusStep = (status) => {
+        switch (status) {
+            case "success":               
+                return 2;
+            case "failed":              
+            return 2;
+          case "processing":              
+                return 1; 
+                  
+            default:
+                return ""; 
+        }
     };
 
   

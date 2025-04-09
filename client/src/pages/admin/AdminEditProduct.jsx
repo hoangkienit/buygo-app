@@ -39,7 +39,7 @@ export const AdminEditProduct = () => {
         try {
             const res = await getProductForAdmin(productId);
 
-            if (res.success) {
+            if (res?.success) {
                 setProduct(res.data.product);
 
                 setProductName(res.data.product.product_name);
@@ -122,7 +122,7 @@ export const AdminEditProduct = () => {
         setIsConfirmModalOpen(false);
         try {
             let res = null;
-            if (product?.product_type === 'utility_account') {
+            if (product?.product_type === 'utility_account' || product?.product_type === 'game_account') {
                 res = await deleteAccountFromProductForAdmin(productId, selectedItemToDelete);
                 setProduct({
                     ...product,
@@ -142,7 +142,7 @@ export const AdminEditProduct = () => {
                 })
             }
             
-            if (res.success) {
+            if (res?.success) {
                 showToast("Xóa thành công", "success");
             }
         } catch (error) {
@@ -228,7 +228,7 @@ export const AdminEditProduct = () => {
                         product?.product_type === 'game_account' &&
                     <div className='product-detail-input-container'>
                         <input className='product-detail-input-title' value={`Số lượng tài khoản`} disabled />
-                        <input className='product-detail-input' value={productStock} onChange={(e) => setProductStock(Number(e.target.value.replace(/\D/g, '')))}/>
+                        <input className='product-detail-input' value={product?.product_attributes?.account.length} disabled onChange={(e) => setProductStock(Number(e.target.value.replace(/\D/g, '')))}/>
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
                     </div>
                     }
@@ -271,6 +271,11 @@ export const AdminEditProduct = () => {
                         <input className='product-detail-input' value={`${product?.averageRating}`} disabled />
                         {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
                     </div>
+                    <div className='product-detail-input-container'>
+                        <input className='product-detail-input-title' value={`Up thông tin thủ công`} disabled />
+                        <input className='product-detail-input' value={`${product?.isValuable ? "✅" : "❌"}`} disabled />
+                        {/* <FaCopy className='product-detail-copy-icon' onClick={() => copyToClipboard(`${product?.product_category}`)}/> */}
+                    </div>
 
                 </div>
             </div>
@@ -278,12 +283,17 @@ export const AdminEditProduct = () => {
                 <div className='product-attributes-container'>
                     <div className='product-attribute-title-button-container'>
                         <p className='attribute-title'>{productTypeText(product?.product_type) }</p>
-                        {product?.product_type !== 'game_account' &&
-                            <a style={{cursor: "pointer"}} onClick={() => setIsModalOpen(true)} className="add-product-button-container">
-                                <MdOutlineAdd className="add-icon" />
-                                <p className="add-text">Thêm mới</p>
-                            </a>
-                        }
+                        {(
+    (product?.product_type === 'game_account' && !product?.isValuable) ||
+    product?.product_type === 'utility_account' ||
+    product?.product_type === 'topup_package'
+) && (
+    <a style={{cursor: "pointer"}} onClick={() => setIsModalOpen(true)} className="add-product-button-container">
+        <MdOutlineAdd className="add-icon" />
+        <p className="add-text">Thêm mới</p>
+    </a>
+)}
+
                     </div>
                     {product?.product_type === 'game_account' &&
                         <table className='product-attributes-table'>
@@ -297,7 +307,20 @@ export const AdminEditProduct = () => {
                             </tr>
                         </thead>
                         <tbody className='product-attributes-table-tbody'>
-                            <td colSpan={5}>Không có tài khoản</td>
+                            {!product?.isValuable ? product?.product_attributes?.account?.map((acc, index) => (
+                                <tr key={index}>
+                                    <td>{ index+1 }</td>
+                                    <td>{ acc.username}</td>
+                                    <td>{ acc.password}</td>
+                                    <td>{acc.sold ? "Đã bán" : "Chưa bán"}</td>
+                                    <td><button onClick={() => {
+                                        setIsConfirmModalOpen(true);
+                                        setSelectedItemToDelete(acc._id);
+                                    }} className='delete-btn action-button'><MdDelete className="action-icon" /></button></td>
+                                    </tr>))
+                                :
+                                     <td colSpan={4}>Không có tài khoản</td>
+                                }
                         </tbody>
                     </table>
                     }

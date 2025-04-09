@@ -70,7 +70,7 @@ class ProductService {
         const product = await Product.findOne({productId}).lean();
         if (!product) throw new Error("No product found");
         
-        if (product.product_type === 'utility_account') {
+        if (product.product_type === 'utility_account' || product.product_type === 'game_account') {
             product.product_attributes.account = product.product_attributes.account.map((acc) => ({
                 ...acc,
                 password: decrypt(acc.password), // Show decrypted password
@@ -90,7 +90,8 @@ class ProductService {
         product_stock,
         images,
         product_price,
-        product_attributes
+        product_attributes,
+        isValuable
     ) {
         // 🔹 Check if product existed
         let existingProduct = await Product.findOne({ product_name });
@@ -109,21 +110,22 @@ class ProductService {
         }
 
         existingProduct = new Product({
-                productId: generateProductId(),
-                product_name: product_name,
-                product_description: product_description,
-                product_type: product_type,
-                product_slug: slugify(product_name),
-                product_category: product_category,
-                product_status: product_status,
-                product_stock: product_stock,
-                product_imgs: imageUrls,
-                product_attributes: {}
+            productId: generateProductId(),
+            product_name: product_name,
+            product_description: product_description,
+            product_type: product_type,
+            product_slug: slugify(product_name),
+            product_category: product_category,
+            product_status: product_status,
+            product_stock: product_stock,
+            product_imgs: imageUrls,
+            isValuable: isValuable,
+            product_attributes: {}
         });
             
         await existingProduct.save();
 
-        if (existingProduct.product_type === "utility_account") {
+        if (existingProduct.product_type === "utility_account" || existingProduct.product_type === "game_account") {
             if (!Array.isArray(product_attributes)) {
                 throw new Error("product_attributes must be an array");
             }
@@ -157,20 +159,7 @@ class ProductService {
 
             existingProduct.product_attributes = newTopUpPackage;
             await existingProduct.save();
-        } else if (existingProduct.product_type === "game_account") {
-            if (!Array.isArray(product_attributes)) {
-                throw new Error("product_attributes must be an array");
-            }
-
-            const newGameAccount = new GameAccount({
-                price: product_price,
-                account: []
-            });
-
-            existingProduct.product_attributes = newGameAccount;
-            await existingProduct.save();
-        }
-        
+        }      
         else {
             throw new Error("Invalid product type")
         }

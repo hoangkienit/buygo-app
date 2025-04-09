@@ -94,7 +94,7 @@ const Payment = () => {
 
         if (res.success) {
           setShowModal(false);
-          navigate('/account/recharge');
+          navigate('/recharge');
         }
       } catch (error) {
         showToast(error.message, "error");
@@ -157,7 +157,7 @@ const Payment = () => {
       Hủy giao dịch
             </button>
             :
-            <button className="back-button" onClick={() => navigate('/account/recharge')}>
+            <button className="back-button" onClick={() => navigate('/recharge')}>
           Nạp tiếp
         </button>
   }

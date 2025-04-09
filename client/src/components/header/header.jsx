@@ -163,7 +163,7 @@ const Header = () => {
               </div>
               {user ? (
                 <div className="user-info">
-                  <a href='/account/recharge' className="user-balance">
+                  <a href='/recharge' className="user-balance">
                     <BalanceDisplay/>
                     {/* <span className="balance">{user?.balance.toLocaleString() || 0}đ</span> */}
                   </a>

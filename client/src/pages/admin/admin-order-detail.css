@@ -60,12 +60,12 @@
     padding: 5px 15px;
 }
 
-.success-button{
+.order-success-button{
     background-color: #2ecc71;
     transition: transform 0.2s ease-in;
 }
 
-.success-button:hover{
+.order-success-button:hover{
     background-color: #2ecc71;
     box-shadow: none;
     transform: scale(1.03);
@@ -213,6 +213,15 @@
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+}
+
+.order-disabled-button{
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+
+.order-disabled-button:hover{
+    background-color: lightgray;
 }
 
 

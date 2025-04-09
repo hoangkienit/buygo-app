@@ -47,15 +47,16 @@ export const getProductBySlug = async (product_slug) => {
 
 // For admin
 export const addNewProduct = async (
-    product_img,
-    product_name,
-    product_description,
-    product_type,
-    product_category,
-    product_status,
-    product_stock,
-    product_attributes,
-    product_price
+  product_img,
+  product_name,
+  product_description,
+  product_type,
+  product_category,
+  product_status,
+  product_stock,
+  product_attributes,
+  product_price,
+  isValuable
 ) => {
     try {
         const formData = new FormData();
@@ -70,7 +71,8 @@ export const addNewProduct = async (
         formData.append("product_status", product_status);
         formData.append("product_stock", product_stock);
         formData.append("product_price", product_price);
-        formData.append("product_attributes", JSON.stringify(product_attributes));
+      formData.append("product_attributes", JSON.stringify(product_attributes));
+      formData.append("isValuable", isValuable);
 
     const response = await api.post(`/product/admin/add-product`, formData, {
       headers: {

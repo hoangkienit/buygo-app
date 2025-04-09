@@ -24,7 +24,7 @@ const Recharge = () => {
 
       if (res.success) {
         setLoading(false);
-        navigate(`/account/recharge/${res?.data?.transactionId}`);
+        navigate(`/recharge/${res?.data?.transactionId}`);
       }
     } catch (error) {
       setLoading(false);

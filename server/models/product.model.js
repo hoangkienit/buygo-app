@@ -20,6 +20,7 @@ const ProductSchema = new mongoose.Schema(
     },
     product_stock: { type: Number, default: 0, required: true },
     product_imgs: [{ type: String, required: true }],
+    isValuable: {type: Boolean, required: true},
     product_sold_amount: {type: Number, default: 0},
     product_attributes: { type: mongoose.Schema.Types.Mixed, required: true },
   },

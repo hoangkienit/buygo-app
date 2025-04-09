@@ -44,8 +44,8 @@ class OrderService {
                     order_status: "processing",
                     order_note: '',
                 });
-            if (product_type === 'utility_account') {
-                if (product.product_attributes.account.length <= 0) throw new Error("Sản phẩm đã hết hàng");
+            if (product_type === 'utility_account' || product_type === 'game_account') {
+                // if (product.product_attributes.account.length <= 0) throw new Error("Sản phẩm đã hết hàng");
 
                 const utilAccount = await Product.aggregate([
                     { $match: { productId: productId } }, // Match the product by its _id
@@ -57,28 +57,47 @@ class OrderService {
                 const firstAccount = utilAccount[0]?.account;
                 
                 //Delete account from stock
-                if (firstAccount) {
+                if (firstAccount && !product?.isValuable) {
                     await Product.updateOne(
                         { productId: productId },
                         { $pull: { "product_attributes.account": { _id: firstAccount._id } } },
                         { session }
                     );
+
+                    newOrder.order_attributes = {
+                        username: encrypt(firstAccount.username),
+                        password: firstAccount.password
+                    }
+
+                    // Set product status to 0 if there are no accounts
+                    const updatedProduct = await Product.findOne({ productId }, null, { session });
+
+                    const accounts = updatedProduct?.product_attributes?.account ?? [];
+
+                    if (accounts.length === 0) {
+                        await Product.updateOne(
+                            { productId: productId },
+                            { product_status: "inactive" },
+                            { session }
+                        );
+                    }
                 } else {
                     logger.error("OrderService: no account to delete");
                 }
-
-
-                newOrder.order_attributes = {
-                        username: encrypt(firstAccount.username),
-                        password: firstAccount.password
-                }
-                
-
+               
             } else if(product_type === 'topup_package') {
                 newOrder.order_attributes = {
                     packageId: packageId
                 }
             }
+
+            //
+            if (product_type === 'utility_account' || (product_type === 'game_account' && !product?.isValuable)) {
+                newOrder.order_status = 'success';
+            } else {
+                newOrder.order_status = 'processing';
+            }
+
         
             await newOrder.save({ session });
 
@@ -100,18 +119,20 @@ class OrderService {
             });
             
 
-            if (product_type === 'utility_account') return {
+            if (product_type === 'utility_account' || (product_type === 'game_account' && !product?.isValuable)) return {
                 message: "Create order successful",
                 item: {
                     username: decrypt(newOrder?.order_attributes?.username),
                     password: decrypt(newOrder?.order_attributes?.password)
                 },
-                orderId: newOrder.orderId
+                orderId: newOrder.orderId,
+                isValuable: product?.isValuable
             }
             return {
                 message: "Create order successful",
                 orderId: newOrder.orderId,
-                item: null
+                item: null,
+                isValuable: product?.isValuable
             };
         } catch (error) {
             await session.abortTransaction();
@@ -128,7 +149,7 @@ class OrderService {
         const product = await Product.findOne({ productId: order.productId }).lean();
         if (!product) throw new Error("Product not found");
         
-        if (order.order_type === 'utility_account') {
+        if (order.order_type === 'utility_account' || (order.order_type === 'utility_account' && !product?.isValuable)) {
             const formatOrder = {
                 ...order,
                 order_attributes: {
@@ -186,7 +207,7 @@ class OrderService {
         const product = await Product.findOne({ productId: order.productId }).lean();
         if (!product) throw new Error("Product not found");
         
-        if (order.order_type === 'utility_account') {
+        if ((order.order_type === 'utility_account' || order.order_type === 'game_account') && !product?.isValuable) {
             const formatOrder = {
                 ...order,
                 order_attributes: {
