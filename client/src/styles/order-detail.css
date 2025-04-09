@@ -1,0 +1,114 @@
+.client-order-detail-container{
+    width: 100%;
+        max-width: 1000px;
+        margin: 0px auto;
+        padding: 20px;
+        background: var(--seven);
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+        height: 100%;
+}
+
+.client-order-orderId-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.client-order-back-icon{
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in;
+}
+
+.client-order-back-icon:hover{
+    transform: scale(1.03);
+    color: var(--eight);
+}
+
+.client-order-orderId{
+    color: #fff;
+    font-family: 'montserrat-bold';
+    font-size: 23px;
+}
+
+.client-stepper{
+    font-family: 'montserrat-bold' !important;
+        font-size: 17px;
+        color: #fff;
+}
+
+.client-order-time{
+    color: lightgray;
+    font-family: 'montserrat-md';
+    font-size: 13px;
+}
+
+.client-order-time-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.client-order-product-section-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.client-order-product-left-side{
+    width: 60%;
+    height: 100%;
+}
+
+.client-order-product-right-side {
+    width: 40%;
+    height: 100%;
+}
+
+.client-order-product-info-container{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--eight);
+    padding: 10px;
+    border-radius: 8px;
+
+}
+
+.client-order-product-name{
+    font-family: 'montserrat-bold';
+    font-size: 18px;
+    color: #fff;
+}
+
+.client-order-attribute-text{
+    font-family: 'montserrat-md';
+        font-size: 14px;
+        color: lightgray;
+}
+
+.client-order-log-container{
+    background-color: var(--eight) !important;
+    color: #fff !important;
+}
+
+.client-order-timeline{
+    color: var(--secondary);
+}
+
+.order-price-section-container{
+    border-top: 1px solid white;
+}

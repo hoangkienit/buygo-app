@@ -63,6 +63,20 @@ export const getAllOrders = async (limit) => {
   }
 };
 
+export const getOrder = async (orderId) => {
+  try {
+    const response = await api.get(`/order/get-order/${orderId}`,
+    {
+        withCredentials: true
+    }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteOrderForAdmin = async (orderId) => {
   try {
     const response = await api.delete(`/order/admin/delete-order/${orderId}`,

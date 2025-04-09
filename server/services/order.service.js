@@ -84,6 +84,7 @@ class OrderService {
 
             user.balance -= amount;
             await user.save({ session });
+            //TODO: write to user transaction history 
 
             await session.commitTransaction();
             session.endSession();
@@ -213,9 +214,9 @@ class OrderService {
     }
 
     static async getAllOrders(userId, limit = 100) {
-        console.log(userId)
         const orders = await Order.find({ userId: userId })
-            .limit(limit)
+            .limit(Number(limit))
+            .sort({createdAt: -1})
             .lean();
         if (!orders) throw new Error("Order not found");
 
