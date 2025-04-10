@@ -15,7 +15,7 @@ function slugify(str) {
         .replace(/-+/g, "-") // Replace multiple hyphens with a single hyphen
         .replace(/^-|-$/g, ""); // Replace spaces with hyphens
     
-    const hash = CryptoJS.MD5(str).toString(CryptoJS.enc.Base64).slice(0, 6);
+    const hash = CryptoJS.MD5(str).toString(CryptoJS.enc.Hex).slice(0, 6);
 
     return `${hash}-${slug}`;
 }

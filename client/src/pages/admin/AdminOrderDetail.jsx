@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { HashLoader } from 'react-spinners';
-import { deleteOrderForAdmin, getOrderForAdmin } from '../../api/order.api';
+import { deleteOrderForAdmin, getOrderForAdmin, markAsSuccessForAdmin } from '../../api/order.api';
 import './admin-order-detail.css'
 import { FaCheckCircle } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
@@ -10,8 +10,10 @@ import { MdDelete } from "react-icons/md";
 import { OrderStepper } from '../../components/stepper/OrderStepper';
 import ConfirmModal from '../../components/modal/confirm-modal';
 import { orderStatusStep } from '../../utils';
+import { useUser } from '../../context/UserContext';
 
 export const AdminOrderDetail = () => {
+  const { user } = useUser();
   const { orderId } = useParams();
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState(null);
@@ -22,7 +24,6 @@ export const AdminOrderDetail = () => {
   useEffect(() => {
     document.title = 'Admin - Chi tiết đơn hàng';
     fetchOrder();
-    console.log(order)
   }, [orderId]);
   
   
@@ -62,7 +63,29 @@ export const AdminOrderDetail = () => {
           finally {
               setLoading(false);
           }
+  }
+  
+  const markAsSuccessOrder = async () => {
+    setLoading(true);
+    try {
+      const res = await markAsSuccessForAdmin(orderId, user?._id);
+  
+      if (res?.success) {
+        showToast("Bạn đã hoàn thành đơn", "success");
+        setCurrentStep(orderStatusStep(res?.data?.order_status));
+        setOrder({
+          ...order,
+          order_status: res?.data?.order_status,
+          processed_by: res?.data?.processed_by
+        });
       }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
 
 
   if (loading) {
@@ -87,7 +110,7 @@ export const AdminOrderDetail = () => {
             <div className='admin-action-buttons-container'>
               <button onClick={() => setIsModalOpen(true)} className='admin-action-button delete-button'><MdDelete className='admin-action-icon'/></button>
               <button className={`admin-action-button order-failed-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaBan className='admin-action-icon'/></button>
-              <button className={`admin-action-button order-success-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaCheckCircle className='admin-action-icon'/></button>
+              <button onClick={markAsSuccessOrder} className={`admin-action-button order-success-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaCheckCircle className='admin-action-icon'/></button>
             </div>
           </div>
           <OrderStepper currentStep={currentStep} order_status={order?.order_status} />
@@ -103,8 +126,8 @@ export const AdminOrderDetail = () => {
               <img className='order-detail-product-image' src={order?.product?.product_imgs[0]} alt='product-img'></img>
               <div className='order-detail-name-container'>
                 <p className='order-detail-username'>{order?.product?.product_name}</p>
-                {order?.order_type === 'topup_package' && <p className='order-attribute-text'>{order_package.name}</p>}
-                {order?.order_type === 'utility_account' || (order?.order_type === 'game_account' && !order?.product?.isValuable) &&
+                {order?.order_type === 'topup_package' && <p className='order-attribute-text'>{order_package?.name}</p>}
+                {(order?.order_type === 'utility_account' || (order?.order_type === 'game_account' && !order?.product?.isValuable)) &&
                   <>
                   <p className='order-attribute-text'>{order?.order_attributes?.username}</p>
                   <p className='order-attribute-text'>{order?.order_attributes?.password}</p>

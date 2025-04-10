@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AccountLayout from "../layouts/AccountLayout";
 import './../styles/order-detail.css';
@@ -8,8 +8,11 @@ import { orderStatusStep, statusText } from '../utils';
 import { HashLoader } from 'react-spinners';
 import { showToast } from '../components/toasts/ToastNotification';
 import { getOrder } from '../api/order.api';
+import { useUser } from '../context/UserContext';
+import socket from '../services/socket';
 
 export const OrderDetail = () => {
+  const { user } = useUser();
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,6 +22,29 @@ export const OrderDetail = () => {
   useEffect(() => {
     fetchOrder();
   }, []);
+
+  const handleMarkOrderSuccess = useCallback(async ({ order_status }) => {
+    setOrder(prevOrder => ({
+      ...prevOrder,
+      order_status: order_status
+    }));
+    setCurrentStep(orderStatusStep(order_status));
+      }, []);
+  
+  
+      useEffect(() => {
+        if (user?._id && socket) {
+        console.log("Joining socket room:", user._id);
+        socket.connect();
+        socket.emit("join", user._id);
+        socket.on("markAsSuccess", handleMarkOrderSuccess);
+  
+        return () => {
+          socket.off("markAsSuccess", handleMarkOrderSuccess);
+          socket.disconnect();
+        };
+      }
+      }, [user?._id, handleMarkOrderSuccess, socket]);
 
   const fetchOrder = async () => {
     setLoading(true);

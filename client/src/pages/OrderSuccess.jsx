@@ -30,7 +30,7 @@ const OrderSuccess = () => {
             <strong>Mã đơn hàng: <span className='orderId'>{orderId }</span></strong>
             <Copy className="copy-icon" onClick={() => copyToClipboard(orderId)} />
           </p>
-          {product_type === 'utility_account' || (product_type === 'game_account' && !isValuable) &&
+          {(product_type === 'utility_account' || (product_type === 'game_account' && !isValuable)) &&
             <div className='order-attributes-container'>
               <div className="order-success-product-username">
                 <strong>Tên đăng nhập:</strong>
@@ -47,7 +47,7 @@ const OrderSuccess = () => {
             Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi!
           </p>
         <div className="cta-container">
-          {product_type === 'utility_account' || (product_type === 'game_account' && !isValuable) ?
+          {(product_type === 'utility_account' || (product_type === 'game_account' && !isValuable)) ?
             <button onClick={() => navigate('/')} className="view-order-btn">
               <FaShoppingBasket />Mua tiếp
             </button>
@@ -57,7 +57,7 @@ const OrderSuccess = () => {
             </button>
           }
                     
-          <button className="view-order-btn">
+          <button onClick={() => navigate(`/order/${orderId}`)} className="view-order-btn">
             <IoReceiptSharp />Xem chi tiết đơn hàng
           </button>
         </div>

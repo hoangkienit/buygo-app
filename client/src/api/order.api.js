@@ -90,3 +90,17 @@ export const deleteOrderForAdmin = async (orderId) => {
     throw error;
   }
 };
+
+export const markAsSuccessForAdmin = async (orderId, authorId) => {
+  try {
+    const response = await api.patch(`/order/admin/mark-as-success/${orderId}?authorId=${authorId}`,
+    {
+        withCredentials: true
+    }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

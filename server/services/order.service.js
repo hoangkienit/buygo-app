@@ -1,5 +1,5 @@
 const Order = require('../models/order.model');
-const User = require('../models/user.model');
+const User = require("../models/user.model");
 const logger = require('../utils/logger');
 const { generateOrderId } = require('../utils/random');
 const { Product } = require('./../models/product.model');
@@ -81,6 +81,9 @@ class OrderService {
                             { session }
                         );
                     }
+
+                    updatedProduct.product_sold_amount += 1;
+                    await updatedProduct.save({ session });
                 } else {
                     logger.error("OrderService: no account to delete");
                 }
@@ -139,6 +142,19 @@ class OrderService {
             session.endSession();
             logger.error("OrderService: "+error);
             throw error;
+        }
+    }
+
+    static async getAllOrders(userId, limit = 100) {
+        const orders = await Order.find({ userId: userId })
+            .limit(Number(limit))
+            .sort({createdAt: -1})
+            .lean();
+        if (!orders) throw new Error("Order not found");
+
+        return {
+            message: "Get orders success",
+            orders: orders
         }
     }
 
@@ -234,16 +250,49 @@ class OrderService {
         }
     }
 
-    static async getAllOrders(userId, limit = 100) {
-        const orders = await Order.find({ userId: userId })
-            .limit(Number(limit))
-            .sort({createdAt: -1})
-            .lean();
-        if (!orders) throw new Error("Order not found");
+    static async markAsSuccessForAdmin(orderId, authorId) {
+        const session = await mongoose.startSession();
+        session.startTransaction();
 
-        return {
-            message: "Get orders success",
-            orders: orders
+        try {
+            const order = await Order.findOne({ orderId }).session(session);
+            if (!order) throw new Error("Order not found");
+
+            const product = await Product.findOne({ productId: order.productId }).session(session);
+            if (!product) throw new Error("Product not found");
+
+            const author = await User.findOne(
+                { _id: convertToObjectId(authorId) },
+                { username: 1, _id: 0 } // only return username
+            ).lean();
+            if(!author) throw new Error("Author not found");
+            
+            order.processed_by = author?.username;
+            order.order_status = "success";
+            product.product_sold_amount += 1; //Increase sold amount to 1
+
+            await order.save({session});
+            await product.save({session});
+
+            await session.commitTransaction();
+            session.endSession();
+
+            const io = getIO();
+            io.to(order?.userId.toString()).emit("markAsSuccess", {
+                order_status: "success",
+            });
+
+            return {
+                message: "Mark order successfully",
+                order_status: order.order_status,
+                processed_by: order.processed_by
+            }
+
+        } catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            logger.error("OrderService: "+error);
+            throw error;
         }
     }
 }

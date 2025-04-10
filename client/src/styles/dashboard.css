@@ -157,7 +157,7 @@ a {text-decoration: none;}
 .item-price{
     color: var(--secondary);
     font-family: 'montserrat-bold';
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .item-name{

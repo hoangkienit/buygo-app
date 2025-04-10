@@ -114,7 +114,7 @@ const Dashboard = () => {
 
       <AccountSection title={'Tài khoản game'} accounts={accounts} />
       <TopUpSection title={'Gói nạp'} packages={packages} />
-      <UtilitySection title={'Tiện ích'} utilities={utilities} />
+      <UtilitySection title={'Tiện ích'} utilities={utilities}/>
     </div>
   );
 };

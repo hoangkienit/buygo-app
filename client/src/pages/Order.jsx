@@ -95,7 +95,7 @@ const Order = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="5">Không có giao dịch nào.</td>
+                                        <td colSpan="8">Không có đơn hàng nào</td>
                                     </tr>
                                 )}
                             </tbody>

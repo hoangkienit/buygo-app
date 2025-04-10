@@ -5,7 +5,7 @@ import { productAttributesStatusText } from '../../utils';
 
 const UtilitySection = ({ title, utilities }) => {
     const activeUtilities = utilities?.filter(util => util.product_status === 'active');
-
+    if (activeUtilities?.length <= 0) return null; 
     return (
         <section className="account-section-container">
             <div className="account-category">

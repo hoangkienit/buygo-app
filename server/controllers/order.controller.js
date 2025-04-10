@@ -1,4 +1,4 @@
-const { error } = require("winston");
+
 const OrderService = require("../services/order.service");
 const logger = require("../utils/logger");
 const { validateId } = require("../utils/validation");
@@ -145,6 +145,30 @@ class OrderController {
     } catch (error) {
       logger.error(error);
       return res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  static async markAsSuccessForAdmin(req, res) {
+    const { orderId } = req.params;
+    const { authorId } = req.query;
+
+    try {
+      const response = await OrderService.markAsSuccessForAdmin(orderId, authorId);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message,
+        data: {
+          order_status: response.order_status,
+          processed_by: response.processed_by
+        }
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      })
     }
   }
 
