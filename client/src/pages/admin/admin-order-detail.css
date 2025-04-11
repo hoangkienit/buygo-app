@@ -224,4 +224,17 @@
     background-color: lightgray;
 }
 
+@media (max-width: 768px) {
+    .order-container{
+        flex-direction: column;
+    }
+
+    .order-left{
+        width: 100%;
+    }
+
+    .order-right{
+        width: 100%;
+    }
+}
 

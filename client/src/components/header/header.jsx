@@ -22,23 +22,26 @@ const Header = () => {
 
   const searchRef = useRef(null);
 
-  const handleOrderSuccess = useCallback(async ({ newBalance}) => {
+  const handleUpdateUserBalance = useCallback(async ({ newBalance}) => {
             await updateBalance(newBalance);
-        }, [updateBalance]);
+  }, [updateBalance]);
+  
     
     
       useEffect(() => {
         if (user?._id && socket) {
           socket.connect();
           socket.emit("join", user._id);
-          socket.on("order_success", handleOrderSuccess);
+          socket.on("order_success", handleUpdateUserBalance);
+          socket.on("markAsFailed", handleUpdateUserBalance);
     
           return () => {
-            socket.off("order_success", handleOrderSuccess);
+            socket.off("order_success", handleUpdateUserBalance);
+            socket.off("markAsFailed", handleUpdateUserBalance);
             socket.disconnect();
           };
         }
-        }, [user?._id, handleOrderSuccess, socket]);
+        }, [user?._id, handleUpdateUserBalance, socket]);
   useEffect(() => {
   const handleResize = () => {
     if (window.innerWidth > 768) {

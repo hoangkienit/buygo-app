@@ -1,6 +1,9 @@
 const { getIO } = require("./socket.service");
 const User = require("../models/user.model");
-const { DepositHistory, TransactionHistory } = require("../models/transaction.model");
+const {
+  DepositHistory,
+  TransactionHistory,
+} = require("../models/transaction.model");
 const { convertToObjectId } = require("../utils/convert");
 const { splitString } = require("../utils/text");
 const { generateTransactionId } = require("../utils/random");
@@ -14,7 +17,7 @@ class PaymentService {
 
     try {
       // 🔹 Extract userId and transactionId from description
-      const [ , transactionId, userIdRaw ] = splitString(description);
+      const [, transactionId, userIdRaw] = splitString(description);
       const userId = convertToObjectId(userIdRaw);
 
       // 🔹 Find user
@@ -41,6 +44,7 @@ class PaymentService {
 
       // 🔹 Update user balance
       user.balance += transferAmount;
+      user.total_amount_deposited += transferAmount;
       await user.save({ session });
 
       // 🔹 Log transaction
@@ -48,8 +52,8 @@ class PaymentService {
         transactionId: generateTransactionId(),
         userId,
         amount: transferAmount,
-        transactionType: 'add',
-        note: 'Nạp tiền qua ngân hàng',
+        transactionType: "add",
+        note: "Nạp tiền qua ngân hàng",
         balance: user.balance,
       });
 

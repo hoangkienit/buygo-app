@@ -16,7 +16,8 @@ const userSchema = mongoose.Schema({
     },
     phone: {
         type: String,
-        unique: true
+        unique: true,
+        default: ''
     },
     password: {
         type: String,
@@ -26,11 +27,20 @@ const userSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    total_amount_deposited: {
+        type: Number,
+        default: 0
+    },
     role: {
         type: String,
         required: true,
         default: 'user',
         enum: ['user', 'admin']
+    },
+    rank: {
+        type: String,
+        enum: ['newbie', 'bronze', 'silver', 'gold', ' platinum', 'diamond'],
+        default: 'newbie'
     },
     profileImg: {
         type: String,

@@ -180,7 +180,7 @@ export const AdminPayment = () => {
                   <tr key={tx.transactionId}>
                       <td>{index + 1}</td>
                       <td>{tx.transactionId}</td>
-                      <td><a className="table-product-name">{tx.userId.username}</a></td>
+                      <td><a className="table-product-name">{tx.userId?.username}</a></td>
                       <td className='transaction-price'>{tx.amount.toLocaleString()|| 0}</td>
                       <td style={{color: "#3498db"}}>{paymentMethodText(tx.paymentMethod)}</td>
                       <td>

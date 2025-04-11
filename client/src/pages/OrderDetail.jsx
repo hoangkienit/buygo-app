@@ -23,7 +23,7 @@ export const OrderDetail = () => {
     fetchOrder();
   }, []);
 
-  const handleMarkOrderSuccess = useCallback(async ({ order_status }) => {
+  const handleMarkOrderStatus = useCallback(async ({ order_status }) => {
     setOrder(prevOrder => ({
       ...prevOrder,
       order_status: order_status
@@ -37,14 +37,16 @@ export const OrderDetail = () => {
         console.log("Joining socket room:", user._id);
         socket.connect();
         socket.emit("join", user._id);
-        socket.on("markAsSuccess", handleMarkOrderSuccess);
+          socket.on("markAsSuccess", handleMarkOrderStatus);
+          socket.on("markAsFailed", handleMarkOrderStatus);
   
         return () => {
-          socket.off("markAsSuccess", handleMarkOrderSuccess);
+          socket.off("markAsSuccess", handleMarkOrderStatus);
+          socket.off("markAsFailed", handleMarkOrderStatus);
           socket.disconnect();
         };
       }
-      }, [user?._id, handleMarkOrderSuccess, socket]);
+      }, [user?._id, handleMarkOrderStatus, socket]);
 
   const fetchOrder = async () => {
     setLoading(true);
@@ -67,6 +69,20 @@ export const OrderDetail = () => {
   const order_package = order?.product?.product_attributes?.packages?.find(
   (pack) => String(pack._id) === String(order?.order_attributes?.packageId)
   );
+
+  if (!order) {
+    return (
+      <AccountLayout title="Đơn hàng">
+        <div className="client-order-detail-container">
+          <p style={{
+            fontFamily: "montserrat-bold",
+            fontSize: "15px",
+            color: "#fff"
+          }}>Đơn hàng không tồn tại</p>
+        </div>
+      </AccountLayout>
+    )
+  }
 
   return (
     <AccountLayout title="Đơn hàng">

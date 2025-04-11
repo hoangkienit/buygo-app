@@ -104,3 +104,17 @@ export const markAsSuccessForAdmin = async (orderId, authorId) => {
     throw error;
   }
 };
+
+export const markAsFailedForAdmin = async (orderId, authorId) => {
+  try {
+    const response = await api.patch(`/order/admin/mark-as-failed/${orderId}?authorId=${authorId}`,
+    {
+        withCredentials: true
+    }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -6,7 +6,6 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../api/transaction.api";
 import { ClipLoader } from "react-spinners";
-import { handleUnauthorizedError } from "../utils/handleError";
 import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
 
 const Recharge = () => {

@@ -19,5 +19,7 @@ router.delete('/admin/delete-order/:orderId', verifyMiddleware, verifyAdminMiddl
 
 router.patch('/admin/mark-as-success/:orderId', verifyMiddleware, verifyAdminMiddleware, OrderController.markAsSuccessForAdmin); 
 
+router.patch('/admin/mark-as-failed/:orderId', verifyMiddleware, verifyAdminMiddleware, OrderController.markAsFailedForAdmin); 
+
 
 module.exports = router;

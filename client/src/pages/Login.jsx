@@ -4,9 +4,11 @@ import "./../styles/login.css";
 import { ClipLoader } from "react-spinners";
 import { login } from "../api/auth.api";
 import { useAuth } from "../context/AuthContext";
+import { useUser } from "../context/UserContext";
 
 const Login = () => {
   const { authenticatedUser } = useAuth();
+  const { user } = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,7 +17,8 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-        document.title = 'Đăng nhập'
+    if (user) navigate('/');
+    document.title = 'Đăng nhập';
   }, []);
 
   const handleLogin = async(e) => {

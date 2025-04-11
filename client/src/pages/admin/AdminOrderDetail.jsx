@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
 import { HashLoader } from 'react-spinners';
-import { deleteOrderForAdmin, getOrderForAdmin, markAsSuccessForAdmin } from '../../api/order.api';
+import { deleteOrderForAdmin, getOrderForAdmin, markAsFailedForAdmin, markAsSuccessForAdmin } from '../../api/order.api';
 import './admin-order-detail.css'
 import { FaCheckCircle } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
@@ -87,6 +87,28 @@ export const AdminOrderDetail = () => {
     }
   }
 
+  const markAsFailedOrder = async () => {
+    setLoading(true);
+    try {
+      const res = await markAsFailedForAdmin(orderId, user?._id);
+  
+      if (res?.success) {
+        showToast("Bạn đã hủy đơn", "warn");
+        setCurrentStep(orderStatusStep(res?.data?.order_status));
+        setOrder({
+          ...order,
+          order_status: res?.data?.order_status,
+          processed_by: res?.data?.processed_by
+        });
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
 
   if (loading) {
     return <div className="loader-container">
@@ -109,7 +131,7 @@ export const AdminOrderDetail = () => {
             <p className='order-detail-orderId'>Đơn hàng #{order?.orderId}</p>
             <div className='admin-action-buttons-container'>
               <button onClick={() => setIsModalOpen(true)} className='admin-action-button delete-button'><MdDelete className='admin-action-icon'/></button>
-              <button className={`admin-action-button order-failed-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaBan className='admin-action-icon'/></button>
+              <button onClick={markAsFailedOrder} className={`admin-action-button order-failed-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaBan className='admin-action-icon'/></button>
               <button onClick={markAsSuccessOrder} className={`admin-action-button order-success-button ${(order?.order_status === 'success' || order?.order_status === "failed") && "order-disabled-button"}`}><FaCheckCircle className='admin-action-icon'/></button>
             </div>
           </div>

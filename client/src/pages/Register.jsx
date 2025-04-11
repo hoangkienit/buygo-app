@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./../styles/register.css";
 import { ClipLoader } from "react-spinners";
 import { register } from "../api/auth.api";
+import { useUser } from "../context/UserContext";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -10,42 +11,50 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-    
+  const { user } = useUser();
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-    useEffect(() => {
-        document.title = "Đăng ký";
-    }, []);
+  useEffect(() => {
+    if (user) navigate("/");
+    document.title = "Đăng ký";
+  }, []);
 
-    const handleRegister = async(e) => {
-      try {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-      
-        if (username === " " || email === " " || password === " " || confirmPassword === " ") {
-          setLoading(false);
-          setError({ message: "Vui lòng điền vào các trường" });
-          return;
-        }
+  const handleRegister = async (e) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+      setError(null);
 
-        await register(username, email, password);
-
+      if (
+        username === " " ||
+        email === " " ||
+        password === " " ||
+        confirmPassword === " "
+      ) {
         setLoading(false);
-        navigate('/login')
-
-      } catch (error) {
-        setLoading(false);
-        setError({message: error.message})
+        setError({ message: "Vui lòng điền vào các trường" });
+        return;
       }
+
+      await register(username, email, password);
+
+      setLoading(false);
+      navigate("/login");
+    } catch (error) {
+      setLoading(false);
+      setError({ message: error.message });
+    }
   };
 
   return (
-        <div className="register-container">
-            <div className="register-box">
-                <h2 className="register-title">Đăng ký</h2>
-                <p className="register-second-title">Tham gia ngay – Nhận ưu đãi liền tay!</p>
+    <div className="register-container">
+      <div className="register-box">
+        <h2 className="register-title">Đăng ký</h2>
+        <p className="register-second-title">
+          Tham gia ngay – Nhận ưu đãi liền tay!
+        </p>
 
         {error && <p className="error-text">*{error.message}</p>}
         <form onSubmit={handleRegister}>
@@ -86,8 +95,18 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading} className={loading ? "disabled-btn register-button" : "register-button"}>
-            {loading ? <ClipLoader size={20} color="#fff" /> : <p className="submit-text">Đăng ký</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className={
+              loading ? "disabled-btn register-button" : "register-button"
+            }
+          >
+            {loading ? (
+              <ClipLoader size={20} color="#fff" />
+            ) : (
+              <p className="submit-text">Đăng ký</p>
+            )}
           </button>
         </form>
 

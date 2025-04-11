@@ -112,3 +112,17 @@
 .order-price-section-container{
     border-top: 1px solid white;
 }
+
+@media (max-width: 768px){
+    .client-order-product-section-container{
+        flex-direction: column;
+    }
+
+    .client-order-product-left-side{
+        width: 100%;
+    }
+
+    .client-order-product-right-side{
+        width: 100%;
+    }
+}
