@@ -1,4 +1,12 @@
+import NEWBIE from './../assets/images/ranking/newbie.png';
+import BRONZE from './../assets/images/ranking/bronze.png';
+import SILVER from './../assets/images/ranking/silver.png';
+import GOLD from './../assets/images/ranking/gold.png';
+import PLATINUM from './../assets/images/ranking/platinum.png';
+import DIAMOND from './../assets/images/ranking/diamond.png';
+
 const allowedExtensions = ["jpg", "jpeg", "png"];
+
 
 export const getFileType = (uri) => {
   const fileExtension = uri.split(".").pop().toLowerCase();
@@ -20,6 +28,26 @@ export const getProductTypeObject = (selectedType) => {
       return { username: "", password: "" };
     default:
       return {};
+  }
+};
+
+export const getUserRankImageURL = (rank) => {
+  switch (rank) {
+    case "newbie":
+      return NEWBIE;
+    case "bronze":
+      return BRONZE;
+    case "silver":
+      return SILVER;
+    case "gold":
+      return GOLD;
+    case "platinum":
+      return PLATINUM;
+    case "diamond":
+      return DIAMOND;
+
+    default:
+      return "";
   }
 };
 
@@ -104,6 +132,26 @@ export const userStatusText = (status) => {
       return "Không hoạt động";
     case "banned":
       return "Bị cấm";
+
+    default:
+      return "";
+  }
+};
+
+export const userRankText = (rank) => {
+  switch (rank) {
+    case "newbie":
+      return "Người mới";
+    case "bronze":
+      return "Đồng";
+    case "silver":
+      return "Bạc";
+    case "gold":
+      return "Vàng";
+    case "platinum":
+      return "Bạch kim";
+    case "diamond":
+      return "Kim cương";
 
     default:
       return "";

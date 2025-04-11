@@ -15,18 +15,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 8px;
 }
 
 .user-detail-header h1 {
-    color: var(--primary-color);
-    font-size: 1.8rem;
+    color: gray;
+    font-size: 1.3rem;
     margin: 0;
+    font-family: 'montserrat-bold';
 }
 
 .user-detail-profile-section {
     display: flex;
     flex-direction: column;
     gap: 30px;
+
 }
 
 @media (min-width: 768px) {
@@ -37,7 +40,7 @@
 
 .user-detail-profile-card {
     background-color: white;
-    border-radius: var(--border-radius);
+    border-radius: 8px;
     box-shadow: var(--box-shadow);
     padding: 30px;
     flex: 0 0 100%;
@@ -51,7 +54,7 @@
 
 .user-detail-profile-info {
     background-color: white;
-    border-radius: var(--border-radius);
+    border-radius: 8px;
     box-shadow: var(--box-shadow);
     padding: 30px;
     flex: 0 0 100%;
@@ -78,12 +81,14 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: 5px;
+    font-family: 'montserrat-bold';
 }
 
 .user-detail-user-username {
     color: var(--text-secondary);
     text-align: center;
     margin-bottom: 20px;
+    font-family: 'montserrat-md';
 }
 
 .user-detail-status-badge {
@@ -171,6 +176,7 @@
 
 .user-detail-info-item {
     margin-bottom: 10px;
+    font-family: 'montserrat-md';
 }
 
 .user-detail-info-label {
@@ -182,6 +188,7 @@
 .user-detail-info-value {
     font-weight: 600;
     font-size: 1rem;
+    color: var(--eight);
 }
 
 .user-detail-financial-section {
@@ -194,6 +201,24 @@
     gap: 15px;
 }
 
+.user-detail-rank-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.user-rank-icon {
+    width: 40px;
+    height: 40px;
+}
+
 @media (min-width: 576px) {
     .user-detail-financial-grid {
         grid-template-columns: 1fr 1fr;
@@ -204,6 +229,7 @@
     background-color: var(--secondary-color);
     border-radius: var(--border-radius);
     padding: 15px;
+    font-family: 'montserrat-md';
 }
 
 .user-detail-financial-label {
@@ -215,7 +241,7 @@
 .user-detail-financial-value {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--eight);
 }
 
 .user-detail-action-button {

@@ -32,6 +32,7 @@ import Order from "./pages/Order";
 import { OrderDetail } from "./pages/OrderDetail";
 import { AdminUser } from "./pages/admin/AdminUser";
 import { AdminUserDetail } from "./pages/admin/AdminUserDetail";
+import { AdminEditUser } from "./pages/admin/AdminEditUser";
 
 function App() {
   return (
@@ -103,6 +104,10 @@ function App() {
               <Route
                 path="/super-admin/users/view/:userId"
                 element={<AdminUserDetail />}
+              />
+              <Route
+                path="/super-admin/users/edit/:userId"
+                element={<AdminEditUser />}
               />
             </Route>
           </Routes>
