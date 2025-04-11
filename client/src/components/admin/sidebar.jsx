@@ -167,7 +167,7 @@ export const Sidebar = ({ isSidebarOpen }) => {
     {
       to: "/super-admin/employees",
       icon: <RiTeamFill />,
-      label: "Quản lí thành viên"
+      label: "Quản lí nhân viên"
     },
     {
       to: "/super-admin/reviews",
@@ -212,6 +212,9 @@ export const Sidebar = ({ isSidebarOpen }) => {
             </Link>
           ))}
         </nav>
+      </div>
+      <div className='sidebar-author-container'>
+          <p className='author-text'>© {new Date().getFullYear()} Hệ thống quản lý</p>
       </div>
     </aside>
   );

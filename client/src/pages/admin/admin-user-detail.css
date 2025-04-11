@@ -1,0 +1,250 @@
+
+.user-detail-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.user-detail-header {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-detail-header h1 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.user-detail-profile-section {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+@media (min-width: 768px) {
+    .user-detail-profile-section {
+        flex-direction: row;
+    }
+}
+
+.user-detail-profile-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 30px;
+    flex: 0 0 100%;
+}
+
+@media (min-width: 768px) {
+    .user-detail-profile-card {
+        flex: 0 0 30%;
+    }
+}
+
+.user-detail-profile-info {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 30px;
+    flex: 0 0 100%;
+}
+
+@media (min-width: 768px) {
+    .user-detail-profile-info {
+        flex: 0 0 65%;
+    }
+}
+
+.user-detail-profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 20px;
+    border: 5px solid var(--secondary-color);
+}
+
+.user-detail-user-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.user-detail-user-username {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.user-detail-status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.user-detail-status-active {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+}
+
+.user-detail-status-in-active {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+}
+
+.user-detail-status-banned {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.user-detail-user-rank {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    background-color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.user-detail-rank-newbie {
+    color: #6b7280;
+}
+
+.user-detail-rank-bronze {
+    color: #b45309;
+}
+
+.user-detail-rank-silver {
+    color: #71717a;
+}
+
+.user-detail-rank-gold {
+    color: #d97706;
+}
+
+.user-detail-rank-platinum {
+    color: #0284c7;
+}
+
+.user-detail-rank-diamond {
+    color: #4f46e5;
+}
+
+.user-detail-info-section {
+    margin-bottom: 25px;
+}
+
+.user-detail-info-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    color: var(--primary-color);
+}
+
+.user-detail-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+@media (min-width: 576px) {
+    .user-detail-info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.user-detail-info-item {
+    margin-bottom: 10px;
+}
+
+.user-detail-info-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.user-detail-info-value {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.user-detail-financial-section {
+    margin-top: 20px;
+}
+
+.user-detail-financial-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+@media (min-width: 576px) {
+    .user-detail-financial-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.user-detail-financial-card {
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 15px;
+}
+
+.user-detail-financial-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.user-detail-financial-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.user-detail-action-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: var(--eight);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.user-detail-action-button:hover {
+    background-color: var(--eight);
+    transform: translateY(-2px);
+}
+
+.user-detail-edit-button {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.user-detail-footer {
+    margin-top: 30px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}

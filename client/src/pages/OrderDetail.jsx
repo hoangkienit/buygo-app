@@ -34,7 +34,6 @@ export const OrderDetail = () => {
   
       useEffect(() => {
         if (user?._id && socket) {
-        console.log("Joining socket room:", user._id);
         socket.connect();
         socket.emit("join", user._id);
           socket.on("markAsSuccess", handleMarkOrderStatus);

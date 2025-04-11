@@ -243,6 +243,19 @@
     height: fit-content;
 }
 
+.sidebar-author-container{
+    padding: 10px 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.author-text{
+    font-family: 'montserrat-md';
+    font-size: 13px;
+    color: gray;
+}
+
 @media (max-width: 798px){
     .sidebar-logo-container{
         display: none;

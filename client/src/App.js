@@ -30,59 +30,83 @@ import { AdminOrder } from "./pages/admin/AdminOrder";
 import { AdminOrderDetail } from "./pages/admin/AdminOrderDetail";
 import Order from "./pages/Order";
 import { OrderDetail } from "./pages/OrderDetail";
-
-
+import { AdminUser } from "./pages/admin/AdminUser";
+import { AdminUserDetail } from "./pages/admin/AdminUserDetail";
 
 function App() {
   return (
     <UserProvider>
       <AuthProvider>
-          <Router>
-            <Routes>
-              {/* Public Routes */}
+        <Router>
+          <Routes>
+            {/* Public Routes */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/product/:product_slug" element={<Product />} />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
+            </Route>
+
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Protected Routes */}
+            <Route element={<AuthLayout />}>
+              <Route path="/logout" element={<Logout />} />
               <Route element={<MainLayout />}>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/product/:product_slug" element={<Product />} />
-                <Route path="*" element={<NotFound />} />
-                <Route path="/unauthorized" element={<Unauthorized/>} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/recharge" element={<Recharge />} />
+                <Route path="/recharge/:transactionId" element={<Payment />} />
+                <Route path="/deposit-history" element={<DepositHistory />} />
+                <Route
+                  path="/transaction-history"
+                  element={<TransactionHistory />}
+                />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order-success" element={<OrderSuccess />} />
+                <Route path="/order" element={<Order />} />
+                <Route path="/order/:orderId" element={<OrderDetail />} />
               </Route>
+            </Route>
 
-              {/* Auth Routes */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+            {/* Admin Routes */}
+            <Route element={<AdminLayout />}>
+              <Route
+                path="/super-admin/dashboard"
+                element={<AdminDashboard />}
+              />
 
-              {/* Protected Routes */}
-              <Route element={<AuthLayout />}>
-                <Route path="/logout" element={<Logout />} />
-                <Route element={<MainLayout />}>
-                  <Route path="/account" element={<Account />} />
-                  <Route path="/recharge" element={<Recharge />} />
-                  <Route path="/recharge/:transactionId" element={<Payment />} />
-                  <Route path="/deposit-history" element={<DepositHistory />} /> 
-                  <Route path="/transaction-history" element={<TransactionHistory />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/order-success" element={<OrderSuccess />} />
-                  <Route path="/order" element={<Order />} />
-                  <Route path="/order/:orderId" element={<OrderDetail/>} />
-                </Route>
-              </Route>
+              <Route path="/super-admin/payment" element={<AdminPayment />} />
 
-              {/* Admin Routes */}
-              <Route element={<AdminLayout />}>
-                <Route path="/super-admin/dashboard" element={<AdminDashboard />} />
-              
-                <Route path="/super-admin/payment" element={<AdminPayment />} />
-              
-                <Route path="/super-admin/products" element={<AdminProduct />} />
-                <Route path="/super-admin/products/add-product" element={<AdminAddProduct />} />
-                <Route path="/super-admin/products/view/:productId" element={<AdminProductDetail />} />
-                <Route path="/super-admin/products/edit/:productId" element={<AdminEditProduct />} />
-              
-                <Route path="/super-admin/orders" element={<AdminOrder />} />
-                <Route path="/super-admin/orders/view/:orderId" element={<AdminOrderDetail />} />
-              </Route>
-            </Routes>
-          </Router>
+              <Route path="/super-admin/products" element={<AdminProduct />} />
+              <Route
+                path="/super-admin/products/add-product"
+                element={<AdminAddProduct />}
+              />
+              <Route
+                path="/super-admin/products/view/:productId"
+                element={<AdminProductDetail />}
+              />
+              <Route
+                path="/super-admin/products/edit/:productId"
+                element={<AdminEditProduct />}
+              />
+
+              <Route path="/super-admin/orders" element={<AdminOrder />} />
+              <Route
+                path="/super-admin/orders/view/:orderId"
+                element={<AdminOrderDetail />}
+              />
+
+              <Route path="/super-admin/users" element={<AdminUser />} />
+              <Route
+                path="/super-admin/users/view/:userId"
+                element={<AdminUserDetail />}
+              />
+            </Route>
+          </Routes>
+        </Router>
       </AuthProvider>
     </UserProvider>
   );
