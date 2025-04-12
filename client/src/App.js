@@ -33,6 +33,7 @@ import { OrderDetail } from "./pages/OrderDetail";
 import { AdminUser } from "./pages/admin/AdminUser";
 import { AdminUserDetail } from "./pages/admin/AdminUserDetail";
 import { AdminEditUser } from "./pages/admin/AdminEditUser";
+import Banned from "./pages/Banned";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               <Route path="/product/:product_slug" element={<Product />} />
               <Route path="*" element={<NotFound />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="/banned" element={<Banned/>} />
             </Route>
 
             {/* Auth Routes */}

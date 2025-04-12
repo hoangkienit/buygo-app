@@ -1,3 +1,4 @@
+
 const UserService = require("../services/user.service");
 const logger = require("../utils/logger");
 const { validateId, validateUpdateUserForAdmin } = require("../utils/validation");
@@ -85,7 +86,7 @@ class UserController {
   static async modifyUserBalanceForAdmin(req, res) {
     const { userId } = req.params;
     const { modify_type, amount } = req.body;
-    console.log(userId, modify_type, amount);
+
     try {
       const response = await UserService.modifyUserBalanceForAdmin(
         userId,
@@ -103,6 +104,33 @@ class UserController {
         success: false,
         message: error.message
       })
+    }
+  }
+
+  static async deleteUserForAdmin(req, res) {
+    const { userId } = req.params;
+
+    const errors = validateId({ userId });
+    if (errors && errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0].message
+      });
+    }
+
+    try {
+      const response = await UserService.deleteUserForAdmin(userId);
+
+      return res.status(200).json({
+        success: true,
+        message: response.message
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
     }
   }
 }

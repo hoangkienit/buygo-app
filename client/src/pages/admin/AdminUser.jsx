@@ -260,7 +260,7 @@ export const AdminUser = () => {
         isOpen={isModalOpen}
         onConfirm={() => handleDeleteUser(selectedIdToDelete)}
         onClose={() => setIsModalOpen(false)}
-        message={"Xác nhận bạn đang xóa một người dùng"}
+        message={"Hãy chắc chắn rằng bạn đang xóa một người dùng, điều này sẽ xóa tất cả những dữ liệu về người dùng này."}
         title={"Xóa người dùng"}
       />
     </div>

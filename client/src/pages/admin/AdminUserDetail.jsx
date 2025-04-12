@@ -59,7 +59,7 @@ export const AdminUserDetail = () => {
     <div className="user-detail-container">
       <ToastNotification />
       <header className="user-detail-header">
-        <h1>#{userId}</h1>
+        <h1 className="user-header-id">#{userId}</h1>
         <div>
           <button
             className="user-detail-action-button"

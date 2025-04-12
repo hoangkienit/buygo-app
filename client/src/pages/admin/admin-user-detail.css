@@ -18,7 +18,7 @@
     border-radius: 8px;
 }
 
-.user-detail-header h1 {
+.user-detail-header .user-header-id {
     color: gray;
     font-size: 1.3rem;
     margin: 0;
@@ -273,4 +273,10 @@
     text-align: center;
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+@media (max-width: 768px){
+    .user-detail-header .user-header-id{
+        font-size: 15px;
+    }
 }

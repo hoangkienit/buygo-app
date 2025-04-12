@@ -34,16 +34,22 @@ const Login = () => {
       }
       const res = await login(username, password);
 
-      setLoading(false);
-      authenticatedUser(res.data.user);
+      // Checking banned
+      if (res.data.user?.status === 'banned') {
+        navigate('/banned');
+        return;
+      }
 
       if (res.data.user.role === 'admin') {
+        authenticatedUser(res.data.user);
         navigate("/super-admin/dashboard");
       }else navigate("/");
       
     } catch (error) {
-      setLoading(false);
       setError({message: error.message})
+    }
+    finally {
+      setLoading(false);
     }
   };
 

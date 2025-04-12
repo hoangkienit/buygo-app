@@ -1,4 +1,6 @@
 const JWT = require("jsonwebtoken");
+const User = require("../models/user.model");
+const { convertToObjectId } = require("../utils/convert");
 
 const verifyMiddleware = async (req, res, next) => {
     try {
@@ -17,7 +19,7 @@ const verifyMiddleware = async (req, res, next) => {
         }
 
         // Verify token
-        JWT.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        JWT.verify(token, process.env.JWT_SECRET, async(err, decoded) => {
             if (err) {
                 if (err.name === "TokenExpiredError") {
                     return res.status(401).json({
@@ -30,8 +32,12 @@ const verifyMiddleware = async (req, res, next) => {
                     message: "Invalid token",
                 });
             }
-            req.user = decoded; // Attach user to request
-            console.log("User:"+req.user);
+            const user = await User.findById(convertToObjectId(decoded.id));
+            req.user = {
+                ...user,
+                id: user._id
+            }; // Attach user to request
+            console.log(req.user);
             next();
         });
     } catch (error) {
@@ -46,7 +52,6 @@ const verifyMiddleware = async (req, res, next) => {
 const verifyAdminMiddleware = async (req, res, next) => {
     try {
         const role = req.user.role;
-        console.log(role);
         if (role !== 'admin') {
             return res.status(401).json({
                 success: false,
@@ -63,4 +68,13 @@ const verifyAdminMiddleware = async (req, res, next) => {
     }
 };
 
-module.exports = { verifyMiddleware, verifyAdminMiddleware };
+const checkBanned = (req, res, next) => {
+  const status = req.user._doc.status; // Assuming you attach the user object after token verification
+  if (status === 'banned') {
+    return res.status(403).json({ error: 'User is banned', code: 'USER_BANNED' });
+  }
+
+  next();
+};
+
+module.exports = { verifyMiddleware, verifyAdminMiddleware, checkBanned };

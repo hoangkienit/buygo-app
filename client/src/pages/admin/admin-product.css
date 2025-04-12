@@ -71,7 +71,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    width: 100%;
+    width: 70%;
 }
 
 .filter-selection {
@@ -92,6 +92,7 @@
     padding: 8px;
     border-radius: 5px;
     transition: transform 0.2s ease-in-out;
+    width: max-content;
 }
 
 .add-product-button-container:hover {

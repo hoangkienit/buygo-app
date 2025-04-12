@@ -48,7 +48,11 @@ api.interceptors.response.use(
                     console.error("Refresh token expired. Redirecting to login...");
                     window.location.href = "/logout";
                 }
-            } else {
+            }
+            else if (status === 403 && error.response.data.code === 'USER_BANNED') {
+                window.location.href = "/logout?reason=banned";
+            }
+            else {
                 console.log(error);
                 throw new Error(error.response.data.message || "Có lỗi xảy ra.")
             }

@@ -56,7 +56,7 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again after 10 minutes'
 });
-// app.use('/api/v1', limiter);
+app.use('/api/v1', limiter);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

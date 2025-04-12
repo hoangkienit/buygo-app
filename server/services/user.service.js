@@ -5,7 +5,8 @@ const bcrypt = require("bcryptjs");
 const logger = require("../utils/logger");
 const { generateTransactionId } = require("../utils/random");
 const { getIO } = require("./socket.service");
-const { TransactionHistory } = require("../models/transaction.model");
+const { TransactionHistory, DepositHistory } = require("../models/transaction.model");
+const Order = require("../models/order.model");
 
 class UserService {
   // 🔹 Register a new user
@@ -102,6 +103,25 @@ class UserService {
       session.endSession();
       logger.error("UserService: " + error);
       throw error;
+    }
+  }
+
+  static async deleteUserForAdmin(userId) {
+    await Promise.all([
+      DepositHistory.deleteMany({ userId: convertToObjectId(userId) }),
+      TransactionHistory.deleteMany({ userId: convertToObjectId(userId) }),
+      Order.deleteMany({ userId: convertToObjectId(userId) })
+    ]);
+
+    // Delete the user
+    const user = await User.findByIdAndDelete(convertToObjectId(userId));
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return {
+      message: "Delete user successfully"
     }
   }
 }
