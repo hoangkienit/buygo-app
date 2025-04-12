@@ -321,8 +321,10 @@ class OrderService {
       order.order_status = "success";
       product.product_sold_amount += 1; //Increase sold amount to 1
 
-      await order.save({ session });
-      await product.save({ session });
+      await Promise.all([
+        order.save({ session }),
+        product.save({ session })
+      ]);
 
       await session.commitTransaction();
       session.endSession();
@@ -378,9 +380,11 @@ class OrderService {
         balance: user?.balance,
       });
 
-      await newTransaction.save({ session });
-      await user.save({ session });
-      await order.save({ session });
+      await Promise.all([
+        newTransaction.save({ session }),
+        user.save({ session }),
+        order.save({ session })
+      ])
 
       await session.commitTransaction();
       session.endSession();

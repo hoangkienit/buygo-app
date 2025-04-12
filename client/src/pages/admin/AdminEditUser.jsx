@@ -1,12 +1,13 @@
 // EditProfilePage.jsx
 import React, { useState, useEffect } from "react";
 import "./admin-edit-user.css";
-import { getUser } from "../../api/user.api";
+import { getUser, updateUserForAdmin } from "../../api/user.api";
 import ToastNotification, {
   showToast,
 } from "../../components/toasts/ToastNotification";
 import { useNavigate, useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
+import ModifyUserBalanceModal from "../../components/modal/modify-user-balance";
 
 export const AdminEditUser = () => {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,7 @@ export const AdminEditUser = () => {
 
   // State for form validation
   const [errors, setErrors] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     document.title = `Admin - ${userId}`;
@@ -56,8 +58,9 @@ export const AdminEditUser = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    setLoading(true);
 
     // Reset states
     setErrors({});
@@ -86,30 +89,26 @@ export const AdminEditUser = () => {
       formErrors.confirmPassword = "Mật khẩu không khớp";
     }
 
-    if (userData.newPassword && !userData.currentPassword) {
-      formErrors.currentPassword =
-        "Mật khẩu hiện tại là bắt buộc để thiết lập mật khẩu mới";
-    }
-
     // If there are errors, show them
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
     }
 
-    // Simulate API call to update profile
-    console.log("Submitting updated profile:", userData);
 
-    // Simulate success after API call
-    setTimeout(() => {
-      // Reset password fields
-      setUserData({
-        ...userData,
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    }, 500);
+    try {
+      const res = await updateUserForAdmin(userId, userData);
+
+      if (res?.success) {
+        setUserData(res?.data?.updatedUser || null);
+        showToast("Cập nhật thành công", "success");
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally{
+      setLoading(false);
+    }
   };
 
   // Handle cancel button
@@ -128,6 +127,13 @@ export const AdminEditUser = () => {
   return (
     <div className="user-detail-container">
       <ToastNotification />
+      <ModifyUserBalanceModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={'Chỉnh sửa số dư'}
+        userId={userId}
+        message={'Bạn đang chỉnh sửa số dư cho người dùng'}
+      />
       <header className="user-detail-header">
         <h1>Chỉnh sửa hồ sơ</h1>
         <div>
@@ -152,7 +158,10 @@ export const AdminEditUser = () => {
               <input type="file" name="profileImg" onChange={() => console.log("File upload clicked")} />
             </div>
             <p className="user-detail-help-text">Upload a square image for best results</p> */}
-                      <button className="user-detail-action-button user-detail-upload-btn">
+            <button onClick={(e) => {
+              e.preventDefault();
+              setIsModalOpen(true);
+            }} className="user-detail-action-button user-detail-upload-btn">
                 Chỉnh sửa số dư
               </button>
           </div>
@@ -231,25 +240,6 @@ export const AdminEditUser = () => {
               Để trống nếu bạn không muốn thay đổi
             </p>
 
-            <div className="user-detail-form-group">
-              <label className="user-detail-form-label">
-                Mật khẩu hiện tại
-              </label>
-              <input
-                type="password"
-                name="currentPassword"
-                value={userData?.currentPassword}
-                onChange={handleChange}
-                className={`user-detail-form-input ${
-                  errors.currentPassword ? "user-detail-input-error" : ""
-                }`}
-              />
-              {errors.currentPassword && (
-                <p className="user-detail-error-message">
-                  {errors.currentPassword}
-                </p>
-              )}
-            </div>
 
             <div className="user-detail-form-group">
               <label className="user-detail-form-label">Mật khẩu mới</label>

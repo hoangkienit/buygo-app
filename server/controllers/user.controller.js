@@ -1,6 +1,6 @@
 const UserService = require("../services/user.service");
 const logger = require("../utils/logger");
-const { validateId } = require("../utils/validation");
+const { validateId, validateUpdateUserForAdmin } = require("../utils/validation");
 
 class UserController {
   // 🔹 Get All Users For Admin
@@ -41,6 +41,68 @@ class UserController {
         success: false,
         message: error.message,
       });
+    }
+  }
+
+  static async updateUserForAdmin(req, res) {
+    const { userId } = req.params;
+    const { fullName, email, newPassword } = req.body;
+
+    const errors = validateUpdateUserForAdmin({
+      fullName,
+      email,
+      newPassword
+    });
+    if (errors && errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0].message
+      });
+    }
+
+    try {
+      const response = await UserService.updateUserForAdmin(
+        userId,
+        fullName,
+        email,
+        newPassword);
+      return res.status(200).json({
+        success: true,
+        message: "Update user success",
+        data: {
+          updatedUser: response.updatedUser
+        }
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
+  static async modifyUserBalanceForAdmin(req, res) {
+    const { userId } = req.params;
+    const { modify_type, amount } = req.body;
+    console.log(userId, modify_type, amount);
+    try {
+      const response = await UserService.modifyUserBalanceForAdmin(
+        userId,
+        modify_type,
+        Number(amount)
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: response.message,
+        data: null
+      })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      })
     }
   }
 }

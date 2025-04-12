@@ -92,7 +92,7 @@ export const AdminUserDetail = () => {
             <div className="user-detail-rank-container">
               <img
                 className="user-rank-icon"
-                src={getUserRankImageURL(userData?.rank)}
+                src={getUserRankImageURL(userData?.rank) || null}
                 alt="User Rank"
               />
               <p>{userRankText(userData?.rank)}</p>

@@ -183,7 +183,7 @@ export const AdminUser = () => {
                   <td>{index + 1}</td>
                   <td>{tx?._id}</td>
                   <td>
-                    <a onClick={() => navigate(`/super-admin/users/view/${tx?._id}`)} className="table-product-name">{tx?.username}</a>
+                    <a onClick={() => tx?._id !== user?._id && navigate(`/super-admin/users/view/${tx?._id}`)} className="table-product-name">{tx?.username}</a>
                   </td>
                   <td>
                     <div className={`user-role-container ${tx?.role}`}>

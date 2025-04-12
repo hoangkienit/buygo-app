@@ -34,10 +34,12 @@ const Header = () => {
           socket.emit("join", user._id);
           socket.on("order_success", handleUpdateUserBalance);
           socket.on("markAsFailed", handleUpdateUserBalance);
+          socket.on("admin_modify_balance", handleUpdateUserBalance);
     
           return () => {
             socket.off("order_success", handleUpdateUserBalance);
             socket.off("markAsFailed", handleUpdateUserBalance);
+            socket.off("admin_modify_balance", handleUpdateUserBalance);
             socket.disconnect();
           };
         }
