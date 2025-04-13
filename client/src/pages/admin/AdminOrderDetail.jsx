@@ -141,7 +141,7 @@ export const AdminOrderDetail = () => {
               <img className='order-detail-user-avatar' src={order?.userId?.profileImg} alt='user-avatar'></img>
               <div className='name-container'>
                 <p className='order-detail-username'>{order?.userId.username}</p>
-                <button className='view-user-detail-button'>Xem thông tin</button>
+                <button onClick={() => navigate(`/super-admin/users/view/${order?.userId?._id}`)} className='view-user-detail-button'>Xem thông tin</button>
               </div>
             </div>
             <div className='order-detail-product-container'>
@@ -172,15 +172,15 @@ export const AdminOrderDetail = () => {
             <div className='order-summary-container'>
               <div className="order-summary-line">
             <span>Tạm tính:</span>
-            <span>{order?.order_amount?.toLocaleString()}đ</span>
+            <span>{order?.order_base_amount?.toLocaleString()}đ</span>
             </div>
             <div className="order-summary-line">
             <span>Giảm giá:</span>
-            <span>-{0}đ</span>
+            <span>-{order?.order_discount_amount?.toLocaleString()}đ</span>
             </div>
             <div className="order-summary-total">
             <strong>Tổng đã thanh toán:</strong>
-            <strong>{order?.order_amount?.toLocaleString()}đ</strong>
+            <strong>{order?.order_final_amount?.toLocaleString()}đ</strong>
             </div>
             </div>
 

@@ -223,7 +223,16 @@ const updateUserForAdminSchema = Joi.object({
     newPassword: Joi.string().min(6).optional().messages({
       'string.min': 'Mật khẩu phải có ít nhất 6 ký tự',
     }),
-  });
+});
+  
+const createDiscountSchema = Joi.object({
+  code: Joi.string().trim().uppercase().required(),
+  discount_type: Joi.string().valid('fixed', 'percentage').required(),
+  discount_value: Joi.number().positive().required(),
+  start_date: Joi.date().greater('now').required(),
+  end_date: Joi.date().greater(Joi.ref('start_date')).required(),
+  isActive: Joi.boolean().optional()
+});
 
 module.exports = {
   validateLogin: (data) => validate(loginSchema, data),
@@ -237,5 +246,6 @@ module.exports = {
   validateProductUpdate: (data) =>
     validate(productUpdateValidationSchema, data),
     validateProductSlug: (data) => validate(productSlugSchema, data),
-    validateUpdateUserForAdmin: (data) => validate(updateUserForAdminSchema, data),
+  validateUpdateUserForAdmin: (data) => validate(updateUserForAdminSchema, data),
+    validateCreateDiscountForAdmin: (data) => validate(createDiscountSchema, data),
 };

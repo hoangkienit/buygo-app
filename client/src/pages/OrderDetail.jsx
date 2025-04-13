@@ -19,6 +19,8 @@ export const OrderDetail = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
 
+  const [isInvalidOrder, setIsInvalidOrder] = useState(false);
+
   useEffect(() => {
     fetchOrder();
   }, []);
@@ -56,6 +58,11 @@ export const OrderDetail = () => {
       if (res?.success) {
         setOrder(res.data.order || null);
         setCurrentStep(orderStatusStep(res?.data?.order?.order_status));
+
+        if (!order) {
+          setIsInvalidOrder(true);
+          return;
+        }
       }
     } catch (error) {
       showToast(error.message, "error");
@@ -69,7 +76,7 @@ export const OrderDetail = () => {
   (pack) => String(pack._id) === String(order?.order_attributes?.packageId)
   );
 
-  if (!order) {
+  if (!isInvalidOrder) {
     return (
       <AccountLayout title="Đơn hàng">
         <div className="client-order-detail-container">
@@ -150,15 +157,15 @@ export const OrderDetail = () => {
             <div className='order-summary-container order-price-section-container'>
               <div className="order-summary-line">
             <span>Tạm tính:</span>
-            <span>{order?.order_amount?.toLocaleString()}đ</span>
+            <span>{order?.order_base_amount?.toLocaleString() || 0}đ</span>
             </div>
             <div className="order-summary-line">
             <span>Giảm giá:</span>
-            <span>-{0}đ</span>
+            <span>-{order?.order_discount_amount?.toLocaleString() || 0}đ</span>
             </div>
             <div className="order-summary-total">
             <strong>Tổng đã thanh toán:</strong>
-            <strong>{order?.order_amount?.toLocaleString()}đ</strong>
+            <strong>{order?.order_final_amount?.toLocaleString() || 0}đ</strong>
             </div>
             </div>
 

@@ -1,33 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import './admin-order.css';
-import { deleteOrderForAdmin, getAllOrdersForAdmin } from '../../api/order.api';
-import ToastNotification, { showToast } from '../../components/toasts/ToastNotification';
-import { FaSearch } from 'react-icons/fa';
-import { HashLoader } from 'react-spinners';
-import { productTypeText, statusText, statusType } from '../../utils';
-import ConfirmModal from '../../components/modal/confirm-modal';
+import React, { useEffect, useState } from "react";
+import "./admin-order.css";
+import { deleteOrderForAdmin, getAllOrdersForAdmin } from "../../api/order.api";
+import ToastNotification, {
+  showToast,
+} from "../../components/toasts/ToastNotification";
+import { FaSearch } from "react-icons/fa";
+import { HashLoader } from "react-spinners";
+import { productTypeText, statusText, statusType } from "../../utils";
+import ConfirmModal from "../../components/modal/confirm-modal";
 import { MdDelete } from "react-icons/md";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa6";
 
 const ITEMS_PER_PAGE = 8;
 const DATA_LIMIT = 200;
 
 export const AdminOrder = () => {
-    const [loading, setLoading] = useState(false);
-    const [selected, setSelected] = useState('');
-    const [searchInput, setSearchInput] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [orders, setOrders] = useState(null);
-    
-    const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [orders, setOrders] = useState(null);
 
-    const navigate = useNavigate();
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = 'Admin - Đơn hàng';
+    document.title = "Admin - Đơn hàng";
     fetchOrders();
   }, []);
 
@@ -41,15 +43,18 @@ export const AdminOrder = () => {
       }
     } catch (error) {
       console.log(error);
-      showToast(error.message, 'error');
+      showToast(error.message, "error");
     } finally {
       setLoading(false);
     }
   };
 
   const filteredOrders = orders?.filter((od) => {
-    const matchesSearch = od.orderId.toLowerCase().includes(searchInput.toLowerCase());
-    const matchesStatus = selected === '' || selected === 'all' || od.order_status === selected;
+    const matchesSearch = od.orderId
+      .toLowerCase()
+      .includes(searchInput.toLowerCase());
+    const matchesStatus =
+      selected === "" || selected === "all" || od.order_status === selected;
     return matchesSearch && matchesStatus;
   });
 
@@ -70,31 +75,32 @@ export const AdminOrder = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     }
-    };
+  };
 
-    const handleDeleteOrder = async () => {
-        setLoading(true);
-        setIsModalOpen(false);
-        try {
-            const res = await deleteOrderForAdmin(selectedIdToDelete);
+  const handleDeleteOrder = async () => {
+    setLoading(true);
+    setIsModalOpen(false);
+    try {
+      const res = await deleteOrderForAdmin(selectedIdToDelete);
 
-            if (res?.success) {
-                showToast("Xóa đơn hàng thành công", "success");
-                setOrders(orders.filter((od) => od.orderId !== selectedIdToDelete));
-            }
-        } catch (error) {
-            showToast(error.message, "success");
-        }
-        finally {
-            setLoading(false);
-        }
+      if (res?.success) {
+        showToast("Xóa đơn hàng thành công", "success");
+        setOrders(orders.filter((od) => od.orderId !== selectedIdToDelete));
+      }
+    } catch (error) {
+      showToast(error.message, "success");
+    } finally {
+      setLoading(false);
     }
-    
-    if (loading) {
-        return <div className="loader-container">
-            <HashLoader color="#092339"/>
-        </div>
-    }  
+  };
+
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <HashLoader color="#092339" />
+      </div>
+    );
+  }
 
   return (
     <div className="admin-order-container">
@@ -131,82 +137,102 @@ export const AdminOrder = () => {
             <option value="failed">Thất bại</option>
           </select>
         </div>
-          </div>
-        <div className="product-table-container">
-                              <table className="product-table">
-                              <thead>
-                              <tr>
-                                  <th>STT</th>
-                                      <th>Mã giao dịch</th>
-                                      <th>Tên người dùng</th>
+      </div>
+      <div className="product-table-container">
+        <table className="product-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã giao dịch</th>
+              <th>Tên người dùng</th>
               <th>Số tiền</th>
               <th>Loại</th>
-                                      <th>Trạng thái</th>
-                                      <th>Thời gian</th>
-                                      <th>Thao tác</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  {currentOrders?.length > 0 ? (
-                  currentOrders
-                      .map((tx, index) => (
-                          <tr key={tx.orderId}>
-                              <td>{index + 1}</td>
-                              <td>{tx.orderId}</td>
-                              <td>{tx.userId.username}</td>
-                          <td className='order-price'>{tx.order_amount.toLocaleString() || 0}</td>
-                          <td className='order-price'>{productTypeText(tx.order_type) || ''}</td>
-                              <td>
-                                  <div className={`transaction-status ${statusType(tx.order_status)}`}>
-                                      {statusText(tx.order_status)}
-                                  </div>
-                          </td>
-                              <td>{new Date(tx.createdAt).toLocaleString()}</td>
-                              <td className="action-cell">
-                                  <div className="action-buttons-container">
-                                      <button className="action-button" onClick={() => navigate(`/super-admin/orders/view/${tx.orderId}`)}><FaEye className="action-icon" /></button>
-                                      <button onClick={() => {
-                                          setIsModalOpen(true);
-                                          setSelectedIdToDelete(tx.orderId);
-                                      }} className="delete-btn action-button"><MdDelete className="action-icon" /></button>
-                                                  </div>
-                                              </td>
-                          </tr>
-                      ))
-              ) : (
-                  <tr>
-                      <td colSpan="9">Không có đơn hàng</td>
-                  </tr>
-              )}
-                              </tbody>
-                          </table>
-          </div>
-          {/* Pagination Controls */}
-                            {totalPages > 1 && (
-                                <div className="pagination">
-                                    <button
-                                        className="pagination-btn"
-                                        onClick={handlePrevPage}
-                                        disabled={currentPage === 1}
-                                    >
-                                        <GrFormPrevious className="pagination-icon"/>
-                                    </button>
-                                    <span className="pagination-info">{currentPage}</span>
-                                    <button
-                                        className="pagination-btn"
-                                        onClick={handleNextPage}
-                                        disabled={currentPage === totalPages}
-                                    >
-                                        <GrFormNext className="pagination-icon"/>
-                                    </button>
-                                </div>
-          )}
-          <ConfirmModal
-              isOpen={isModalOpen}
-              onConfirm={() => handleDeleteOrder(selectedIdToDelete)}
-              onClose={() => setIsModalOpen(false)}
-              message={'Xác nhận bạn đang xóa một đơn hàng'}
-              title={'Xóa đơn hàng'} />
+              <th>Trạng thái</th>
+              <th>Thời gian</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentOrders?.length > 0 ? (
+              currentOrders.map((tx, index) => (
+                <tr key={tx.orderId}>
+                  <td>{index + 1}</td>
+                  <td>{tx.orderId}</td>
+                  <td>{tx.userId.username}</td>
+                  <td className="order-price">
+                    {tx.order_final_amount.toLocaleString() || 0}
+                  </td>
+                  <td className="order-price">
+                    {productTypeText(tx.order_type) || ""}
+                  </td>
+                  <td>
+                    <div
+                      className={`transaction-status ${statusType(
+                        tx.order_status
+                      )}`}
+                    >
+                      {statusText(tx.order_status)}
+                    </div>
+                  </td>
+                  <td>{new Date(tx.createdAt).toLocaleString()}</td>
+                  <td className="action-cell">
+                    <div className="action-buttons-container">
+                      <button
+                        className="action-button"
+                        onClick={() =>
+                          navigate(`/super-admin/orders/view/${tx.orderId}`)
+                        }
+                      >
+                        <FaEye className="action-icon" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setSelectedIdToDelete(tx.orderId);
+                        }}
+                        className="delete-btn action-button"
+                      >
+                        <MdDelete className="action-icon" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9">Không có đơn hàng</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            className="pagination-btn"
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            <GrFormPrevious className="pagination-icon" />
+          </button>
+          <span className="pagination-info">{currentPage}</span>
+          <button
+            className="pagination-btn"
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            <GrFormNext className="pagination-icon" />
+          </button>
+        </div>
+      )}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onConfirm={() => handleDeleteOrder(selectedIdToDelete)}
+        onClose={() => setIsModalOpen(false)}
+        message={"Xác nhận bạn đang xóa một đơn hàng"}
+        title={"Xóa đơn hàng"}
+      />
     </div>
   );
 };

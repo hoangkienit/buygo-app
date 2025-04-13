@@ -40,8 +40,9 @@ const Login = () => {
         return;
       }
 
+      authenticatedUser(res.data.user);
+      
       if (res.data.user.role === 'admin') {
-        authenticatedUser(res.data.user);
         navigate("/super-admin/dashboard");
       }else navigate("/");
       

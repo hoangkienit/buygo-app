@@ -188,3 +188,17 @@
     background-color: lightgray !important;
 }
 
+.discount-text{
+    color: #c4f5d2;
+    font-family: 'montserrat-md';
+    font-size: 14px;
+}
+
+.discount-code {
+    color: var(--secondary);
+}
+
+.delete-discount-button{
+    background-color: #FF6347 !important;
+}
+

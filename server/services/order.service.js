@@ -8,179 +8,206 @@ const mongoose = require("mongoose");
 const { getIO } = require("./socket.service");
 const { convertToObjectId } = require("../utils/convert");
 const { TransactionHistory } = require("../models/transaction.model");
+const DiscountService = require("./discount.service");
 
 class OrderService {
   // 🔹 Create a new order
   static async createNewOrder(
-    userId,
-    productId,
-    product_type,
-    amount,
-    requestId,
-    packageId
-  ) {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    try {
-      if (!requestId) throw new Error("Missing requestId");
+    discountCode, 
+  userId,
+  productId,
+  product_type,
+  _amountFromClient,
+  requestId,
+  packageId
+) {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    if (!requestId) throw new Error("Missing requestId");
 
-      // Prevent duplicate orders by requestId
-      const existing = await Order.findOne({ requestId }).session(session);
-      if (existing) {
-        throw new Error("Duplicate request detected");
-      }
+    const existing = await Order.findOne({ requestId }).session(session);
+    if (existing) throw new Error("Duplicate request detected");
 
-      // Checking user balance
-      const user = await User.findOne({
-        _id: convertToObjectId(userId),
-      }).session(session);
-      if (!user) throw new Error("User not found");
+    const user = await User.findOne({
+      _id: convertToObjectId(userId),
+    }).session(session);
+    if (!user) throw new Error("User not found");
 
-      if (user.balance < amount)
-        throw new Error("You don't have enough balance");
+    const product = await Product.findOne({ productId }).lean().session(session);
+    if (!product) throw new Error("Product not found");
 
-      const product = await Product.findOne({ productId: productId })
-        .lean()
-        .session(session);
-      if (!product) {
-        throw new Error("Product not found");
-      }
+    // Take amount from product 
+    let base_amount = 0;
+    let discount = null;
+    let discountAmount = 0;
+    let finalTotal = base_amount;
+    
+    if (product_type === "topup_package") {
+      const selectedPackage = product.product_attributes?.packages?.find(
+        (pkg) => pkg._id.toString() === packageId
+      );
+      console.log("run this " + selectedPackage)
+      if (!selectedPackage) throw new Error("Invalid packageId");
+      base_amount = selectedPackage.price;
+      
+    } else {
+      base_amount = product.product_attributes?.price;
+    }
 
-      let newOrder = null;
-      newOrder = new Order({
-        requestId: requestId,
-        orderId: generateOrderId(),
-        userId: userId,
-        productId: product.productId,
-        order_type: product.product_type,
-        order_amount: amount,
-        order_status: "processing",
-        order_note: "",
-      });
-      if (
-        product_type === "utility_account" ||
-        product_type === "game_account"
-      ) {
-        // if (product.product_attributes.account.length <= 0) throw new Error("Sản phẩm đã hết hàng");
+    // Checking discount and apply
+    if (discountCode || discountCode !== "") {
+      const {
+        discountAmount: amount,
+        finalTotal: final,
+        discountId
+      } = await DiscountService.validateDiscount(discountCode, base_amount);
 
-        const utilAccount = await Product.aggregate([
-          { $match: { productId: productId } }, // Match the product by its _id
-          { $unwind: "$product_attributes.account" }, // Unwind the packages array to access individual elements
-          { $limit: 1 }, // Limit to only the first object in the array
-          { $project: { account: "$product_attributes.account" } }, // Project the first package
-        ]).session(session);
+      discount = discountId;
+      discountAmount = amount;
+      finalTotal = final;    
+    } else {
+      discountAmount = 0;
+      finalTotal = base_amount;
+      discount = null;
+    }
 
-        const firstAccount = utilAccount[0]?.account;
+    if (user.balance < finalTotal) throw new Error("You don't have enough balance");
+    console.log(base_amount, discountAmount, finalTotal, discount);
+    let newOrder = new Order({
+      requestId: requestId,
+      orderId: generateOrderId(),
+      userId: userId,
+      productId: product.productId,
+      order_type: product.product_type,
+      order_base_amount: base_amount,
+      order_discount_amount: discountAmount,
+      order_final_amount: finalTotal,
+      discountId: discount,
+      order_status: "processing",
+      order_note: "",
+    });
 
-        //Delete account from stock
-        if (firstAccount && !product?.isValuable) {
+    if (
+      product_type === "utility_account" ||
+      product_type === "game_account"
+    ) {
+      const utilAccount = await Product.aggregate([
+        { $match: { productId: productId } },
+        { $unwind: "$product_attributes.account" },
+        { $limit: 1 },
+        { $project: { account: "$product_attributes.account" } },
+      ]).session(session);
+
+      const firstAccount = utilAccount[0]?.account;
+
+      if (firstAccount && !product?.isValuable) {
+        await Product.updateOne(
+          { productId: productId },
+          {
+            $pull: {
+              "product_attributes.account": { _id: firstAccount._id },
+            },
+          },
+          { session }
+        );
+
+        newOrder.order_attributes = {
+          username: encrypt(firstAccount.username),
+          password: firstAccount.password,
+        };
+
+        const updatedProduct = await Product.findOne({ productId }, null, {
+          session,
+        });
+
+        const accounts = updatedProduct?.product_attributes?.account ?? [];
+
+        if (accounts.length === 0) {
           await Product.updateOne(
             { productId: productId },
-            {
-              $pull: {
-                "product_attributes.account": { _id: firstAccount._id },
-              },
-            },
+            { product_status: "inactive" },
             { session }
           );
-
-          newOrder.order_attributes = {
-            username: encrypt(firstAccount.username),
-            password: firstAccount.password,
-          };
-
-          // Set product status to 0 if there are no accounts
-          const updatedProduct = await Product.findOne({ productId }, null, {
-            session,
-          });
-
-          const accounts = updatedProduct?.product_attributes?.account ?? [];
-
-          if (accounts.length === 0) {
-            await Product.updateOne(
-              { productId: productId },
-              { product_status: "inactive" },
-              { session }
-            );
-          }
-
-          updatedProduct.product_sold_amount += 1;
-          await updatedProduct.save({ session });
-        } else {
-          logger.error("OrderService: no account to delete");
         }
-      } else if (product_type === "topup_package") {
-        newOrder.order_attributes = {
-          packageId: packageId,
-        };
-      }
 
-      //
-      if (
-        product_type === "utility_account" ||
-        (product_type === "game_account" && !product?.isValuable)
-      ) {
-        newOrder.order_status = "success";
+        updatedProduct.product_sold_amount += 1;
+        await updatedProduct.save({ session });
       } else {
-        newOrder.order_status = "processing";
+        logger.error("OrderService: no account to delete");
       }
+    } else if (product_type === "topup_package") {
+      newOrder.order_attributes = {
+        packageId: packageId,
+      };
+    }
 
-      await newOrder.save({ session });
+    if (
+      product_type === "utility_account" ||
+      (product_type === "game_account" && !product?.isValuable)
+    ) {
+      newOrder.order_status = "success";
+    } else {
+      newOrder.order_status = "processing";
+    }
 
-      user.balance -= amount;
-      await user.save({ session });
+    await newOrder.save({ session });
 
-      // 🔹 Log transaction
-      const newTransaction = new TransactionHistory({
-        transactionId: generateTransactionId(),
-        userId: user?._id,
-        amount: amount,
-        transactionType: "subtract",
-        note: `Bạn đã mua ${product?.product_name}`,
-        balance: user.balance,
-      });
+    user.balance -= newOrder?.order_final_amount;
+    await user.save({ session });
 
-      await newTransaction.save({ session });
+    const newTransaction = new TransactionHistory({
+      transactionId: generateTransactionId(),
+      userId: user?._id,
+      amount: newOrder?.order_final_amount,
+      transactionType: "subtract",
+      note: `Bạn đã mua ${product?.product_name}`,
+      balance: user.balance,
+    });
 
-      await session.commitTransaction();
-      session.endSession();
+    await newTransaction.save({ session });
 
-      const io = getIO();
-      io.to(user._id.toString()).emit("order_success", {
-        newBalance: user.balance,
-      });
+    await session.commitTransaction();
+    session.endSession();
 
-      io.to("admin_room").emit("new_order", {
-        type: "orders",
-        count: 1,
-      });
+    const io = getIO();
+    io.to(user._id.toString()).emit("order_success", {
+      newBalance: user.balance,
+    });
 
-      if (
-        product_type === "utility_account" ||
-        (product_type === "game_account" && !product?.isValuable)
-      )
-        return {
-          message: "Create order successful",
-          item: {
-            username: decrypt(newOrder?.order_attributes?.username),
-            password: decrypt(newOrder?.order_attributes?.password),
-          },
-          orderId: newOrder.orderId,
-          isValuable: product?.isValuable,
-        };
+    io.to("admin_room").emit("new_order", {
+      type: "orders",
+      count: 1,
+    });
+
+    if (
+      product_type === "utility_account" ||
+      (product_type === "game_account" && !product?.isValuable)
+    )
       return {
         message: "Create order successful",
+        item: {
+          username: decrypt(newOrder?.order_attributes?.username),
+          password: decrypt(newOrder?.order_attributes?.password),
+        },
         orderId: newOrder.orderId,
-        item: null,
         isValuable: product?.isValuable,
       };
-    } catch (error) {
-      await session.abortTransaction();
-      session.endSession();
-      logger.error("OrderService: " + error);
-      throw error;
-    }
+
+    return {
+      message: "Create order successful",
+      orderId: newOrder.orderId,
+      item: null,
+      isValuable: product?.isValuable,
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    logger.error("OrderService: " + error);
+    throw error;
   }
+}
+
 
   static async getAllOrders(userId, limit = 100) {
     const orders = await Order.find({ userId: userId })

@@ -155,9 +155,9 @@ export const Sidebar = ({ isSidebarOpen }) => {
       label: "Người dùng"
     },
     {
-      to: "/super-admin/giftcodes",
+      to: "/super-admin/discounts",
       icon: <BsFillGiftFill />,
-      label: "Giftcode"
+      label: "Giảm giá"
     },
     {
       to: "/super-admin/analytics",

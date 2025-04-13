@@ -1,9 +1,10 @@
 import api from './../utils/api';
 import { nanoid } from 'nanoid';
 
-export const createNewOrder = async (productId, product_type, amount, packageId) => {
+export const createNewOrder = async (discountCode, productId, product_type, amount, packageId) => {
   try {
     const response = await api.post(`/order/create-order`, {
+      discountCode, 
       productId,
       product_type,
       amount,

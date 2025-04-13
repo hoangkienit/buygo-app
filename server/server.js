@@ -56,7 +56,7 @@ const limiter = rateLimit({
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again after 10 minutes'
 });
-app.use('/api/v1', limiter);
+// app.use('/api/v1', limiter);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -71,6 +71,7 @@ app.use('/api/v1/payment', require('./routes/payment.route'));
 app.use('/api/v1/transaction', require('./routes/transaction.route'));
 app.use('/api/v1/product', require('./routes/product.route'));
 app.use('/api/v1/order', require('./routes/order.route'));
+app.use('/api/v1/discount', require('./routes/discount.route'));
 
 // Error handling middleware
 app.use(errorHandler);

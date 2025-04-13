@@ -37,7 +37,7 @@ const verifyMiddleware = async (req, res, next) => {
                 ...user,
                 id: user._id
             }; // Attach user to request
-            console.log(req.user);
+
             next();
         });
     } catch (error) {
@@ -51,7 +51,7 @@ const verifyMiddleware = async (req, res, next) => {
 
 const verifyAdminMiddleware = async (req, res, next) => {
     try {
-        const role = req.user.role;
+        const role = req.user._doc.role;
         if (role !== 'admin') {
             return res.status(401).json({
                 success: false,
