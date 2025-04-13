@@ -157,7 +157,7 @@ export const Sidebar = ({ isSidebarOpen }) => {
     {
       to: "/super-admin/discounts",
       icon: <BsFillGiftFill />,
-      label: "Giảm giá"
+      label: "Mã giảm giá"
     },
     {
       to: "/super-admin/analytics",

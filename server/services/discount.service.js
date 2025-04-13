@@ -1,3 +1,4 @@
+const { convertToObjectId } = require("../utils/convert");
 const Discount = require("./../models/discount.model");
 
 class DiscountService {
@@ -25,11 +26,11 @@ class DiscountService {
       throw new Error(
         `Đơn hàng tối thiểu là ${discount.min_purchase.toLocaleString()}đ`
       );
-      }
-      
-      if (discount.usedCount >= discount.limitUsage) {
-          throw new Error("Mã giảm giá đã hết");
-      }
+    }
+
+    if (discount.usedCount >= discount.limitUsage) {
+      throw new Error("Mã giảm giá đã hết");
+    }
 
     let discountAmount = 0;
 
@@ -93,6 +94,23 @@ class DiscountService {
     await discount.save();
 
     return discount;
+  }
+
+  static async getAllDiscountsForAdmin() {
+    const discounts = await Discount.find().sort({ createdAt: -1 }).lean();
+
+    return {
+      discounts: discounts ? discounts : [],
+    };
+  }
+
+  static async getDiscount(discountId) {
+    const discount = await Discount.findOne({
+      _id: convertToObjectId(discountId),
+    }).lean();
+    if (!discount) throw new Error("Discount not found");
+
+    return { discount };
   }
 }
 

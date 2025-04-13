@@ -1,0 +1,144 @@
+/* DiscountDetail.css */
+
+.discount-detail-container {
+    padding: 24px;
+    width: 100%;
+    margin: 0 auto;
+    font-family: 'montserrat-md';
+}
+
+.discount-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.discount-detail-title {
+    font-size: 28px;
+    color: #333;
+    margin: 0;
+}
+
+.discount-detail-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+}
+
+.discount-detail-badge.active {
+    background-color: #e6f7ee;
+    color: #2e7d32;
+}
+
+.discount-detail-badge.inactive {
+    background-color: #feeeee;
+    color: #d32f2f;
+}
+
+.discount-detail-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.discount-detail-section {
+    padding: 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.discount-detail-section:last-child {
+    border-bottom: none;
+}
+
+.discount-detail-section-title {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 20px 0;
+}
+
+.discount-detail-row {
+    display: flex;
+    margin-bottom: 16px;
+}
+
+.discount-detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.discount-detail-label {
+    flex: 0 0 180px;
+    color: #666;
+    font-weight: 500;
+}
+
+.discount-detail-value {
+    flex: 1;
+    color: #585858;
+    font-weight: 600;
+}
+
+.discount-detail-value.capitalize {
+    text-transform: capitalize;
+}
+
+.discount-detail-actions {
+    display: flex;
+    padding: 24px;
+    gap: 12px;
+    background-color: #f9f9f9;
+}
+
+.discount-detail-btn {
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.discount-detail-btn.edit {
+    background-color: #14B8A6;
+    color: white;
+}
+
+.discount-detail-btn.edit:hover {
+    background-color: #14B8A6;
+}
+
+.discount-detail-btn.back {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.discount-detail-btn.delete:hover {
+    background-color: #3B82F6;
+}
+
+.discount-detail-btn.toggle {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.discount-detail-btn.toggle:hover {
+    background-color: #e0e0e0;
+}
+
+.discount-detail-loading,
+.discount-detail-error,
+.discount-detail-not-found {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+
+.discount-detail-error {
+    color: #d32f2f;
+}

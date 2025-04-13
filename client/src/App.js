@@ -34,6 +34,8 @@ import { AdminUser } from "./pages/admin/AdminUser";
 import { AdminUserDetail } from "./pages/admin/AdminUserDetail";
 import { AdminEditUser } from "./pages/admin/AdminEditUser";
 import Banned from "./pages/Banned";
+import { AdminDiscount } from "./pages/admin/AdminDiscount";
+import AdminDiscountDetail from "./pages/admin/AdminDiscountDetail";
 
 function App() {
   return (
@@ -111,6 +113,9 @@ function App() {
                 path="/super-admin/users/edit/:userId"
                 element={<AdminEditUser />}
               />
+
+              <Route path="/super-admin/discounts" element={<AdminDiscount />} />
+              <Route path="/super-admin/discounts/view/:discountId" element={<AdminDiscountDetail/>} />
             </Route>
           </Routes>
         </Router>

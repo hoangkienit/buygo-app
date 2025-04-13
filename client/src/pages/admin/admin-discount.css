@@ -1,0 +1,11 @@
+.add-discount-button{
+    width: 20%;
+    background-color: var(--eight);
+    color: white;
+    transition: transform 0.2s ease-in;
+}
+
+.add-discount-button:hover{
+    transform: translateY(-2px);
+    background-color: var(--eight);
+}

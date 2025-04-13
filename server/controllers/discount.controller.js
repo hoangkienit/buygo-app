@@ -1,6 +1,9 @@
 const DiscountService = require("../services/discount.service");
 const logger = require("../utils/logger");
-const { validateCreateDiscountForAdmin } = require("../utils/validation");
+const {
+  validateCreateDiscountForAdmin,
+  validateId,
+} = require("../utils/validation");
 
 class DiscountController {
   static async validateDiscount(req, res) {
@@ -66,6 +69,52 @@ class DiscountController {
         data: {
           newDiscount: response,
         },
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+
+  static async getAllDiscountsForAdmin(req, res) {
+    try {
+      const response = await DiscountService.getAllDiscountsForAdmin();
+
+      return res.status(200).json({
+        success: true,
+        message: "Get all discount success",
+        data: response,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+
+  static async getDiscount(req, res) {
+    const { discountId } = req.params;
+
+    const errors = validateId(discountId);
+    if (errors && errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0].message,
+      });
+    }
+
+    try {
+      const response = await DiscountService.getDiscount(discountId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Get discount success",
+        data: response,
       });
     } catch (error) {
       logger.error(error);
