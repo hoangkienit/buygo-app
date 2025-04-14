@@ -13,7 +13,7 @@ const DiscountService = require("./discount.service");
 class OrderService {
   // 🔹 Create a new order
   static async createNewOrder(
-    discountCode, 
+    coupon, 
   userId,
   productId,
   product_type,
@@ -39,7 +39,7 @@ class OrderService {
 
     // Take amount from product 
     let base_amount = 0;
-    let discount = null;
+    let discountCode = '';
     let discountAmount = 0;
     let finalTotal = base_amount;
     
@@ -47,7 +47,7 @@ class OrderService {
       const selectedPackage = product.product_attributes?.packages?.find(
         (pkg) => pkg._id.toString() === packageId
       );
-      console.log("run this " + selectedPackage)
+      
       if (!selectedPackage) throw new Error("Invalid packageId");
       base_amount = selectedPackage.price;
       
@@ -56,24 +56,24 @@ class OrderService {
     }
 
     // Checking discount and apply
-    if (discountCode || discountCode !== "") {
+    if (coupon || coupon !== "") {
       const {
         discountAmount: amount,
         finalTotal: final,
-        discountId
-      } = await DiscountService.validateDiscount(discountCode, base_amount);
+        discountCode: code
+      } = await DiscountService.validateDiscount(coupon, base_amount);
 
-      discount = discountId;
+      discountCode = code;
       discountAmount = amount;
       finalTotal = final;    
     } else {
       discountAmount = 0;
       finalTotal = base_amount;
-      discount = null;
+      discountCode = '';
     }
 
-    if (user.balance < finalTotal) throw new Error("You don't have enough balance");
-    console.log(base_amount, discountAmount, finalTotal, discount);
+    if (user.balance < finalTotal) throw new Error("Bạn không đủ số dư");
+    
     let newOrder = new Order({
       requestId: requestId,
       orderId: generateOrderId(),
@@ -83,7 +83,7 @@ class OrderService {
       order_base_amount: base_amount,
       order_discount_amount: discountAmount,
       order_final_amount: finalTotal,
-      discountId: discount,
+      discountCode: discountCode,
       order_status: "processing",
       order_note: "",
     });

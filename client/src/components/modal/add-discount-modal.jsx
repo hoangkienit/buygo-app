@@ -2,9 +2,18 @@ import React, { useState } from "react";
 import "./add-discount-modal.css";
 import { ClipLoader } from "react-spinners";
 import { showToast } from "../toasts/ToastNotification";
+import { createDiscountForAdmin } from "../../api/discount.api";
 
-const AddDiscountModal = ({ isOpen, onClose, message, title }) => {
+const AddDiscountModal = ({
+  isOpen,
+  onClose,
+  message,
+  title,
+  setDiscounts,
+  discounts,
+}) => {
   const [selectedOption, setSelectedOption] = useState("percentage");
+  const [code, setCode] = useState("");
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
@@ -56,10 +65,20 @@ const AddDiscountModal = ({ isOpen, onClose, message, title }) => {
       return;
     }
     try {
-      const res = null;
+      const res = await createDiscountForAdmin(
+        code,
+        selectedOption,
+        amount,
+        startDate,
+        endDate,
+        minPurchase,
+        limitUsage,
+        true
+      );
 
       if (res.success) {
-        showToast("Chỉnh sửa số dư thành công", "success");
+        showToast("Thêm mã giảm giá thành công", "success");
+        setDiscounts((prevDiscounts) => [res.data.newDiscount, ...prevDiscounts]);
         onClose();
       }
     } catch (error) {
@@ -95,6 +114,16 @@ const AddDiscountModal = ({ isOpen, onClose, message, title }) => {
           placeholder="Nhập số tiền"
           onChange={(e) => setAmount(Number(e.target.value.replace(/\D/g, "")))}
         />
+        <div className="discount-item-card">
+          <p>Code</p>
+          <input
+            className="date-input"
+            type="text"
+            value={code}
+            placeholder="VD: IAMPESMOBILE10"
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </div>
         <div className="discount-item-card">
           <p>Ngày bắt đầu</p>
           <input

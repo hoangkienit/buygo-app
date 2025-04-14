@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./admin-discount-detail.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDiscount } from "../../api/discount.api";
-import { showToast } from "../../components/toasts/ToastNotification";
+import { getDiscount, switchDiscountStatus } from "../../api/discount.api";
+import ToastNotification, { showToast } from "../../components/toasts/ToastNotification";
 import { HashLoader } from "react-spinners";
 
 const AdminDiscountDetail = () => {
@@ -20,6 +20,7 @@ const AdminDiscountDetail = () => {
 
         if (res?.success) {
           setDiscount(res.data.discount);
+          document.title = `Code: ${res.data.discount?.code}`;
         }
       } catch (err) {
           showToast(err.message, "error");
@@ -33,14 +34,31 @@ const AdminDiscountDetail = () => {
     }
   }, [discountId]);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
+  const handleSwitchDiscountStatus = async () => {
+    setLoading(true);
+
+    try {
+      const status = discount?.isActive;
+
+      const res = await switchDiscountStatus(discountId, !status);
+
+      if (res.success) {
+        showToast("Cập nhật thành công", "success");
+        setDiscount({
+          ...discount,
+          isActive: res.data.newStatus
+        });
+      } else {
+        showToast("Lỗi hệ thống xin vui lòng thử lại", "error");
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
 
   if (loading) {
     return (
@@ -56,8 +74,11 @@ const AdminDiscountDetail = () => {
 
   return (
     <div className="discount-detail-container">
+      <ToastNotification/>
       <div className="discount-detail-header">
-        <h1 className="discount-detail-title">Chi tiết mã giảm giá</h1>
+        <span className="tab-nav-title">
+        <a href="/super-admin/discounts">Danh sách mã giảm giá</a> / {discount?.code}
+      </span>
         <div className="discount-detail-status">
           <span
             className={`discount-detail-badge ${
@@ -150,11 +171,11 @@ const AdminDiscountDetail = () => {
         </div>
 
         <div className="discount-detail-actions">
-          <button onClick={() => navigate('/super-admin/discounts')} className="discount-detail-btn back">
-            Quay lại
+          <button className="discount-detail-btn delete">
+            Xóa mã giảm giá
           </button>
-          <button className="discount-detail-btn edit">Chỉnh sửa</button>
-          <button className="discount-detail-btn toggle">
+          {/* <button className="discount-detail-btn edit">Chỉnh sửa</button> */}
+          <button onClick={handleSwitchDiscountStatus} className={`discount-detail-btn toggle ${!discount.isActive ? "discount-active-button" : "discount-deactive-button"}`}>
             {discount.isActive ? "Hủy kích hoạt" : "Kích hoạt"}
           </button>
         </div>

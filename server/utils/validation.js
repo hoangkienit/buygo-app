@@ -229,7 +229,7 @@ const createDiscountSchema = Joi.object({
   code: Joi.string().trim().uppercase().required(),
   discount_type: Joi.string().valid('fixed', 'percentage').required(),
   discount_value: Joi.number().positive().required(),
-  start_date: Joi.date().greater('now').required(),
+  start_date: Joi.date().required(),
   end_date: Joi.date().greater(Joi.ref('start_date')).required(),
   isActive: Joi.boolean().optional()
 });

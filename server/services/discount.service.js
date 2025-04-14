@@ -61,23 +61,18 @@ class DiscountService {
     limit_usage,
     isActive,
   }) {
-    const now = new Date();
     const start = new Date(start_date);
     const end = new Date(end_date);
 
-    if (start < now) {
-      throw new Error("Start date must be in the future or today");
-    }
-
     if (end <= start) {
-      throw new Error("End date must be after start date");
+      throw new Error("Ngày kết thúc phải sau ngày bắt đầu");
     }
 
     const existing = await Discount.findOne({
       code: code.trim().toUpperCase(),
     });
     if (existing) {
-      throw new Error("Discount code already exists");
+      throw new Error("Mã giảm giá đã tồn tại");
     }
 
     const discount = new Discount({
@@ -93,7 +88,7 @@ class DiscountService {
 
     await discount.save();
 
-    return discount;
+  return discount;
   }
 
   static async getAllDiscountsForAdmin() {
@@ -111,6 +106,30 @@ class DiscountService {
     if (!discount) throw new Error("Discount not found");
 
     return { discount };
+  }
+
+  static async switchDiscountStatus(discountId, status) {
+    
+    const updatedDiscount = await Discount.findOneAndUpdate({
+      _id: discountId
+    },
+      {
+        isActive: status
+      },{ new: true }).lean();
+    
+    if (!updatedDiscount) throw new Error("Discount not found");
+    return updatedDiscount.isActive;
+  }
+
+  static async deleteDiscountForAdmin(discountId) {
+    const deletedAccount = await Discount.findOneAndDelete(
+      { _id: discountId },   
+    );
+    if (deletedAccount.deletedCount === 0) {
+      throw new Error("Discount not found");
+    }
+
+    return "Deleted discount success";
   }
 }
 

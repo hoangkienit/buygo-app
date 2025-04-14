@@ -16,9 +16,8 @@ export const AdminUserDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `Admin - ${userId}`;
     fetchUser();
-  }, []);
+  }, [userId]);
 
   const fetchUser = async () => {
     setLoading(true);
@@ -28,7 +27,7 @@ export const AdminUserDetail = () => {
 
       if (res?.success) {
         setUserData(res.data.user || null);
-        console.log(res);
+        document.title = `Người dùng: ${res.data.user?.username}`;
       }
     } catch (error) {
       showToast(error.message, "error");

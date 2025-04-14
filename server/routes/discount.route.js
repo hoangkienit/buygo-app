@@ -14,5 +14,7 @@ router.get('/all-discounts', verifyMiddleware, verifyAdminMiddleware, DiscountCo
 
 router.get('/get-discount/:discountId', verifyMiddleware, verifyAdminMiddleware, DiscountController.getDiscount);
 
+router.patch('/switch-status/:discountId', verifyMiddleware, verifyAdminMiddleware, DiscountController.switchDiscountStatus);
 
+router.delete('/delete-discount/:discountId', verifyMiddleware, verifyAdminMiddleware, DiscountController.deleteDiscountForAdmin);
 module.exports = router;

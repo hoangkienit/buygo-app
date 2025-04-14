@@ -124,6 +124,64 @@ class DiscountController {
       });
     }
   }
+
+  static async switchDiscountStatus(req, res) {
+    const { status } = req.query;
+    const { discountId } = req.params;
+    
+    const errors = validateId(discountId);
+    if (errors && errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0].message
+      })
+    }
+
+    try {
+      const response = await DiscountService.switchDiscountStatus(discountId, status);
+
+      return res.status(200).json({
+        success: true,
+        message: "Switch status success",
+        data: {
+          newStatus: response
+        }
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      })
+    }
+  }
+
+  static async deleteDiscountForAdmin(req, res) {
+    const { discountId } = req.params;
+
+    const errors = validateId(discountId);
+    if (errors && errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: errors[0].message
+      })
+    }
+
+    try {
+      const response = await DiscountService.deleteDiscountForAdmin(discountId);
+
+      return res.status(200).json({
+        success: true,
+        message: response,
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      })
+    }
+  }
 }
 
 module.exports = DiscountController;

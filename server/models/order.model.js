@@ -9,7 +9,7 @@ const OrderSchema = new mongoose.Schema({
     order_base_amount: { type: Number, required: true },
     order_discount_amount: { type: Number, required: true },
     order_final_amount: { type: Number, required: true },
-    discountId: { type: mongoose.Schema.Types.ObjectId, ref: "Discount", index: true },
+    discountCode: { type: String, default: '' },
     order_status: { type: String, enum: ["processing", "success", "failed"], default: "processing", index: true },
     order_note: { type: String, default: '' },
     processed_by: {type: String, default: ''},
