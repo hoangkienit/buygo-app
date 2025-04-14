@@ -51,6 +51,7 @@ export const getUserRankImageURL = (rank) => {
   }
 };
 
+
 export const statusType = (type) => {
   switch (type) {
     case "success":

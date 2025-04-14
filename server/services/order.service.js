@@ -9,6 +9,7 @@ const { getIO } = require("./socket.service");
 const { convertToObjectId } = require("../utils/convert");
 const { TransactionHistory } = require("../models/transaction.model");
 const DiscountService = require("./discount.service");
+const Discount = require("../models/discount.model");
 
 class OrderService {
   // 🔹 Create a new order
@@ -60,12 +61,19 @@ class OrderService {
       const {
         discountAmount: amount,
         finalTotal: final,
-        discountCode: code
+        discountCode: code,
+        discountId
       } = await DiscountService.validateDiscount(coupon, base_amount);
 
       discountCode = code;
       discountAmount = amount;
-      finalTotal = final;    
+      finalTotal = final;
+      
+      // Increase discount usage to 1
+      await Discount.findByIdAndUpdate(
+        { _id: discountId },
+        { $inc: { usedCount: 1 } }
+      );
     } else {
       discountAmount = 0;
       finalTotal = base_amount;
@@ -395,13 +403,13 @@ class OrderService {
 
       order.processed_by = author?.username;
       order.order_status = "failed";
-      user.balance += order?.order_amount;
+      user.balance += order?.order_base_amount;
 
       // 🔹 Log transaction
       const newTransaction = new TransactionHistory({
         transactionId: generateTransactionId(),
         userId: user?._id,
-        amount: order.order_amount,
+        amount: order.order_base_amount,
         transactionType: "add",
         note: "Đơn hàng đã bị hủy",
         balance: user?.balance,

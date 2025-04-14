@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "./admin-discount-detail.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDiscount, switchDiscountStatus } from "../../api/discount.api";
-import ToastNotification, { showToast } from "../../components/toasts/ToastNotification";
+import {
+  deleteDiscountForAdmin,
+  getDiscount,
+  switchDiscountStatus,
+} from "../../api/discount.api";
+import ToastNotification, {
+  showToast,
+} from "../../components/toasts/ToastNotification";
 import { HashLoader } from "react-spinners";
+import ConfirmModal from "../../components/modal/confirm-modal";
 
 const AdminDiscountDetail = () => {
   const { discountId } = useParams();
   const [discount, setDiscount] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [isDeleteDiscountModalOpen, setIsDeleteDiscountModalOpen] =
+    useState(false);
 
   useEffect(() => {
     const fetchDiscountDetails = async () => {
@@ -23,7 +32,7 @@ const AdminDiscountDetail = () => {
           document.title = `Code: ${res.data.discount?.code}`;
         }
       } catch (err) {
-          showToast(err.message, "error");
+        showToast(err.message, "error");
       } finally {
         setLoading(false);
       }
@@ -46,19 +55,32 @@ const AdminDiscountDetail = () => {
         showToast("Cập nhật thành công", "success");
         setDiscount({
           ...discount,
-          isActive: res.data.newStatus
+          isActive: res.data.newStatus,
         });
       } else {
         showToast("Lỗi hệ thống xin vui lòng thử lại", "error");
       }
     } catch (error) {
       showToast(error.message, "error");
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
+  const handleDeleteDiscount = async () => {
+    setLoading(true);
+    setIsDeleteDiscountModalOpen(false);
+    try {
+      const res = await deleteDiscountForAdmin(discountId);
+      if (res.success) {
+        navigate('/super-admin/discounts');
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -69,16 +91,28 @@ const AdminDiscountDetail = () => {
   }
 
   if (!discount) {
-    return <div className="discount-detail-not-found">Không tìm thấy mã giảm giá</div>;
+    return (
+      <div className="discount-detail-not-found">
+        Không tìm thấy mã giảm giá
+      </div>
+    );
   }
 
   return (
     <div className="discount-detail-container">
-      <ToastNotification/>
+      <ToastNotification />
+      <ConfirmModal
+        isOpen={isDeleteDiscountModalOpen}
+        onConfirm={handleDeleteDiscount}
+        onClose={() => setIsDeleteDiscountModalOpen(false)}
+        message={`Xác nhận bạn đang xóa mã ${discount?.code}`}
+        title={"Xóa mã giảm giá"}
+      />
       <div className="discount-detail-header">
         <span className="tab-nav-title">
-        <a href="/super-admin/discounts">Danh sách mã giảm giá</a> / {discount?.code}
-      </span>
+          <a href="/super-admin/discounts">Danh sách mã giảm giá</a> /{" "}
+          {discount?.code}
+        </span>
         <div className="discount-detail-status">
           <span
             className={`discount-detail-badge ${
@@ -171,11 +205,21 @@ const AdminDiscountDetail = () => {
         </div>
 
         <div className="discount-detail-actions">
-          <button className="discount-detail-btn delete">
+          <button
+            onClick={() => setIsDeleteDiscountModalOpen(true)}
+            className="discount-detail-btn delete"
+          >
             Xóa mã giảm giá
           </button>
           {/* <button className="discount-detail-btn edit">Chỉnh sửa</button> */}
-          <button onClick={handleSwitchDiscountStatus} className={`discount-detail-btn toggle ${!discount.isActive ? "discount-active-button" : "discount-deactive-button"}`}>
+          <button
+            onClick={handleSwitchDiscountStatus}
+            className={`discount-detail-btn toggle ${
+              !discount.isActive
+                ? "discount-active-button"
+                : "discount-deactive-button"
+            }`}
+          >
             {discount.isActive ? "Hủy kích hoạt" : "Kích hoạt"}
           </button>
         </div>

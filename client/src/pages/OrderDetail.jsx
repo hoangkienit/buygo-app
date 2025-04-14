@@ -151,7 +151,10 @@ export const OrderDetail = () => {
               Đơn hàng được tạo vào lúc <span className='order-time client-order-timeline'>{new Date(order?.createdAt).toLocaleString()}</span></p>
             <p className='order-log'>
               Đơn hàng cập nhật vào lúc <span className='order-time client-order-timeline'>{new Date(order?.updatedAt).toLocaleString()}</span></p>
-            <p className='order-log'>
+            {order?.discountCode && <p className='order-log'>
+              Đơn hàng sử dụng mã <span className='order-time client-order-timeline'>{order?.discountCode}</span></p>}
+                    
+                    <p className='order-log'>
               Nội dung: <span className='order-time client-order-timeline'>{order?.order_note || ""}</span></p>
             
             <div className='order-summary-container order-price-section-container'>

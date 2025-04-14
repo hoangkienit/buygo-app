@@ -53,6 +53,7 @@ class ProductController {
 
     static async getProductBySlug(req, res) {
         const { product_slug } = req.params;
+        const { review_limit } = req.query;
 
         const errors = validateProductSlug({ product_slug });
         if (errors && errors.length > 0) {
@@ -66,7 +67,7 @@ class ProductController {
         try {
             const response = await ProductService.getProductBySlug(product_slug);
 
-            const ratingResponse = await ReviewService.getProductReviewsWithStats(response.product.productId);
+            const ratingResponse = await ReviewService.getProductReviewsWithStats(response.product.productId, Number(review_limit));
             return res.status(200).json({
                 success: true,
                 message: response.message,

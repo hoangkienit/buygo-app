@@ -72,6 +72,7 @@ app.use('/api/v1/transaction', require('./routes/transaction.route'));
 app.use('/api/v1/product', require('./routes/product.route'));
 app.use('/api/v1/order', require('./routes/order.route'));
 app.use('/api/v1/discount', require('./routes/discount.route'));
+app.use('/api/v1/review', require('./routes/review.route'));
 
 // Error handling middleware
 app.use(errorHandler);

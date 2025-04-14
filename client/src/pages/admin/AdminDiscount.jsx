@@ -126,7 +126,8 @@ export const AdminDiscount = () => {
               <th>STT</th>
               <th>Code</th>
               <th>Giá trị</th>
-              <th>Loại</th>
+              <th>Đã sử dụng</th>
+              <th>Tối đa</th>
               <th>Bắt đầu lúc</th>
               <th>Kết thúc lúc</th>
               <th>Trạng thái</th>
@@ -138,11 +139,12 @@ export const AdminDiscount = () => {
               discounts.map((tx, index) => (
                 <tr key={tx?._id}>
                   <td>{index + 1}</td>
-                  <td>{tx?.code}</td>
+                  <td><a className="discount-detail-code" href={`/super-admin/discounts/view/${tx?._id}`}>{tx?.code}</a></td>
                   <td className="order-price">
                     {tx?.discount_value.toLocaleString() || 0}{tx?.discount_type === 'percentage' ? "%" :"đ"}
                   </td>
-                  <td className="order-price">{tx?.discount_type}</td>
+                  <td className="order-price">{tx?.usedCount}</td>
+                  <td className="order-price">{ tx?.limitUsage}</td>
                   <td className="order-price">
                     {new Date(tx?.start_date).toLocaleDateString()}
                   </td>

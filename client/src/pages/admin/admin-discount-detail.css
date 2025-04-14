@@ -146,19 +146,24 @@
 }
 
 .discount-active-button{
-    background-color: #4CAF50 !important;
+    background-color: #28a745 !important;
     color: white !important;
 }
 
 .discount-active-button:hover {
-    background-color: #43A047;
+    background-color: #218838;
 }
 
 .discount-deactive-button {
-    background-color: #e74c3c !important;
+    background-color: #dc3545 !important;
     color: white !important;
 }
 
-.discount-active-button:hover {
-    background-color: #E53935;
+.discount-deactive-button:hover {
+    background-color: #dc3545;
+}
+
+.discount-detail-code{
+    color: var(--eight);
+    font-weight: 600;
 }

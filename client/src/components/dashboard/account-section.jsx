@@ -59,7 +59,7 @@ const AccountCard = ({ acc }) => {
           </p>
         </div>
         <div className="rating-sold-container">
-          <StarRating rating={acc.averageRatings} />
+          <StarRating rating={acc?.averageRating} />
           <p className="sold-text">Đã bán {acc?.product_sold_amount}</p>
         </div>
       </div>

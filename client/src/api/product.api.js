@@ -31,9 +31,9 @@ export const getProductsByType = async (product_type, limit) => {
   }
 };
 
-export const getProductBySlug = async (product_slug) => {
+export const getProductBySlug = async (product_slug, limit) => {
   try {
-    const response = await api.get(`/product/get-product/${product_slug}`,
+    const response = await api.get(`/product/get-product/${product_slug}?review_limit=${limit}`,
       {
         withCredentials: true
       }
