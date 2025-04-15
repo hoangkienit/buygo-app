@@ -20,7 +20,6 @@ export const AdminEditUser = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    document.title = `Admin - ${userId}`;
     fetchUser();
   }, []);
 
@@ -32,6 +31,7 @@ export const AdminEditUser = () => {
 
       if (res?.success) {
         setUserData(res.data.user || null);
+        document.title = `Người dùng: ${res.data.user.username}`;
       }
     } catch (error) {
       showToast(error.message, "error");

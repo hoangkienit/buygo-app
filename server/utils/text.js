@@ -1,4 +1,5 @@
 const CryptoJS = require("crypto-js");
+const vietnamese_offensive_words = require("../data/vietnamese_offensive_words");
 
 function splitString(str) {
     return str.split(' ');
@@ -20,4 +21,16 @@ function slugify(str) {
     return `${hash}-${slug}`;
 }
 
-module.exports = {splitString, slugify}
+function containsBadWord(text) {
+  const lowerText = text.toLowerCase();
+  return vietnamese_offensive_words.some(word => {
+    const pattern = new RegExp(`\\b${escapeRegex(word)}\\b`, 'i');
+    return pattern.test(lowerText);
+  });
+}
+
+function escapeRegex(word) {
+  return word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+module.exports = {splitString, slugify, containsBadWord}

@@ -6,6 +6,10 @@
     margin: 50px auto;
 }
 
+.account-information-container{
+    min-height: 600px;
+}
+
 .account-sidebar {
     width: 250px;
     height: 100%;

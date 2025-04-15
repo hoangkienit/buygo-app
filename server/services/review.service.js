@@ -3,6 +3,7 @@ const Review = require("./../models/review.model");
 const Order = require("../models/order.model");
 const User = require("../models/user.model");
 const { convertToObjectId } = require("../utils/convert");
+const { containsBadWord } = require("../utils/text");
 
 class ReviewService {
   static async getProductRatingStats(productId) {
@@ -23,7 +24,7 @@ class ReviewService {
   }
 
   static async getProductReviewsWithStats(productId, limit = 20) {
-    const reviews = await Review.find({ productId })
+    const reviews = await Review.find({ productId, status: "show" })
       .limit(limit)
       .populate("userId", "username profileImg rank") // Fetch only `username` & `profile_img`
       .sort({ createdAt: -1 })
@@ -45,12 +46,17 @@ class ReviewService {
     if (!order) throw new Error(`Order with ID ${orderId} not found`);
     if (!user) throw new Error(`User with ID ${userId} not found`);
 
+    if (order.order_status !== 'success') throw new Error("The order has not been successful yet.");
+
+    const isContainsBadWord = containsBadWord(comment);
+    console.log(isContainsBadWord)
     const newReview = await Review.create({
       productId: product.productId,
       userId: user._id,
       orderId: order.orderId,
       rating,
       comment,
+      status: isContainsBadWord ? "hide" : "show"
     });
 
     return newReview;

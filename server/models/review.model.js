@@ -6,6 +6,7 @@ const ReviewSchema = new mongoose.Schema({
   orderId: {type: String, required: true},
   rating: { type: Number, min: 1, max: 5, required: true }, // 1-5 star rating
   comment: { type: String, required: true },
+  status: { type: String, default: 'show', enum: ['show', 'hide'] },
 }, {
     timestamps: true
 });
