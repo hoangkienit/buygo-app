@@ -1,0 +1,141 @@
+.feedback-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.feedback-modal {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    font-family: 'montserrat-bold', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0;
+    color: gray;
+}
+
+.feedback-modal-close-btn{
+    background: none !important;
+    border: none !important;
+    font-size: 22px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    width: max-content !important;
+    display: flex;
+    align-items: center;
+}
+
+.feedback-modal-close-btn:hover {
+    color: #000;
+    box-shadow: none;
+}
+
+.rating-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.star {
+    font-size: 40px;
+    color: #e0e0e0;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.star.filled {
+    color: var(--eight);
+}
+
+.feedback-textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 14px;
+    resize: none;
+    min-height: 100px;
+    font-family: 'montserrat-md', sans-serif;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.feedback-textarea:focus {
+    border-color: #3498db;
+}
+
+.char-count{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+    padding-bottom: 10px;
+    font-family: 'montserrat-md';
+    font-size: 11px;
+    color: gray;
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: var(--eight);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+    background-color: #2c80b4;
+}
+
+.feedback-modal-error-message{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0px;
+    color: #FF6347;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px){
+    .feedback-modal{
+        width: 90%;
+    }
+}

@@ -160,6 +160,7 @@ const Product = () => {
                   selectedTopUpPackage={selectedTopUpPackage}
                   setSelectedTopUpPackage={() => setSelectedTopUpPackage(pack)}
                   pack={pack}
+                  product={product}
                 ></TopUpPackage>
               ))}
             </div>
@@ -343,6 +344,7 @@ const TopUpPackage = ({
   selectedTopUpPackage,
   setSelectedTopUpPackage,
   pack,
+  product
 }) => {
   return (
     <div
@@ -354,7 +356,7 @@ const TopUpPackage = ({
       <img
         className="product-item-img"
         alt="Top Up Package Image"
-        src="https://img.redbull.com/images/c_fill,g_auto,w_450,h_600/q_auto:low,f_auto/redbullcom/2016/05/10/1331793850853_2/clash-royale-trucchi-e-consigli-1"
+        src={product?.product_imgs[0] || "https://img.redbull.com/images/c_fill,g_auto,w_450,h_600/q_auto:low,f_auto/redbullcom/2016/05/10/1331793850853_2/clash-royale-trucchi-e-consigli-1"}
       ></img>
       <div className="product-item-info">
         <p className="product-item-name">{pack?.name}</p>

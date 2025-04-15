@@ -65,7 +65,6 @@ class UserService {
         transactionId: generateTransactionId(),
         userId: user?._id,
         amount: amount,
-        balance: user?.balance,
       });
 
       if (modify_type === "add") {
@@ -79,11 +78,12 @@ class UserService {
         newTransaction.transactionType = "subtract";
         newTransaction.note = "Trừ tiền từ Admin";
       }
+     
+      await user.save({ session });
+    
+      newTransaction.balance = user.balance;
 
-      await Promise.all([
-        user.save({ session }),
-        newTransaction.save({ session }),
-      ]);
+      await newTransaction.save({ session });
 
       await session.commitTransaction();
       session.endSession();
