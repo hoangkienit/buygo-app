@@ -77,6 +77,9 @@
 .client-order-product-right-side {
     width: 70%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .client-order-product-info-container{
@@ -139,6 +142,37 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.order-detail-review-container{
+    width: 100%;
+    background-color: var(--eight);
+    height: 100%;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.order-detail-review-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    color: #fff;
+    font-family: 'montserrat-bold';
+    gap: 5px;
+}
+
+.comment-rating-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.order-detail-comment {
+    color: #fff;
+    font-family: 'montserrat-md';
+    font-size: 13px;
 }
 
 @media (max-width: 768px){

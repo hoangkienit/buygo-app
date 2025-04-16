@@ -7,17 +7,17 @@ import DIAMOND from './../../assets/images/ranking/diamond.png';
 
 const RankingIcon = ({ rank }) => {
   switch (rank) {
-    case "newbie":
-        return <img src={NEWBIE} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
     case "bronze":
-          return <img src={BRONZE} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
+        return <img src={NEWBIE} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
     case "silver":
-          return <img src={SILVER} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
+          return <img src={BRONZE} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
     case "gold":
-          return <img src={GOLD} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
+          return <img src={SILVER} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
     case "platinum":
-          return <img src={PLATINUM} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
+          return <img src={GOLD} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
     case "diamond":
+          return <img src={PLATINUM} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
+    case "vip":
         return <img src={DIAMOND} alt='user-ranking' style={{ width: "20px", height: "20px" }}></img>;
     default:
         break;

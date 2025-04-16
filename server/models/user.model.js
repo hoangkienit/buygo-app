@@ -39,8 +39,8 @@ const userSchema = mongoose.Schema({
     },
     rank: {
         type: String,
-        enum: ['newbie', 'bronze', 'silver', 'gold', ' platinum', 'diamond'],
-        default: 'newbie'
+        enum: ['bronze', 'silver', 'gold', ' platinum', 'diamond', 'vip'],
+        default: 'bronze'
     },
     profileImg: {
         type: String,

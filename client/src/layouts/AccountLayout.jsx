@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { FaUser, FaBox, FaGift, FaHistory, FaHeart, FaMoneyCheck } from "react-icons/fa";
 import { PiBankFill } from "react-icons/pi";
+import { FaTrophy } from "react-icons/fa";
 import "../styles/account.css";
 
 const AccountLayout = ({ title, children }) => {
@@ -30,8 +31,8 @@ const AccountLayout = ({ title, children }) => {
           <li className={location.pathname.startsWith("/order") ? "sidebar-active" : ""}>
             <NavLink to="/order" className={() => "navlink"}><FaBox /> Đơn hàng</NavLink>
           </li>
-          <li className={location.pathname.startsWith("/redeem") ? "sidebar-active" : ""}>
-            <NavLink to="/redeem" className={() => "navlink"}><FaGift /> Đổi điểm</NavLink>
+          <li className={location.pathname.startsWith("/rank") ? "sidebar-active" : ""}>
+            <NavLink to="/rank" className={() => "navlink"}><FaTrophy /> Xếp hạng</NavLink>
           </li>
           <li className={location.pathname.startsWith("/favorites") ? "sidebar-active" : ""}>
             <NavLink to="/favorites" className={() => "navlink"}><FaHeart /> Sản phẩm yêu thích</NavLink>

@@ -29,6 +29,20 @@ export const getUser = async (userId) => {
   }
 };
 
+export const getUserTotalDeposit = async () => {
+  try {
+    const response = await api.get(`/user/get-total-deposit`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updateUserForAdmin = async (userId, userData) => {
   try {
     const response = await api.put(`/user/update-user/${userId}`,

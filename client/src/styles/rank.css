@@ -1,0 +1,202 @@
+/* RankProgressBar.css */
+
+/* Container styles */
+.rank-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px;
+    background-color: var(--seven);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'montserrat-md';
+}
+
+/* Header styles */
+.rank-header {
+    margin-bottom: 24px;
+}
+
+.rank-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin: 0 0 8px 0;
+}
+
+.rank-subtitle {
+    font-size: 14px;
+    color: lightgray;
+    margin: 0;
+}
+
+/* User card styles */
+.rank-user-card {
+    padding: 16px;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, var(--eight), var(--seven));
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.rank-user-points {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.rank-user-level {
+    font-size: 16px;
+    color: var(--secondary);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.rank-progress-info {
+    margin-top: 8px;
+}
+
+.rank-progress-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: lightgray;
+}
+
+/* Progress layout */
+.rank-progress-wrapper {
+    height: 360px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.rank-progress-layout {
+    display: flex;
+    height: 100%;
+}
+
+/* Progress bar styles */
+.rank-progress-bar-container {
+    width: 4px;
+    height: 100%;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    position: relative;
+    margin-left: 30px;
+}
+
+.rank-progress-bar-fill {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border-radius: 4px;
+    transition: height 0.5s ease;
+    
+}
+
+/* Level indicators */
+.rank-level-indicators {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 8px 0;
+}
+
+.rank-level-indicator {
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+}
+
+.rank-level-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    margin-left: -55px;
+}
+
+.rank-level-achieved {
+    background: linear-gradient(135deg, var(--eight), var(--nine));
+    border: none;
+}
+
+@keyframes rank-pulse {
+    0% {
+        box-shadow: 0 0 0 4px rgba(19, 73, 119, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(19, 73, 119, 0.5);
+    }
+
+    100% {
+        box-shadow: 0 0 0 4px rgba(19, 73, 119, 1);
+    }
+}
+
+.rank-level-current {
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+    animation: rank-pulse 2s ease-in-out infinite;
+    transition: box-shadow 0.3s ease;
+}
+
+.rank-check-icon {
+    width: 12px;
+    height: 12px;
+    fill: white;
+}
+
+.rank-level-text {
+    margin-left: 8px;
+}
+
+.rank-level-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #9ca3af;
+}
+
+.rank-level-points {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.rank-achieved-text {
+    color: #fff;
+}
+
+.rank-achieved-points {
+    color: var(--secondary);
+}
+
+/* Button styles */
+.rank-button {
+    width: 100%;
+    padding: 12px 0;
+    background: linear-gradient(to right, #8b5cf6, #6366f1);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+}
+
+.rank-button:hover {
+    background: linear-gradient(to right, #7c3aed, #4f46e5);
+    box-shadow: 0 4px 6px rgba(99, 102, 241, 0.4);
+}
+
+.rank-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+}

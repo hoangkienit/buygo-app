@@ -6,11 +6,15 @@ import { FaArrowCircleLeft } from "react-icons/fa";
 import { Step, Stepper } from "react-form-stepper";
 import { orderStatusStep, statusText } from "../utils";
 import { HashLoader } from "react-spinners";
-import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
+import ToastNotification, {
+  showToast,
+} from "../components/toasts/ToastNotification";
 import { getOrder } from "../api/order.api";
 import { useUser } from "../context/UserContext";
 import socket from "../services/socket";
 import FeedbackModal from "../components/modal/feedback-modal";
+import { MdOutlineInsertComment } from "react-icons/md";
+import StarRating from "./../components/star-rating/star-rating";
 
 export const OrderDetail = () => {
   const { user } = useUser();
@@ -60,6 +64,7 @@ export const OrderDetail = () => {
       if (res?.success) {
         setOrder(res.data.order || null);
         setCurrentStep(orderStatusStep(res?.data?.order?.order_status));
+        setIsReviewed(res.data.order.review ? true : false);
 
         if (!order) {
           setIsInvalidOrder(true);
@@ -98,8 +103,15 @@ export const OrderDetail = () => {
   return (
     <AccountLayout title="Đơn hàng">
       <div className="client-order-detail-container">
-        <ToastNotification/>
-        <FeedbackModal isOpen={isFeedbackModal} onClose={() => setIsFeedbackModal(false)}/>
+        <ToastNotification />
+        <FeedbackModal
+          isOpen={isFeedbackModal}
+          onClose={() => setIsFeedbackModal(false)}
+          productId={order?.productId}
+          orderId={order?.orderId}
+          setIsReviewed={setIsReviewed}
+          setOrder={setOrder}
+        />
         {loading ? (
           <div className="loader-container">
             <HashLoader color="#fff" />
@@ -170,14 +182,19 @@ export const OrderDetail = () => {
                       </>
                     )}
                   </div>
-                  </div>
-                  {order?.order_status === 'success' &&
-                  <button onClick={() => setIsFeedbackModal(true)} className={`write-review-button ${isReviewed ? "disabled-review-button" : ''}`}>
-                    {
-                      isReviewed ? "Đơn hàng đã được đánh giá" : "Đánh giá đơn hàng"
-                    }
+                </div>
+                {order?.order_status === "success" && (
+                  <button
+                    onClick={() => setIsFeedbackModal(true)}
+                    className={`write-review-button ${
+                      isReviewed ? "disabled-review-button" : ""
+                    }`}
+                  >
+                    {isReviewed
+                      ? "Đơn hàng đã được đánh giá"
+                      : "Đánh giá đơn hàng"}
                   </button>
-                  }
+                )}
               </div>
               <div className="client-order-product-right-side">
                 <div className="order-log-container client-order-log-container">
@@ -230,6 +247,22 @@ export const OrderDetail = () => {
                     </div>
                   </div>
                 </div>
+                {isReviewed && (
+                  <div className="order-detail-review-container">
+                    <div className="order-detail-review-header">
+                      <MdOutlineInsertComment className="order-detail-review-header-icon" />
+                      <p className="order-detail-review-header-text">
+                        Đánh giá của bạn
+                      </p>
+                    </div>
+                    <div className="comment-rating-container">
+                      <p className="order-detail-comment">
+                        {order?.review?.comment || "No comment"}
+                      </p>
+                      <StarRating rating={order?.review?.rating || 5} />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </>

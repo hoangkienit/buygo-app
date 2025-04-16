@@ -41,3 +41,23 @@ export const deleteReviewForAdmin = async (reviewId) => {
     throw error;
   }
 };
+
+export const createNewReview = async (productId, orderId, rating, comment) => {
+  try {
+    const response = await api.post(`/review/create`,
+      {
+        productId,
+        orderId,
+        rating,
+        comment
+    },
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

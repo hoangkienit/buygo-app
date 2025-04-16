@@ -133,6 +133,28 @@ class UserController {
       });
     }
   }
+
+  static async getUserTotalDeposit(req, res) {
+    const userId = req.user?.id;
+
+    try {
+      const response = await UserService.getUserTotalDeposit(userId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Get user total deposit amount",
+        data: {
+          totalDeposit: response
+        }
+      })
+    } catch (error) {
+      logger.error(error);
+      return res.status(200).json({
+        success: false,
+        message: error.message
+      })
+    }
+  }
 }
 
 module.exports = UserController;

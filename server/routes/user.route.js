@@ -7,6 +7,8 @@ const router = express.Router();
 // For client
 router.get('/get-user/:userId', verifyMiddleware, checkBanned, UserController.getUser);
 
+router.get('/get-total-deposit', verifyMiddleware, checkBanned, UserController.getUserTotalDeposit);
+
 // For Admin
 router.get('/all-users', verifyMiddleware, verifyAdminMiddleware, UserController.getAllUserForAdmin);
 

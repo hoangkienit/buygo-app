@@ -58,7 +58,7 @@ const AccountPage = () => {
             </div>
           </div>
 
-          <div className="account-card storage-card">
+          {/* <div className="account-card storage-card">
             <p>Kho hàng</p>
             <div className="storage-stats">
               <span>0 Chờ xử lý</span>
@@ -66,7 +66,7 @@ const AccountPage = () => {
               <span>0 Hoàn thành</span>
               <span>0 Bị hủy</span>
             </div>
-          </div>
+          </div> */}
 
           <div className="account-card password-card">
             <p>Đổi mật khẩu</p>

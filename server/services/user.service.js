@@ -124,6 +124,13 @@ class UserService {
       message: "Delete user successfully"
     }
   }
+
+  static async getUserTotalDeposit(userId) {
+    const user = await User.findById(userId).lean();
+    if (!user) throw new Error("User not found");
+
+    return user.total_amount_deposited;
+  }
 }
 
 module.exports = UserService;

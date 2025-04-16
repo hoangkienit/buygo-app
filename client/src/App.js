@@ -37,6 +37,7 @@ import Banned from "./pages/Banned";
 import { AdminDiscount } from "./pages/admin/AdminDiscount";
 import AdminDiscountDetail from "./pages/admin/AdminDiscountDetail";
 import AdminReviews from "./pages/admin/AdminReviews";
+import Rank from "./pages/Rank";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
                 <Route path="/order-success" element={<OrderSuccess />} />
                 <Route path="/order" element={<Order />} />
                 <Route path="/order/:orderId" element={<OrderDetail />} />
+                <Route path="/rank" element={<Rank />} />
               </Route>
             </Route>
 

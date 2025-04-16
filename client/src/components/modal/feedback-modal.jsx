@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./feedback-modal.css";
 import { IoClose } from "react-icons/io5";
 import { showToast } from "../toasts/ToastNotification";
+import { createNewReview } from "../../api/review.api";
+import { ClipLoader } from "react-spinners";
 
-const FeedbackModal = ({ isOpen, onClose }) => {
+const FeedbackModal = ({ isOpen, onClose, productId, orderId, setIsReviewed, setOrder }) => {
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,20 +19,46 @@ const FeedbackModal = ({ isOpen, onClose }) => {
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
+
     if (message.trim() === "") {
       setError({ message: "Không được để trống đánh giá" });
+      setLoading(false);
       return;
       }
       
       if (message.trim().length > 300) {
-          setError({ message: "Đánh giá tối đa là 300 ký tự" });
+        setError({ message: "Đánh giá tối đa là 300 ký tự" });
+        setLoading(false);
         return;
-      } else if (message.trim().length < 50) {
-          setError({ message: "Đánh giá tối thiểu là 50 ký tự" });
+      } else if (message.trim().length < 20) {
+        setError({ message: "Đánh giá tối thiểu là 50 ký tự" });
+        setLoading(false);
         return;
       }
-    console.log({ rating, message });
-    onClose();
+    
+    try {
+      const res = await createNewReview(
+        productId,
+        orderId,
+        rating,
+        message
+      );
+
+      if (res.success) {
+        setIsReviewed(true);
+        setOrder((prev) => ({
+          ...prev,
+          review: res.data.newReview
+        }));
+        showToast("Đánh giá thành công", "success");
+        onClose();
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -61,8 +89,8 @@ const FeedbackModal = ({ isOpen, onClose }) => {
           className="feedback-textarea"
           placeholder="Hãy để lại trải nghiệm của bạn về đơn hàng..."
           value={message}
-          minlength="50"
-          maxlength="300"
+          minLength="50"
+          maxLength="300"
           required
           onChange={(e) => setMessage(e.target.value)}
         />
@@ -70,8 +98,8 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         {error && (
           <p className="feedback-modal-error-message">*{error?.message}</p>
         )}
-        <button className="submit-btn" onClick={handleSubmit}>
-          Gửi đánh giá
+        <button disabled={loading} className="submit-btn" onClick={handleSubmit}>
+          {loading ? <ClipLoader size={20} color="#fff"/> : "Gửi đánh giá"}
         </button>
       </div>
     </div>

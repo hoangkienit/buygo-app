@@ -33,17 +33,17 @@ export const getProductTypeObject = (selectedType) => {
 
 export const getUserRankImageURL = (rank) => {
   switch (rank) {
-    case "newbie":
-      return NEWBIE;
     case "bronze":
-      return BRONZE;
+      return NEWBIE;
     case "silver":
-      return SILVER;
+      return BRONZE;
     case "gold":
-      return GOLD;
+      return SILVER;
     case "platinum":
-      return PLATINUM;
+      return GOLD;
     case "diamond":
+      return PLATINUM;
+    case "vip":
       return DIAMOND;
 
     default:
@@ -141,8 +141,8 @@ export const userStatusText = (status) => {
 
 export const userRankText = (rank) => {
   switch (rank) {
-    case "newbie":
-      return "Người mới";
+    case "vip":
+      return "VIP";
     case "bronze":
       return "Đồng";
     case "silver":

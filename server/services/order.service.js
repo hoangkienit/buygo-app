@@ -10,6 +10,7 @@ const { convertToObjectId } = require("../utils/convert");
 const { TransactionHistory } = require("../models/transaction.model");
 const DiscountService = require("./discount.service");
 const Discount = require("../models/discount.model");
+const Review = require("../models/review.model");
 
 class OrderService {
   // 🔹 Create a new order
@@ -235,9 +236,10 @@ class OrderService {
     const order = await Order.findOne({ orderId }).lean();
     if (!order) throw new Error("Order not found");
 
-    const product = await Product.findOne({
-      productId: order.productId,
-    }).lean();
+    const [product, review] = await Promise.all([
+      Product.findOne({ productId: order.productId }).lean(),
+      Review.findOne({orderId: order.orderId}).lean()
+    ])
     if (!product) throw new Error("Product not found");
 
     if (
@@ -257,6 +259,7 @@ class OrderService {
         order: {
           ...formatOrder,
           product,
+          review
         },
       };
     }
@@ -266,6 +269,7 @@ class OrderService {
       order: {
         ...order,
         product,
+        review
       },
     };
   }

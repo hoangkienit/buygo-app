@@ -5,7 +5,8 @@ const { validateId } = require("../utils/validation");
 
 class ReviewController {
     static async createNewReview(req, res) {
-        const { userId, productId, orderId, rating, comment } = req.body;
+        const userId = req.user?.id;
+        const { productId, orderId, rating, comment } = req.body;
         
         let errors = validateId(productId);
         if (errors && errors.length > 0) {
