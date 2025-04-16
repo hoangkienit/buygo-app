@@ -10,8 +10,13 @@ import {
 } from "lucide-react";
 import "./admin-reviews.css";
 import { HashLoader } from "react-spinners";
-import { showToast } from "../../components/toasts/ToastNotification";
-import { getAllReviewsForAdmin } from "../../api/review.api";
+import ToastNotification, {
+  showToast,
+} from "../../components/toasts/ToastNotification";
+import {
+  getAllReviewsForAdmin,
+  updateReviewStatusForAdmin,
+} from "../../api/review.api";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 
@@ -66,26 +71,32 @@ export default function AdminReviews() {
     return new Date(dateString).toLocaleDateString("vi-VN", options);
   };
 
-  const toggleFlag = (id) => {
-    setReviews(
-      reviews.map((review) =>
-        review.id === id ? { ...review, flagged: !review.flagged } : review
-      )
-    );
-  };
-
   const deleteReview = (id) => {
     if (window.confirm("Are you sure you want to delete this review?")) {
       setReviews(reviews.filter((review) => review.id !== id));
     }
   };
 
-  const changeStatus = (id, newStatus) => {
-    setReviews(
-      reviews.map((review) =>
-        review.id === id ? { ...review, status: newStatus } : review
-      )
-    );
+  const changeStatus = async (id, newStatus) => {
+    setLoading(true);
+
+    try {
+      const res = await updateReviewStatusForAdmin(id, newStatus);
+
+      if (res?.success) {
+        setReviews(
+          reviews.map((review) =>
+            review.id === res.data.updatedReview?._id ? { ...review, status: res.data.updatedReview?.status } : review
+          )
+          );
+          
+          showToast("Cập nhật trạng thái thành công", "success");
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredReviews = () => {
@@ -175,6 +186,7 @@ export default function AdminReviews() {
 
   return (
     <div className="admin-review-container">
+      <ToastNotification />
       <header className="admin-review-header">
         <h1>Đánh giá của khách hàng</h1>
         <div className="admin-review-filter-container">
@@ -185,9 +197,9 @@ export default function AdminReviews() {
               onChange={(e) => handleFilterChange("type", e.target.value)}
               className="admin-review-filter-select"
             >
-              <option value="all">All Reviews</option>
-              <option value="high">High Ratings (4-5)</option>
-              <option value="low">Low Ratings (1-2)</option>
+              <option value="all">Tất cả</option>
+              <option value="high">Đánh giá cao (4-5)</option>
+              <option value="low">Đánh giá thấp (1-2)</option>
             </select>
           </div>
 

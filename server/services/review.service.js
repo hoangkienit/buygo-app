@@ -80,6 +80,16 @@ class ReviewService {
       page
     }
   }
+
+  static async updateReviewStatusForAdmin(reviewId, status) {
+    const review = await Review.findById(reviewId);
+    if (!review) throw new Error(`Review not found with ID ${reviewId}`);
+
+    review.status = status;
+    await review.save();
+
+    return review;
+  }
 }
 
 module.exports = ReviewService;

@@ -10,4 +10,6 @@ router.post('/create', verifyMiddleware, checkBanned, ReviewController.createNew
 // For Admin
 router.get('/all-reviews', verifyMiddleware, verifyAdminMiddleware, ReviewController.getAllReviewsForAdmin);
 
+router.patch('/update-status/:reviewId', verifyMiddleware, verifyAdminMiddleware, ReviewController.updateReviewStatusForAdmin);
+
 module.exports = router;
