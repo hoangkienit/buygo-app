@@ -270,14 +270,24 @@ class OrderService {
   }
 
   // For admin
-  static async getAllOrdersForAdmin(limit = 50) {
-    const orders = await Order.find()
-      .populate("userId", "username")
-      .limit(Number(limit))
-      .sort({ createdAt: -1 })
-      .lean();
+  static async getAllOrdersForAdmin(limit = 10, page = 1) {
+    const skip = (page - 1) * limit;
 
-    return { message: "Get orders successful", orders: orders ? orders : [] };
+    const [orders, total] = await Promise.all([
+      Order.find().populate("userId", "username").skip(skip).limit(limit).sort({ createdAt: -1 }).lean(),
+      Order.countDocuments()
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      message: "Get orders successful",
+      orders: orders ? orders : [],
+      page: page,
+      limit: limit,
+      total: total,
+      totalPages: totalPages
+    };
   }
 
   static async deleteOrderForAdmin(orderId) {

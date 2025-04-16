@@ -5,8 +5,9 @@ const ReviewController = require('../controllers/review.controller');
 const router = express.Router();
 
 // For client
-router.post('/create',  ReviewController.createNewReview);
+router.post('/create', verifyMiddleware, checkBanned, ReviewController.createNewReview);
 
 // For Admin
+router.get('/all-reviews', verifyMiddleware, verifyAdminMiddleware, ReviewController.getAllReviewsForAdmin);
 
 module.exports = router;

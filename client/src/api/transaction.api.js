@@ -77,9 +77,9 @@ export const cancelTransaction = async (transactionId) => {
 };
 
 // For admin
-export const getTransactionListForAdmin = async (limit = 50) => {
+export const getTransactionListForAdmin = async (limit, page) => {
   try {
-    const response = await api.get(`/transaction/admin/get-transaction/transactions?limit=${limit}`,
+    const response = await api.get(`/transaction/admin/get-transaction/transactions?limit=${limit}&page=${page}`,
       {
         withCredentials: true
       }

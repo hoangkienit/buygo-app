@@ -42,15 +42,20 @@ class OrderController {
   }
 
   static async getAllOrdersForAdmin(req, res) {
-    const { limit } = req.query;
-
     try {
-      const response = await OrderService.getAllOrdersForAdmin(limit);
+      const limit = parseInt(req.query.limit);
+      const page = parseInt(req.query.page);
+
+      const response = await OrderService.getAllOrdersForAdmin(limit, page);
 
       return res.status(200).json({
         success: true,
         message: response.message,
         data: {
+          limit: response.limit,
+          total: response.total,
+          totalPages: response.totalPages,
+          page: response.page,
           orders: response.orders,
         },
       });

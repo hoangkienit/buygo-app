@@ -61,6 +61,25 @@ class ReviewService {
 
     return newReview;
   }
+
+  static async getAllReviewsForAdmin(limit = 10, page = 1) {
+    const skip = (page - 1) * limit;
+
+    const [reviews, total] = await Promise.all([
+      Review.find().limit(limit).skip(skip).sort({ createdAt: -1 }).populate("userId", "username profileImg").lean(),
+      Review.countDocuments()
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      message: "Get reviews success",
+      total,
+      totalPages,
+      reviews,
+      page
+    }
+  }
 }
 
 module.exports = ReviewService;

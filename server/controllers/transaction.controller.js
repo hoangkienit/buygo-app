@@ -115,16 +115,21 @@ class TransactionController {
 
     // For admin
     // 🔹 Get transaction list
-    static async getTransactionListForAdmin(req, res) {
-        const limit = parseInt(req.query.limit) || 20;
+    static async getTransactionListForAdmin(req, res) {        
         try {
-            const response = await TransactionService.getTransactionListForAdmin(limit);
+            const limit = parseInt(req.query.limit);
+            const page = parseInt(req.query.page);
+
+            const response = await TransactionService.getTransactionListForAdmin(limit, page);
 
             return res.status(200).json({
                 success: true,
-                message: "Get transaction list successfully",
+                message: response.message,
                 data: {
-                    transactions: response.transactions
+                    transactions: response.transactions,
+                    page: response.page,
+                    totalPages: response.totalPages,
+                    total: response.total
                 }
             });
         } catch (error) {

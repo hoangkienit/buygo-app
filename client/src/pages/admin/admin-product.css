@@ -21,7 +21,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 30%;
+    width: 40%;
 }
 
 .header-search-input {
@@ -45,7 +45,7 @@
 .header-search-input::placeholder {
     font-family: 'montserrat-md';
     font-size: 13px;
-    color: #000;
+    color: #000;;
 }
 
 .search-icon {

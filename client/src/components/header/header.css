@@ -282,6 +282,10 @@ html {
     border-radius: 50%;
 }
 
+.user-avatar:hover {
+    border: 2px solid var(--secondary);
+}
+
 /* Icons */
 .header-icons {
     display: flex;

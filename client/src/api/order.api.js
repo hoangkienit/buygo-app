@@ -22,9 +22,9 @@ export const createNewOrder = async (discountCode, productId, product_type, amou
   }
 };
 
-export const getAllOrdersForAdmin = async (limit) => {
+export const getAllOrdersForAdmin = async (limit, page) => {
   try {
-    const response = await api.get(`/order/admin/orders?limit=${limit}`,
+    const response = await api.get(`/order/admin/orders?limit=${limit}&page=${page}`,
     {
         withCredentials: true
     }

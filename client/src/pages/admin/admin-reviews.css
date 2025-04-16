@@ -1,0 +1,264 @@
+.admin-review-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    width: 95%;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--eight);
+    background-color: #fff;
+    margin: 20px 0px;
+    border-radius: 8px;
+}
+
+.admin-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.admin-review-filter-container {
+    display: flex;
+    gap: 12px;
+}
+
+.admin-review-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'montserrat-bold';
+}
+
+.admin-review-filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-review-filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.admin-review-reviews-count {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.admin-review-reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.admin-review-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    border: 1px solid #eaeaea;
+}
+
+.admin-review-flagged {
+    
+}
+
+.admin-review-approved {
+
+}
+
+.admin-review-rejected {
+    
+}
+
+.admin-review-pending {
+    
+}
+
+.admin-review-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.admin-review-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-review-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.admin-review-username {
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'montserrat-md';
+}
+
+.admin-review-review-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.admin-review-action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-review-action-button:hover {
+    background-color: #f5f5f5;
+}
+
+.admin-review-delete-button {
+    background-color: #dc3545;
+}
+
+.admin-review-delete-button:hover {
+    background-color: #dc3545;
+}
+
+
+.admin-review-rating-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.admin-review-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.admin-review-time {
+    font-size: 13px;
+    color: gray;
+    font-family: 'montserrat-md';
+}
+
+.admin-review-comment {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    font-family: 'montserrat-md';
+}
+
+.admin-review-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #666;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.admin-review-helpful {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-review-status-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.admin-review-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-review-status-icon {
+    stroke-width: 2px;
+}
+
+.admin-review-status-icon.admin-review-show {
+    stroke: #28a745;
+}
+
+.admin-review-status-icon.admin-review-hide {
+    stroke: #dc3545;
+}
+
+
+.admin-review-status-text {
+    font-weight: 500;
+}
+
+.admin-review-status-text.admin-review-show {
+    color: #28a745;
+}
+
+.admin-review-status-text.admin-review-hide {
+    color: #dc3545;
+}
+
+.admin-review-status-text.admin-review-pending {
+    color: #ffc107;
+}
+
+.admin-review-status-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.admin-review-status-button {
+    border: none;
+    background: none;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    border: 1px solid transparent;
+    width: max-content !important;
+}
+
+.admin-review-status-button:hover {
+    background-color: #f5f5f5;
+}
+
+.admin-review-status-button.admin-review-show {
+    color: #28a745;
+}
+
+.admin-review-status-button.admin-review-show.admin-review-active {
+    background-color: #e8f5e9;
+    border-color: #28a745;
+}
+
+.delete-icon-button{
+    color: #fff;
+}
+
+.admin-review-status-button.admin-review-hide {
+    color: #dc3545;
+}
+
+.admin-review-status-button.admin-review-hide.admin-review-active {
+    background-color: #ffebee;
+    border-color: #dc3545;
+}
+

@@ -12,3 +12,7 @@
         padding: 10px 0px;
         margin: 20px 0;
 }
+
+.pagination-text{
+    color: var(--eight);
+}

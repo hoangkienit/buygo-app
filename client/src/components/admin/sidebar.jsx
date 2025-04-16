@@ -160,6 +160,12 @@ export const Sidebar = ({ isSidebarOpen }) => {
       label: "Mã giảm giá"
     },
     {
+      to: "/super-admin/reviews",
+      icon: <BiSolidCommentDetail />,
+      label: "Đánh giá",
+      notificationKey: "reviews"
+    },
+    {
       to: "/super-admin/analytics",
       icon: <MdAnalytics />,
       label: "Phân tích"
@@ -168,12 +174,6 @@ export const Sidebar = ({ isSidebarOpen }) => {
       to: "/super-admin/employees",
       icon: <RiTeamFill />,
       label: "Quản lí nhân viên"
-    },
-    {
-      to: "/super-admin/reviews",
-      icon: <BiSolidCommentDetail />,
-      label: "Đánh giá",
-      notificationKey: "reviews"
     },
     {
       to: "/super-admin/settings",

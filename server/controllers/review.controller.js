@@ -47,6 +47,32 @@ class ReviewController {
             });
         }
     }
+
+    static async getAllReviewsForAdmin(req, res) {
+        try {
+            const limit = parseInt(req.query.limit);
+            const page = parseInt(req.query.page);
+
+            const response = await ReviewService.getAllReviewsForAdmin(limit, page);
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: {
+                    total: response.total,
+                    totalPages: response.totalPages,
+                    page: response.page,
+                    reviews: response.reviews
+                }
+            })
+        } catch (error) {
+            logger.error(error);
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            })
+        }
+    }
 }
 
 module.exports = ReviewController;

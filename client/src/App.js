@@ -36,6 +36,7 @@ import { AdminEditUser } from "./pages/admin/AdminEditUser";
 import Banned from "./pages/Banned";
 import { AdminDiscount } from "./pages/admin/AdminDiscount";
 import AdminDiscountDetail from "./pages/admin/AdminDiscountDetail";
+import AdminReviews from "./pages/admin/AdminReviews";
 
 function App() {
   return (
@@ -115,7 +116,9 @@ function App() {
               />
 
               <Route path="/super-admin/discounts" element={<AdminDiscount />} />
-              <Route path="/super-admin/discounts/view/:discountId" element={<AdminDiscountDetail/>} />
+              <Route path="/super-admin/discounts/view/:discountId" element={<AdminDiscountDetail />} />
+              
+              <Route path="/super-admin/reviews" element={<AdminReviews/>} />
             </Route>
           </Routes>
         </Router>

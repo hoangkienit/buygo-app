@@ -91,19 +91,24 @@ class TransactionService {
 
     // For admin
     // 🔹 Get transaction list
-    static async getTransactionListForAdmin(limit = 50) {  
+    static async getTransactionListForAdmin(limit = 10, page = 1) {  
         try {
-            const transactions = await DepositHistory.find()// Find transactions
-                .limit(limit) // Limit the number of transactions returned
-                .populate("userId", "username")
-                .sort({ createdAt: -1 }) // Sort by most recent transactions
-                .lean();
+            const skip = (page - 1) * limit;
 
-            if (!transactions || transactions.length === 0) {
-                return { transactions: [] };
-            }
+            const [transactions, total] = await Promise.all([
+                DepositHistory.find().limit(limit).skip(skip).populate("userId", "username").sort({ createdAt: -1 }).lean(),
+                DepositHistory.countDocuments()
+            ]);
 
-            return { transactions };
+            const totalPages = Math.ceil(total / limit);
+
+            return { 
+                message: "Get deposit transactions success",
+                total,
+                totalPages,
+                transactions,
+                page
+             };
         } catch (error) {
             throw new Error("Cant get transaction list. System error");
         }
