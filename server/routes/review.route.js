@@ -12,4 +12,6 @@ router.get('/all-reviews', verifyMiddleware, verifyAdminMiddleware, ReviewContro
 
 router.patch('/update-status/:reviewId', verifyMiddleware, verifyAdminMiddleware, ReviewController.updateReviewStatusForAdmin);
 
+router.delete('/delete/:reviewId', verifyMiddleware, verifyAdminMiddleware, ReviewController.deleteReviewForAdmin);
+
 module.exports = router;

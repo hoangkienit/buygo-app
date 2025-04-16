@@ -14,11 +14,14 @@ import ToastNotification, {
   showToast,
 } from "../../components/toasts/ToastNotification";
 import {
+  deleteReviewForAdmin,
   getAllReviewsForAdmin,
   updateReviewStatusForAdmin,
 } from "../../api/review.api";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
+import { IoMdMail } from "react-icons/io";
+import ConfirmModal from "../../components/modal/confirm-modal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -29,6 +32,8 @@ export default function AdminReviews() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
 
   const fetchReviews = async () => {
     setLoading(true);
@@ -43,8 +48,7 @@ export default function AdminReviews() {
           rating: r.rating,
           comment: r.comment,
           time: r.createdAt,
-          flagged: r.flagged || false,
-          helpful: r.helpful || 0,
+          orderId: r.orderId,
           status: r.status || "show",
         }))
       );
@@ -58,6 +62,7 @@ export default function AdminReviews() {
 
   useEffect(() => {
     fetchReviews();
+    document.title = 'Admin - Đánh giá';
   }, [currentPage]);
 
   const formatDate = (dateString) => {
@@ -69,12 +74,6 @@ export default function AdminReviews() {
       minute: "2-digit",
     };
     return new Date(dateString).toLocaleDateString("vi-VN", options);
-  };
-
-  const deleteReview = (id) => {
-    if (window.confirm("Are you sure you want to delete this review?")) {
-      setReviews(reviews.filter((review) => review.id !== id));
-    }
   };
 
   const changeStatus = async (id, newStatus) => {
@@ -176,6 +175,27 @@ export default function AdminReviews() {
     setCurrentPage(1); // reset page when filters change
   };
 
+
+  const handleDeleteReview = async () => {
+    setLoading(true);
+    setIsModalOpen(false);
+
+    try {
+      const res = await deleteReviewForAdmin(selectedIdToDelete);
+
+      if (res.success) {
+        showToast("Xóa đánh giá thành công", "success");
+
+        fetchReviews();
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="loader-container">
@@ -187,6 +207,13 @@ export default function AdminReviews() {
   return (
     <div className="admin-review-container">
       <ToastNotification />
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onConfirm={handleDeleteReview}
+        onClose={() => setIsModalOpen(false)}
+        message={"Xác nhận bạn đang xóa một đánh giá của khách hàng"}
+        title={"Xóa đánh giá"}
+      />
       <header className="admin-review-header">
         <h1>Đánh giá của khách hàng</h1>
         <div className="admin-review-filter-container">
@@ -210,7 +237,7 @@ export default function AdminReviews() {
               onChange={(e) => handleFilterChange("status", e.target.value)}
               className="admin-review-filter-select"
             >
-              <option value="all">Trạng thái</option>
+              <option value="all">Tất cả</option>
               <option value="show">Hiển thị</option>
               <option value="hide">Bị ẩn</option>
             </select>
@@ -242,7 +269,10 @@ export default function AdminReviews() {
               <div className="admin-review-review-actions">
                 <button
                   className="admin-review-action-button admin-review-delete-button"
-                  onClick={() => deleteReview(review.id)}
+                  onClick={() => {
+                    setSelectedIdToDelete(review.id);
+                    setIsModalOpen(true);
+                  }}
                 >
                   <MdDelete
                     className="delete-icon-button"
@@ -266,8 +296,8 @@ export default function AdminReviews() {
 
             <div className="admin-review-review-footer">
               <div className="admin-review-helpful">
-                <ThumbsUp size={14} />
-                <span>{review.helpful} found this helpful</span>
+                <IoMdMail size={14} />
+                <span>Đánh giá từ đơn hàng <span className="admin-review-orderId">#{review.orderId}</span></span>
               </div>
 
               <div className="admin-review-status-controls">
@@ -304,7 +334,8 @@ export default function AdminReviews() {
       </div>
 
       {/* Pagination Controls */}
-      {totalPages > 1 && (
+      <div className="pagination-container">
+        {totalPages > 1 && (
         <div className="pagination">
           <button
             className="pagination-btn"
@@ -327,6 +358,7 @@ export default function AdminReviews() {
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 }

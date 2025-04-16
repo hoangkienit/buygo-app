@@ -43,6 +43,7 @@
     background-color: white;
     font-size: 14px;
     cursor: pointer;
+    font-family: 'montserrat-md';
 }
 
 .admin-review-reviews-count {
@@ -175,6 +176,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    font-family: 'montserrat-md';
+}
+
+.admin-review-orderId{
+    font-weight: 600;
 }
 
 .admin-review-status-controls {
@@ -260,5 +266,13 @@
 .admin-review-status-button.admin-review-hide.admin-review-active {
     background-color: #ffebee;
     border-color: #dc3545;
+}
+
+.pagination-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 

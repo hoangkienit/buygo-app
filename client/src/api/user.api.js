@@ -65,3 +65,17 @@ export const modifyUserBalanceForAdmin = async (userId, modify_type, amount) => 
     throw error;
   }
 };
+
+export const deleteUserForAdmin = async (userId) => {
+  try {
+    const response = await api.delete(`/user/delete-user/${userId}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

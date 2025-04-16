@@ -103,6 +103,33 @@ class ReviewController {
             });
         }
     }
+
+    static async deleteReviewForAdmin(req, res) {
+        const { reviewId } = req.params;
+
+        const errors = validateId(reviewId);
+        if (errors && errors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: errors[0].message
+            });
+        }
+        try {
+            const response = await ReviewService.deleteReviewForAdmin(reviewId);
+
+            return res.status(200).json({
+                success: true,
+                message: response.message,
+                data: null
+            })
+        } catch (error) {
+            logger.error(error);
+             return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = ReviewController;

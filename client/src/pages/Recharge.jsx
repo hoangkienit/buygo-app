@@ -5,7 +5,9 @@ import AccountLayout from "../layouts/AccountLayout";
 import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../api/transaction.api";
 import { ClipLoader } from "react-spinners";
-import ToastNotification, { showToast } from "../components/toasts/ToastNotification";
+import ToastNotification, {
+  showToast,
+} from "../components/toasts/ToastNotification";
 
 const Recharge = () => {
   const [amount, setAmount] = useState("");
@@ -13,12 +15,19 @@ const Recharge = () => {
 
   const navigate = useNavigate();
 
-  const amounts = [10000, 20000, 50000, 100000, 200000, 300000, 500000, 700000, 900000, 1000000];
+  const amounts = [
+    10000, 20000, 50000, 100000, 200000, 300000, 500000, 700000, 900000,
+    1000000,
+  ];
 
   const handleRecharge = async () => {
     setLoading(true);
     try {
-      const res = await createTransaction(amount, "empty_gateway", "bank_transfer");
+      const res = await createTransaction(
+        amount,
+        "empty_gateway",
+        "bank_transfer"
+      );
 
       if (res.success) {
         setLoading(false);
@@ -30,32 +39,39 @@ const Recharge = () => {
     }
   };
 
-
   return (
     <AccountLayout title="Nạp tiền">
       <div className="recharge-container">
         <h2>Nạp tiền</h2>
 
         <AmountSelection
-            amounts={amounts}
-            selectedAmount={amount}
+          amounts={amounts}
+          selectedAmount={amount}
           setAmount={setAmount}
           loading={loading}
-            onRecharge={handleRecharge}
+          onRecharge={handleRecharge}
         />
-        <ToastNotification/>
+        <ToastNotification />
       </div>
     </AccountLayout>
   );
 };
 
-const AmountSelection = ({ amounts, selectedAmount, setAmount, onRecharge, loading }) => (
+const AmountSelection = ({
+  amounts,
+  selectedAmount,
+  setAmount,
+  onRecharge,
+  loading,
+}) => (
   <>
     <div className="amount-options">
       {amounts.map((amt) => (
         <button
           key={amt}
-          className={`amount-button ${selectedAmount === amt ? "selected" : ""}`}
+          className={`amount-button ${
+            selectedAmount === amt ? "selected" : ""
+          }`}
           onClick={() => setAmount(amt)}
         >
           <p className="amount-text">{amt.toLocaleString()}đ</p>
@@ -63,13 +79,19 @@ const AmountSelection = ({ amounts, selectedAmount, setAmount, onRecharge, loadi
       ))}
     </div>
     <div className="recharge-button-wrapper">
-      <button onClick={onRecharge} disabled={!selectedAmount} className="recharge-button">
-        {loading ? <ClipLoader size={20} color="#fff"/> : <GrFormNextLink className="recharge-icon" />}
+      <button
+        onClick={onRecharge}
+        disabled={!selectedAmount}
+        className="recharge-button"
+      >
+        {loading ? (
+          <ClipLoader size={20} color="#fff" />
+        ) : (
+          <GrFormNextLink className="recharge-icon" />
+        )}
       </button>
     </div>
   </>
 );
-
-
 
 export default Recharge;

@@ -217,6 +217,7 @@ class OrderService {
 }
 
 
+  // TODO: fix this getAllOrder for client pagination
   static async getAllOrders(userId, limit = 100) {
     const orders = await Order.find({ userId: userId })
       .limit(Number(limit))

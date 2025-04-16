@@ -90,6 +90,17 @@ class ReviewService {
 
     return review;
   }
+
+  static async deleteReviewForAdmin(reviewId) {
+    const review = await Review.deleteOne({_id: convertToObjectId(reviewId)});
+    if (review.deletedCount === 0) {
+      throw new Error(`Review not found with ID: ${reviewId}`);
+    }
+
+    return {
+      message: "Deleted review"
+    }
+  }
 }
 
 module.exports = ReviewService;

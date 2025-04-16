@@ -11,7 +11,7 @@ import ToastNotification, {
 } from "../../components/toasts/ToastNotification";
 import { userStatusText } from "../../utils";
 import ConfirmModal from "../../components/modal/confirm-modal";
-import { getAllUsersForAdmin } from "../../api/user.api";
+import { deleteUserForAdmin, getAllUsersForAdmin } from "../../api/user.api";
 import "./admin-user.css";
 import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -103,17 +103,16 @@ export const AdminUser = () => {
     setLoading(true);
     setIsModalOpen(false);
     try {
-      //   const res = await deleteTransactionForAdmin(userId);
-      //   if (res.success) {
-      //     // Remove transaction from state
-      //     setTransaction(
-      //       transactions.filter(
-      //         (transaction) => transaction.transactionId !== transactionId
-      //       )
-      //     );
-      //     showToast("Xóa giao dịch thành công", "success");
-      //     setSelectedIdToDelete("");
-      //   }
+        const res = await deleteUserForAdmin(userId);
+        if (res.success) {
+          setUsers(
+            users.filter(
+              (us) => us._id !== userId
+            )
+          );
+          showToast("Xóa người dùng thành công", "success");
+          setSelectedIdToDelete("");
+        }
     } catch (error) {
       showToast(error.message, "error");
     } finally {

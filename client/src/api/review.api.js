@@ -27,3 +27,17 @@ export const updateReviewStatusForAdmin = async (reviewId, status) => {
     throw error;
   }
 };
+
+export const deleteReviewForAdmin = async (reviewId) => {
+  try {
+    const response = await api.delete(`/review/delete/${reviewId}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

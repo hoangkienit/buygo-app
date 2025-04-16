@@ -104,7 +104,7 @@ const Payment = () => {
     }
 
     const onTimeUp = () => {
-        navigate('/account/recharge');
+        navigate('/recharge');
     }
 
   return (
