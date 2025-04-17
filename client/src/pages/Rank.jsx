@@ -7,13 +7,14 @@ import { getUserTotalDeposit } from "../api/user.api";
 import { useUser } from "../context/UserContext";
 
 const rankData = [
-    { level: 6, title: "VIP", points: 100000000, color: "#7C3AED" },
-  { level: 5, title: "Kim cương", points: 40000000, color: "#7C3AED" },
-  { level: 4, title: "Bạch kim", points: 20000000, color: "#8B5CF6" },
-  { level: 3, title: "Vàng", points: 2000000, color: "#A78BFA" },
-  { level: 2, title: "Bạc", points: 1000000, color: "#C4B5FD" },
-  { level: 1, title: "Đồng", points: 0, color: "#DDD6FE" },
+  { level: 6, title: "VIP", points: 100000000, color: "#134977" }, // Original
+  { level: 5, title: "Kim cương", points: 40000000, color: "#1A5A94" }, // Slightly lighter
+  { level: 4, title: "Bạch kim", points: 20000000, color: "#2C6CA3" },
+  { level: 3, title: "Vàng", points: 2000000, color: "#4781B2" },
+  { level: 2, title: "Bạc", points: 1000000, color: "#6A9BC5" },
+  { level: 1, title: "Đồng", points: 0, color: "#8CB5D8" }, // Lightest
 ];
+
 const Rank = () => {
   const [userPoints, setUserPoints] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -101,8 +102,8 @@ const Rank = () => {
                   <div className="rank-progress-details">
                     <span>{progressPercentage}% hoàn thành</span>
                     <span>
-                      {(nextRank.points - userPoints).toLocaleString()}đ để tăng lên cấp {" "}
-                      {nextRank.level}
+                      {(nextRank.points - userPoints).toLocaleString()}đ để tăng lên {" "}
+                      {nextRank.title}
                     </span>
                   </div>
                 </div>

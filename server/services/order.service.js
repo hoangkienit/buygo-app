@@ -11,6 +11,7 @@ const { TransactionHistory } = require("../models/transaction.model");
 const DiscountService = require("./discount.service");
 const Discount = require("../models/discount.model");
 const Review = require("../models/review.model");
+const TelegramService = require("./telegram.service");
 
 class OrderService {
   // 🔹 Create a new order
@@ -188,6 +189,9 @@ class OrderService {
       type: "orders",
       count: 1,
     });
+
+    // Send message to Telegram
+    await TelegramService.sendMessage(process.env.TELEGRAM_CHAT_ID, "Có một đơn hàng mới");
 
     if (
       product_type === "utility_account" ||

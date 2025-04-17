@@ -18,6 +18,7 @@ const requestLogger = require('./middlewares/request.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 require("./jobs/transactionQueue");
 require('./jobs/clearUploads');
+const telegramBot = require('./bot/telegram_bot');
 
 // Load environment variables
 dotenv.config();
@@ -37,7 +38,7 @@ app.use(hpp()); // Protect against HTTP Parameter Pollution
 
 // Middlewares
 app.use(cors({
-  origin: "http://localhost:3000", // Adjust based on frontend URL
+  origin: "*", // Adjust based on frontend URL http://localhost:3000
   credentials: true, // ✅ Allow cookies
 }));
 app.use(cookieParser());
@@ -49,6 +50,11 @@ app.use(compression());
 const upload = multer({ dest: "uploads/" });
 
 app.use(express.json());
+
+// Telegram
+const WEBHOOK_PATH = "/telegram/webhook";
+
+app.use(WEBHOOK_PATH, telegramBot.webhookCallback(WEBHOOK_PATH));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -73,6 +79,7 @@ app.use('/api/v1/product', require('./routes/product.route'));
 app.use('/api/v1/order', require('./routes/order.route'));
 app.use('/api/v1/discount', require('./routes/discount.route'));
 app.use('/api/v1/review', require('./routes/review.route'));
+app.use('/api/v1/telegram', require('./routes/telegram.route'));
 
 // Error handling middleware
 app.use(errorHandler);
