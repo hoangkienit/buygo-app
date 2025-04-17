@@ -179,9 +179,29 @@ class OrderService {
       await newTransaction.save({ session });
 
       // Send message to Telegram
+      let message = `
+🛒 <b>ĐƠN HÀNG MỚI VỪA ĐẶT!</b>\n
+<b>Mã đơn hàng:</b> <code>${newOrder.orderId}</code>\n
+<b>Khách hàng:</b> ${user.username}\n
+<b>Thanh toán:</b> ${newOrder.order_final_amount.toLocaleString()}đ\n
+<b>Trạng thái:</b> ${newOrder.order_status}\n
+<b>Thời gian:</b> ${newOrder.createdAt.toLocaleString()}\n
+`;
+
+      if (
+        product.product_type === "topup_package" ||
+        (product.product_type === "game_account" && product.isValuable)
+      ) {
+        message += `
+<b>🛠 Hành động:</b>\n
+<b>Xác nhận:</b> <code>/confirm ${newOrder.orderId}</code>\n
+<b>Hủy:</b> <code>/cancel ${newOrder.orderId}</code>\n
+`;
+      }
+
       await TelegramService.sendMessage(
         process.env.TELEGRAM_CHAT_ID,
-        `🛒 <b>ĐƠN HÀNG MỚI VỪA ĐẶT!</b>\n<b>Mã đơn hàng:</b> ${newOrder.orderId}\n<b>Khách hàng:</b> ${user.username}\n<b>Thanh toán:</b> ${newOrder.order_final_amount.toLocaleString()}đ\n<b>Trạng thái:</b> ${newOrder.order_status}\n<b>Thời gian:</b> ${newOrder.createdAt.toLocaleString()}`
+        message.trim()
       );
 
       await session.commitTransaction();
@@ -360,26 +380,32 @@ class OrderService {
     };
   }
 
-  static async markAsSuccessForAdmin(orderId, authorId) {
+  static async markAsSuccessForAdmin(orderId, authorId, telegramAdmin) {
     const session = await mongoose.startSession();
     session.startTransaction();
-
     try {
       const order = await Order.findOne({ orderId }).session(session);
       if (!order) throw new Error("Order not found");
+      if (order.order_status !== "processing")
+        throw new Error("Order has been processed");
 
       const product = await Product.findOne({
         productId: order.productId,
       }).session(session);
       if (!product) throw new Error("Product not found");
 
-      const author = await User.findOne(
-        { _id: convertToObjectId(authorId) },
-        { username: 1, _id: 0 } // only return username
-      ).lean();
-      if (!author) throw new Error("Author not found");
+      if (authorId) {
+        const author = await User.findOne(
+          { _id: convertToObjectId(authorId) },
+          { username: 1, _id: 0 } // only return username
+        ).lean();
+        if (!author) throw new Error("Author not found");
 
-      order.processed_by = author?.username;
+        order.processed_by = author?.username;
+      } else if (telegramAdmin) {
+        order.processed_by = telegramAdmin;
+      }
+
       order.order_status = "success";
       product.product_sold_amount += 1; //Increase sold amount to 1
 
@@ -406,26 +432,33 @@ class OrderService {
     }
   }
 
-  static async markAsFailedForAdmin(orderId, authorId) {
+  static async markAsFailedForAdmin(orderId, authorId, telegramAdmin) {
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try {
       const order = await Order.findOne({ orderId }).session(session);
       if (!order) throw new Error("Order not found");
+      if (order.order_status !== "processing")
+        throw new Error("Order has been processed");
 
       const user = await User.findOne({
         _id: convertToObjectId(order?.userId),
       }).session(session);
       if (!user) throw new Error("User not found");
 
-      const author = await User.findOne(
-        { _id: convertToObjectId(authorId) },
-        { username: 1, _id: 0 } // only return username
-      ).lean();
-      if (!author) throw new Error("Author not found");
+      if (authorId) {
+        const author = await User.findOne(
+          { _id: convertToObjectId(authorId) },
+          { username: 1, _id: 0 } // only return username
+        ).lean();
+        if (!author) throw new Error("Author not found");
 
-      order.processed_by = author?.username;
+        order.processed_by = author?.username;
+      } else if (telegramAdmin) {
+        order.processed_by = telegramAdmin;
+      }
+
       order.order_status = "failed";
       user.balance += order?.order_base_amount;
 
@@ -466,8 +499,6 @@ class OrderService {
       throw error;
     }
   }
-
-  
 }
 
 module.exports = OrderService;

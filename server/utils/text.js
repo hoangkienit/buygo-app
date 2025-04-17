@@ -33,4 +33,11 @@ function escapeRegex(word) {
   return word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-module.exports = {splitString, slugify, containsBadWord}
+function getUserTextAfterCommand(ctx) {
+  if (!ctx.message || !ctx.message.text) return '';
+  
+  const parts = ctx.message.text.trim().split(' ');
+  return parts.slice(1).join(' ') || '';
+}
+
+module.exports = {splitString, slugify, containsBadWord, getUserTextAfterCommand}

@@ -47,7 +47,7 @@ export const AdminEditProduct = () => {
                 setProductStatus(res.data.product.product_status);
                 setProductStock(res.data.product.product_stock);
 
-                if (res.data.product.product_type === 'game_account') {
+                if (res.data.product.product_type === 'game_account' || res.data.product.product_type === 'utility_account') {
                     setProductPrice(res.data.product.product_attributes.price);
                 }
             }
@@ -107,7 +107,7 @@ export const AdminEditProduct = () => {
                     
             if (res.success) {
                 showToast("Cập nhật sản phẩm thành công", "success");
-                setProduct(res.data.updatedProduct);
+                fetchProductData();
             }
         } catch (error) {
             showToast(error.message, "error");
