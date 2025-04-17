@@ -1,4 +1,5 @@
 const { Telegraf } = require('telegraf');
+const TelegramService = require('../services/telegram.service');
 require('dotenv').config();
 
 const telegram_bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
@@ -12,6 +13,14 @@ telegram_bot.start((ctx) => ctx.reply('Chào bạn! Đây là bot hỗ trợ n�
 telegram_bot.command('help', (ctx) => ctx.reply('Các lệnh: /nap /info'));
 telegram_bot.command('info', (ctx) => ctx.reply('Tôi giúp bạn nhận thông báo đơn hàng nạp game.'));
 
-telegram_bot.command('balance', async(ctx) => ctx.reply('Số dư của bạn là 100.000đ'));
+telegram_bot.command('daily_stats', async () => {
+  await TelegramService.sendOrderDailyStatistics();
+});
+
+telegram_bot.command('weekly_stats', async () => {
+  await TelegramService.sendOrderWeeklyStatistics();
+});
+
+
 
 module.exports = telegram_bot;

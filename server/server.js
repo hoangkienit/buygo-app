@@ -18,10 +18,11 @@ const requestLogger = require('./middlewares/request.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 require("./jobs/transactionQueue");
 require('./jobs/clearUploads');
-const telegramBot = require('./bot/telegram_bot');
-
 // Load environment variables
 dotenv.config();
+
+const telegramBot = require('./bot/telegram_bot');
+
 
 // Connect to Database
 connectDb();
@@ -38,7 +39,7 @@ app.use(hpp()); // Protect against HTTP Parameter Pollution
 
 // Middlewares
 app.use(cors({
-  origin: "*", // Adjust based on frontend URL http://localhost:3000
+  origin: "http://localhost:3000", // Adjust based on frontend URL http://localhost:3000
   credentials: true, // ✅ Allow cookies
 }));
 app.use(cookieParser());
