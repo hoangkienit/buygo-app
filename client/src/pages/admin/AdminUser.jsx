@@ -33,6 +33,7 @@ export const AdminUser = () => {
 
   useEffect(() => {
     fetchUserList();
+    document.title = 'Admin - Người dùng';
   }, []);
 
   const fetchUserList = async () => {

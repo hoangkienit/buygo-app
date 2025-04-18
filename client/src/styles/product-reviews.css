@@ -23,12 +23,18 @@
 }
 
 .reviews-category-container{
-    display: flex;
-    flex-direction: row;
+    display: grid;
     align-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     justify-content: flex-start;
     gap: 10px;
     margin: 20px 0px;
+}
+
+@media (max-width: 768px){
+    .reviews-category-container {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
 }
 
 .reviews-category-item{
@@ -36,6 +42,7 @@
         flex-direction: row;
     align-items: center;
     gap: 5px;
+    justify-content: center;
     background-color: var(--eight);
     padding: 5px 20px;
     border-radius: 8px;

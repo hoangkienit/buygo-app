@@ -72,7 +72,7 @@ const AccountPage = () => {
             <p>Đổi mật khẩu</p>
             <input type="password" value="********" disabled />
             <div className="button-group">
-              <button>Đổi mật khẩu</button>
+              <button onClick={() => navigate('/account/change-password')}>Đổi mật khẩu</button>
             </div>
           </div>
           <div className="account-card password-card">

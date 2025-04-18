@@ -81,6 +81,7 @@ app.use('/api/v1/order', require('./routes/order.route'));
 app.use('/api/v1/discount', require('./routes/discount.route'));
 app.use('/api/v1/review', require('./routes/review.route'));
 app.use('/api/v1/telegram', require('./routes/telegram.route'));
+app.use('/api/v1/gmail', require('./routes/gmail.route'));
 
 // Error handling middleware
 app.use(errorHandler);

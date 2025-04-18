@@ -39,6 +39,8 @@ import AdminDiscountDetail from "./pages/admin/AdminDiscountDetail";
 import AdminReviews from "./pages/admin/AdminReviews";
 import Rank from "./pages/Rank";
 import { ProductReviews } from "./pages/ProductReviews";
+import { ChangePassword } from "./pages/ChangePassword";
+import { AdminEmail } from "./pages/admin/AdminEmail";
 
 function App() {
   return (
@@ -65,6 +67,7 @@ function App() {
               <Route path="/logout" element={<Logout />} />
               <Route element={<MainLayout />}>
                 <Route path="/account" element={<Account />} />
+                <Route path="/account/change-password" element={<ChangePassword />} />
                 <Route path="/recharge" element={<Recharge />} />
                 <Route path="/recharge/:transactionId" element={<Payment />} />
                 <Route path="/deposit-history" element={<DepositHistory />} />
@@ -122,7 +125,9 @@ function App() {
               <Route path="/super-admin/discounts" element={<AdminDiscount />} />
               <Route path="/super-admin/discounts/view/:discountId" element={<AdminDiscountDetail />} />
               
-              <Route path="/super-admin/reviews" element={<AdminReviews/>} />
+              <Route path="/super-admin/reviews" element={<AdminReviews />} />
+              
+              <Route path="/super-admin/emails" element={<AdminEmail/>} />
             </Route>
           </Routes>
         </Router>

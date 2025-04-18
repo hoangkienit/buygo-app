@@ -57,7 +57,7 @@
 }
 
 .modal-message{
-    font-family: 'montserrat-bold';
+    font-family: 'montserrat-md' !important;
     font-size: 13px;
     color: #000 !important;
     padding: 10px 0px;

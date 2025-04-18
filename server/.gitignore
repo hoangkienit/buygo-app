@@ -28,3 +28,6 @@ Thumbs.db
 
 # Testing
 /coverage/
+
+credentials.json
+token.json

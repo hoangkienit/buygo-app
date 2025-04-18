@@ -156,10 +156,7 @@ export const AdminPayment = () => {
             <option value="failed">Thất bại</option>
           </select>
         </div>
-        {/* <a href="/super-admin/products/add-product" className="add-product-button-container">
-                          <MdOutlineAdd className="add-icon" />
-                          <p className="add-text">Thêm sản phẩm</p>
-                      </a> */}
+
       </div>
       <div className="product-table-container">
         <table className="product-table">

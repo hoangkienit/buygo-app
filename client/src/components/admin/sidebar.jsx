@@ -13,6 +13,7 @@ import { useUser } from '../../context/UserContext';
 import socket from '../../services/socket';
 import { showTopCenterToast } from '../toasts/ToastNotification';
 import { playNotificationSound } from '../../utils/audio';
+import { MdEmail } from "react-icons/md";
 
 export const Sidebar = ({ isSidebarOpen }) => {
   const location = useLocation();
@@ -153,6 +154,11 @@ export const Sidebar = ({ isSidebarOpen }) => {
       to: "/super-admin/users",
       icon: <FaUserAlt />,
       label: "Người dùng"
+    },
+    {
+      to: "/super-admin/emails",
+      icon: <MdEmail />,
+      label: "Email"
     },
     {
       to: "/super-admin/discounts",
