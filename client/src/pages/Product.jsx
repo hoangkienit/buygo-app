@@ -218,7 +218,7 @@ const Product = () => {
                 <FaStar className="rating-icon"/>
               </div>
             </div>
-            <div onClick={() => navigate(`/product/review/${product_slug}`)} className="view-all-reviews-container">
+            <div onClick={() => navigate(`/product/reviews/${product_slug}`)} className="view-all-reviews-container">
               <a className="view-all-reviews-text">Xem tất cả</a>
               <IoIosArrowForward />
             </div>

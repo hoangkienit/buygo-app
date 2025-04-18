@@ -7,6 +7,8 @@ const router = express.Router();
 // For client
 router.post('/create', verifyMiddleware, checkBanned, ReviewController.createNewReview);
 
+router.get('/get-reviews/:product_slug', ReviewController.getProductReviewsBySlug);
+
 // For Admin
 router.get('/all-reviews', verifyMiddleware, verifyAdminMiddleware, ReviewController.getAllReviewsForAdmin);
 

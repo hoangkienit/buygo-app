@@ -35,6 +35,21 @@ class ReviewService {
     return { ...ratingStats, reviews };
   }
 
+  static async getProductReviewsBySlug(product_slug, limit = 20) {
+    const product = await Product.findOne({ product_slug: product_slug }).lean();
+    if (!product) throw new Error(`Product not found with ${product_slug}`);
+
+    const reviews = await Review.find({ productId: product.productId, status: "show" })
+      .limit(limit)
+      .populate("userId", "username profileImg rank") // Fetch only `username` & `profile_img`
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const ratingStats = await ReviewService.getProductRatingStats(product.productId);
+
+    return { ...ratingStats, reviews };
+  }
+
   static async createNewReview(productId, userId, orderId, rating, comment) {
     const [product, order, user] = await Promise.all([
       Product.findOne({ productId: productId }).lean(),

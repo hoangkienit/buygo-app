@@ -61,3 +61,17 @@ export const createNewReview = async (productId, orderId, rating, comment) => {
     throw error;
   }
 };
+
+export const getProductReviewsBySlug = async (product_slug, limit) => {
+  try {
+    const response = await api.get(`/review/get-reviews/${product_slug}?limit=${limit}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

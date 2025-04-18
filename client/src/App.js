@@ -38,6 +38,7 @@ import { AdminDiscount } from "./pages/admin/AdminDiscount";
 import AdminDiscountDetail from "./pages/admin/AdminDiscountDetail";
 import AdminReviews from "./pages/admin/AdminReviews";
 import Rank from "./pages/Rank";
+import { ProductReviews } from "./pages/ProductReviews";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/product/:product_slug" element={<Product />} />
+              <Route path="/product/reviews/:product_slug" element={<ProductReviews/>} />
               <Route path="*" element={<NotFound />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
               <Route path="/banned" element={<Banned/>} />

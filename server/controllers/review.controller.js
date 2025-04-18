@@ -131,6 +131,29 @@ class ReviewController {
             });
         }
     }
+
+    static async getProductReviewsBySlug(req, res) {
+        const { product_slug } = req.params;
+        const limit = parseInt(req.query.limit);
+
+        try {
+            const response = await ReviewService.getProductReviewsBySlug(product_slug, limit);
+
+            return res.status(200).json({
+                success: true,
+                message: "Get reviews success",
+                data: {
+                    product_reviews: response
+                }
+            })
+        } catch (error) {
+            logger.error(error);
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            })
+        }
+    }
 }
 
 module.exports = ReviewController;
