@@ -19,7 +19,7 @@ telegram_bot.start((ctx) =>
   )
 );
 telegram_bot.command("info", (ctx) =>
-  ctx.reply("Tôi giúp bạn nhận thông báo đơn hàng nạp game.")
+  ctx.reply("Đây là bot hỗ trợ thông báo được phát triển bởi Hoangkiendev.")
 );
 telegram_bot.command("help", (ctx) => ctx.reply("Các lệnh: /nap /info"));
 

@@ -2,28 +2,24 @@ import React, { useState } from "react";
 import "./add-discount-modal.css";
 import { ClipLoader } from "react-spinners";
 import { showToast } from "../toasts/ToastNotification";
-import { createDiscountForAdmin } from "../../api/discount.api";
+import { createNewEmailForAdmin } from "../../api/gmail.api";
 
-const AddEmailModal = ({
-  isOpen,
-  onClose,
-  message,
-  title,
-}) => {
-
-    const [loading, setLoading] = useState(false);
-    const [password, setPassword] = useState("");
-
+const AddEmailModal = ({ isOpen, onClose, message, title, setEmails }) => {
+  const [loading, setLoading] = useState(false);
   if (!isOpen) return null;
 
-  const handleAddDiscount = async () => {
+  const handleAddEmail = async () => {
     setLoading(true);
     try {
-        const res = null;
+      const res = await createNewEmailForAdmin();
 
       if (res.success) {
-        showToast("Thêm mã giảm giá thành công", "success");
-        
+        const newEmail = res.data.newEmail;
+        showToast("Thêm email thành công", "success");
+          setEmails((prev) => [
+              newEmail,
+              ...prev
+        ]);
         onClose();
       }
     } catch (error) {
@@ -40,13 +36,6 @@ const AddEmailModal = ({
         <p className="modal-message">
           {message || "Are you sure you want to proceed?"}
         </p>
-        <input
-          className="balance-input"
-          type="text"
-          value={password}
-          placeholder="Nhập mật khẩu"
-          onChange={(e) => setPassword(e.target.value)}
-        />
         <div className="modal-buttons">
           <button
             disabled={loading}
@@ -58,7 +47,7 @@ const AddEmailModal = ({
             Hủy
           </button>
           <button
-            onClick={handleAddDiscount}
+            onClick={handleAddEmail}
             disabled={loading}
             className={`modify-balance-confirm-btn ${
               loading && "disabled-button"

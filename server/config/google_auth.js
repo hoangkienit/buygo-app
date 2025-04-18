@@ -2,10 +2,12 @@ const fs = require('fs');
 const { google } = require('googleapis');
 const readline = require('readline');
 const path = require('path');
+const logger = require('../utils/logger');
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 const TOKEN_PATH = path.resolve(__dirname, 'token.json');
 const CREDENTIALS = require('./credentials.json');
+const { encryptToFile, decryptFromFile } = require('../utils/crypto');
 
 const { client_id, client_secret, redirect_uris } = CREDENTIALS.web;
 const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
@@ -13,19 +15,19 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
 async function authorizeGoogle() {
   if (fs.existsSync(TOKEN_PATH)) {
     try {
-      const tokenData = fs.readFileSync(TOKEN_PATH, 'utf8');
-        oAuth2Client.setCredentials(JSON.parse(tokenData));
-        await refreshTokenIfNeeded();
-      console.log('Token loaded successfully.');
+      const tokenData = decryptFromFile(TOKEN_PATH);
+      oAuth2Client.setCredentials(tokenData);
+      await refreshTokenIfNeeded();
+      logger.info('🔑 Token loaded and decrypted successfully.');
       return oAuth2Client;
     } catch (error) {
-      console.error('Error reading or parsing token file:', error);
+      logger.error('❌ Error reading or decrypting token file:', error);
     }
   }
 
   const open = (await import('open')).default;
   const authUrl = oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
-  console.log('Authorize this app by visiting this url:', authUrl);
+  logger.info('🔗 Authorize this app by visiting this URL:', authUrl);
   await open(authUrl);
 
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -33,49 +35,41 @@ async function authorizeGoogle() {
   rl.close();
 
   try {
-    console.log('Exchanging authorization code for tokens...');
-    console.log('Code being used:', code.trim());
-    
+    logger.info('🧪 Code received, exchanging for token...');
     const { tokens } = await oAuth2Client.getToken(code.trim());
-    console.log('Token obtained successfully');
-    
     oAuth2Client.setCredentials(tokens);
-    
-    // Check if directory exists, create if not
+
     const dir = path.dirname(TOKEN_PATH);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
-    // Write token with better error handling
+
     try {
-      fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens, null, 2));
-      console.log('Token saved to:', TOKEN_PATH);
+      encryptToFile(tokens, TOKEN_PATH);
+      logger.info('🔒 Token encrypted and saved successfully at:', TOKEN_PATH);
     } catch (writeError) {
-      console.error('Error writing token file:', writeError);
-      console.log('Trying to save to current directory instead');
-      fs.writeFileSync('./token.json', JSON.stringify(tokens, null, 2));
+      logger.error('❌ Failed to save encrypted token:', writeError);
     }
-    
+
     return oAuth2Client;
   } catch (error) {
-    console.error('Error getting token:', error.message);
+    logger.error('❌ Error retrieving access token:', error.message);
     if (error.response) {
-      console.error('Response data:', error.response.data);
+      logger.error('Response data:', error.response.data);
     }
     throw error;
   }
 }
 
 async function refreshTokenIfNeeded() {
-  if (oAuth2Client.isTokenExpiring()) {
+  if (oAuth2Client.isTokenExpiring && oAuth2Client.isTokenExpiring()) {
     try {
       const { credentials } = await oAuth2Client.refreshAccessToken();
       oAuth2Client.setCredentials(credentials);
-      fs.writeFileSync(TOKEN_PATH, JSON.stringify(credentials, null, 2));
-      console.log('Token refreshed and saved.');
+      encryptToFile(credentials, TOKEN_PATH);
+      logger.info('🔁 Token refreshed and encrypted successfully.');
     } catch (error) {
-      console.error('Error refreshing token:', error);
+      logger.error('❌ Error refreshing token:', error);
     }
   }
 }

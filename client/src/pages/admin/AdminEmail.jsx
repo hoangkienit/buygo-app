@@ -3,30 +3,83 @@ import "./admin-email.css";
 import { MdOutlineAdd } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
 import { HashLoader } from "react-spinners";
-import ToastNotification from "../../components/toasts/ToastNotification";
+import ToastNotification, {
+  showToast,
+} from "../../components/toasts/ToastNotification";
 import AddEmailModal from "../../components/modal/add-email-modal";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
+import axios from "axios";
+import { deleteEmailForAdmin, getAllEmailsForAdmin } from "../../api/gmail.api";
+import ConfirmModal from "../../components/modal/confirm-modal";
+
+const ITEMS_PER_PAGE = 8;
 
 export const AdminEmail = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [emails, setEmails] = useState("");
+  const [emails, setEmails] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [totalPages, setTotalPages] = useState(1);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
 
   useEffect(() => {
     document.title = "Admin - Email";
+  }, []);
+
+  useEffect(() => {
+    fetchEmails();
   }, [currentPage, searchInput]);
-    
-    const handleNextPage = () => {
+
+  const fetchEmails = async () => {
+    try {
+      setLoading(true);
+      const response = await getAllEmailsForAdmin(ITEMS_PER_PAGE, currentPage);
+
+      if (response.success) {
+        let filtered = response.data.emails;
+
+        if (searchInput.trim()) {
+          filtered = filtered.filter((em) =>
+            em.email.toLowerCase().includes(searchInput.toLowerCase())
+          );
+        }
+        setEmails(filtered);
+        setTotalPages(response.data.totalPages || 1);
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleDeleteEmail = async () => {
+    try {
+      setLoading(true);
+        setIsDeleteModalOpen(false);
+      const res = await deleteEmailForAdmin(selectedIdToDelete);
+
+      if (res.success) {
+        showToast("Xóa email thành công", "success");
+        setEmails(emails.filter((em) => em._id !== selectedIdToDelete));
+        setSelectedIdToDelete("");
+      }
+    } catch (error) {
+      showToast(error.message, "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -41,13 +94,21 @@ export const AdminEmail = () => {
     <div className="admin-email-container">
       <ToastNotification />
       <AddEmailModal
-        title={"Thêm Email"}
-        message={
-          "Thêm một email mới. Bạn chỉ cần nhập mật khẩu cho email này vì email sẽ được tạo tự động."
-        }
+        title="Thêm Email"
+        message="Email và mật khẩu sẽ được tạo tự động"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        setEmails={setEmails}
       />
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={handleDeleteEmail}
+        onClose={() => setIsDeleteModalOpen(false)}
+        message={"Xác nhận bạn đang xóa một email"}
+        title={"Xóa email"}
+      />
+
       <p className="tab-nav-title">Danh sách email</p>
       <div className="admin-product-header">
         <div className="search-filter-container">
@@ -71,6 +132,7 @@ export const AdminEmail = () => {
           <p className="add-text">Thêm email mới</p>
         </a>
       </div>
+
       <div className="product-table-container">
         <table className="product-table">
           <thead>
@@ -85,34 +147,19 @@ export const AdminEmail = () => {
           </thead>
           <tbody>
             {emails.length > 0 ? (
-              emails.map((tx, index) => (
-                <tr key={tx._id}>
-                  <td>{index + 1}</td>
-                  <td>{tx.transactionId}</td>
-                  <td>
-                    <a className="table-product-name">{tx.userId?.username}</a>
-                  </td>
-                  <td className="transaction-price">
-                    {tx.amount.toLocaleString() || 0}
-                  </td>
-                  <td style={{ color: "#3498db" }}>
-                    {}
-                  </td>
-                  <td>
-                    <div
-                      className={`transaction-status`}
-                    >
-                      {}
-                    </div>
-                  </td>
-                  <td>{tx.gateway === "empty_gateway" ? "NA" : tx.gateway}</td>
-                  <td>{new Date(tx.createdAt).toLocaleString()}</td>
+              emails.map((email, index) => (
+                <tr key={email._id}>
+                  <td>{(currentPage - 1) * 10 + index + 1}</td>
+                  <td>{email._id}</td>
+                  <td>{email.email}</td>
+                  <td>{email.password}</td>
+                  <td>{new Date(email.createdAt).toLocaleString()}</td>
                   <td className="action-cell">
                     <div className="action-buttons-container">
                       <button
                         onClick={() => {
-                          setIsModalOpen(true);
-                          setSelectedIdToDelete(tx.transactionId);
+                          setSelectedIdToDelete(email._id);
+                          setIsDeleteModalOpen(true);
                         }}
                         className="delete-btn action-button"
                       >
@@ -124,14 +171,13 @@ export const AdminEmail = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="9">Không có email</td>
+                <td colSpan="6">Không có email</td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
 
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="pagination">
           <button
