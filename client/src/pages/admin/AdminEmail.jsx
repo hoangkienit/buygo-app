@@ -9,9 +9,10 @@ import ToastNotification, {
 import AddEmailModal from "../../components/modal/add-email-modal";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
-import axios from "axios";
 import { deleteEmailForAdmin, getAllEmailsForAdmin } from "../../api/gmail.api";
 import ConfirmModal from "../../components/modal/confirm-modal";
+import { MdMarkEmailUnread } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -23,7 +24,8 @@ export const AdminEmail = () => {
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
+    const [selectedIdToDelete, setSelectedIdToDelete] = useState("");
+    const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Admin - Email";
@@ -155,7 +157,13 @@ export const AdminEmail = () => {
                   <td>{email.password}</td>
                   <td>{new Date(email.createdAt).toLocaleString()}</td>
                   <td className="action-cell">
-                    <div className="action-buttons-container">
+                          <div className="action-buttons-container">
+                              <button
+                        onClick={() => navigate(`/super-admin/emails/view/${email.email}`)}
+                        className="edit-btn action-button"
+                      >
+                        <MdMarkEmailUnread className="action-icon" />
+                      </button>
                       <button
                         onClick={() => {
                           setSelectedIdToDelete(email._id);

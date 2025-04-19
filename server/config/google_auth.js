@@ -26,7 +26,11 @@ async function authorizeGoogle() {
   }
 
   const open = (await import('open')).default;
-  const authUrl = oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: SCOPES
+  });
   logger.info('🔗 Authorize this app by visiting this URL:', authUrl);
   await open(authUrl);
 

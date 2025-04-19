@@ -41,6 +41,7 @@ import Rank from "./pages/Rank";
 import { ProductReviews } from "./pages/ProductReviews";
 import { ChangePassword } from "./pages/ChangePassword";
 import { AdminEmail } from "./pages/admin/AdminEmail";
+import { AdminEmailDetail } from "./pages/admin/AdminEmailDetail";
 
 function App() {
   return (
@@ -127,7 +128,8 @@ function App() {
               
               <Route path="/super-admin/reviews" element={<AdminReviews />} />
               
-              <Route path="/super-admin/emails" element={<AdminEmail/>} />
+              <Route path="/super-admin/emails" element={<AdminEmail />} />
+              <Route path="/super-admin/emails/view/:alias" element={<AdminEmailDetail/>} />
             </Route>
           </Routes>
         </Router>

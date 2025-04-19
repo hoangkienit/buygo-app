@@ -1,6 +1,7 @@
 const { google } = require("googleapis");
 const Email = require("../models/email.model");
 const { generateWords } = require("../utils/random");
+const { encrypt, decrypt } = require("../utils/crypto");
 
 const BASE_EMAIL = "hoangkien.service";
 const BASE_DOMAIN = "@hoangkiendev.io.vn";
@@ -54,7 +55,7 @@ class GmailService {
   static async createNewEmailForAdmin() {
     const newEmail = new Email({
       email: `${BASE_EMAIL}+${generateWords(6)}${BASE_DOMAIN}`,
-      password: generateWords(10, true),
+      password: encrypt(generateWords(10, true)),
     });
 
     await newEmail.save();
@@ -72,22 +73,28 @@ class GmailService {
 
     const totalPages = Math.ceil(total / limit);
 
+    const formattedEmails = emails.map((em) => ({
+      ...em,
+      password: decrypt(em.password),
+    }));
+
     return {
       message: "Get emails success",
       total,
       totalPages,
-      emails,
+      emails: formattedEmails,
     };
-    }
-    
-    static async deleteEmailForAdmin(emailId) {
-        const email = await Email.deleteOne({ _id: emailId });
-        if (email.deletedCount === 0) throw new Error(`Email not found with ${emailId}`);
+  }
 
-        return {
-            message: "Delete email success"
-        }
-    }
+  static async deleteEmailForAdmin(emailId) {
+    const email = await Email.deleteOne({ _id: emailId });
+    if (email.deletedCount === 0)
+      throw new Error(`Email not found with ${emailId}`);
+
+    return {
+      message: "Delete email success",
+    };
+  }
 }
 
 module.exports = GmailService;

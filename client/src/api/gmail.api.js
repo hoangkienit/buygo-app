@@ -15,9 +15,23 @@ export const createNewEmailForAdmin = async () => {
   }
 };
 
+export const getEmailsByAlias = async (alias) => {
+  try {
+    const response = await api.get(`/gmail/get-emails/${alias}`,
+      {
+        withCredentials: true
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getAllEmailsForAdmin = async (limit, page) => {
   try {
-    const response = await api.get(`/gmail/all-emails`,
+    const response = await api.get(`/gmail/all-emails?limit=${limit}&page=${page}`,
       {
         withCredentials: true
       }
